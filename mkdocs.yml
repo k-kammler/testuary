@@ -1,0 +1,65 @@
+site_name: Testuary
+site_url: https://k-kammler.github.io/testuary/
+site_description: Unit test suites for Python, Java and C written with a language model, measured and reduced
+docs_dir: docs
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.superfences
+  # Included files, such as the changelog, are read from the repository.
+  - pymdownx.snippets:
+      base_path: ["."]
+      check_paths: true
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            show_root_heading: true
+            show_source: false
+            members_order: source
+            filters: ["!^_"]
+
+nav:
+  - Home: index.md
+  - Getting started: getting-started.md
+  - User guide:
+      - Set up your machine: guide/machine.md
+      - Configuration: guide/configuration.md
+      - Models and prompt profiles: models-and-prompts.md
+      - Terminal output: guide/terminal.md
+      - Results and logs: guide/output.md
+      - Offline demonstrations: guide/demonstrations.md
+      - Web interface: guide/web.md
+      - Running on a cluster: guide/cluster.md
+  - Extending:
+      - Extension points: extending/index.md
+      - Your own model client: extending/model-provider.md
+      - A prompt profile: extending/prompt-profile.md
+      - Hints: extending/hints.md
+      - Make a language ready: extending/languages.md
+      - Extend the web interface: extending/web.md
+  - Reference:
+      - reference/index.md
+      - Command line: reference/cli.md
+      - Settings: reference/settings.md
+      - Python API: reference/api.md
+      - Result files: reference/result-files.md
+      - Tested environments: reference/tested-environments.md
+  - Explanation:
+      - Code organization: explanation/code-organization.md
+      - Measurement and recovery: explanation/measurement-and-recovery.md
+  - Contributing: contributing.md
+  - Changelog: changelog.md

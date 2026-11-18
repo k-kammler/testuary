@@ -1,0 +1,202 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "testuary"
+version = "0.2.0"
+description = "Test generation with coverage and mutation feedback for Python, Java and C"
+readme = "README.md"
+requires-python = ">=3.10"
+# Testuary is MIT. The demonstrations ship sources of tenacity and
+# JSONassert under the Apache License 2.0, with their license texts beside
+# them (THIRD_PARTY_NOTICES.md); license-files ships those texts.
+license = "MIT"
+license-files = [
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md",
+    "src/testuary/demo/data/LICENSE-tenacity.txt",
+    "src/testuary/demo/data/tutorial/LICENSE-tenacity.txt",
+    "src/testuary/demo/data/java/LICENSE-jsonassert.txt",
+]
+authors = [
+    { name = "Kevin Kammler" },
+]
+keywords = ["llm", "agent", "mutation-testing", "test-generation", "automated-testing"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Testing",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Typing :: Typed",
+]
+dependencies = [
+    "langgraph>=1.2,<2.0",
+    "langchain-core>=1.4,<2.0",
+    "langchain-openai>=1.6,<1.7",
+    "pydantic>=2.12,<3.0",
+    # NotRequired, TypedDict and Annotated at module level. 4.0 is the first
+    # version with all three.
+    "typing-extensions>=4.0,<5",
+    # Never imported: the retry classification reads openai's exception
+    # names (APIConnectionError, APITimeoutError) from the client that
+    # langchain-openai uses.
+    "openai>=2.0,<4",
+    # The model requests' retry loop, in the range langchain-core
+    # requires.
+    "tenacity>=8.1,!=8.4.0,<10",
+    # The agent and trace logs, one JSON object per line. 4.0 is the first
+    # version that writes a dict message without a message field.
+    "python-json-logger>=4.0,<5",
+    # The execution tools LangAdapter pins for the same Python.
+    "cosmic-ray==8.4.1",
+    "pytest==8.1.1; python_version < '3.14'",
+    "pytest==8.4.2; python_version >= '3.14'",
+    "coverage==7.6.8; python_version < '3.14'",
+    "coverage==7.16.2; python_version >= '3.14'",
+    "pulp==3.3.2",
+    "lizard>=1.17,<2",
+    "httpx[socks]>=0.28,<1",
+    "rich>=14,<16",
+    # The per-user directory of models.ini and the global config.ini.
+    "platformdirs>=4.0,<5",
+    # The web interface's check whether a job's process runs.
+    "psutil>=7.0,<8",
+    # The language backend, which brings its own parsing dependencies.
+    # Released together with Testuary: a 0.1 release keeps the interface
+    # Testuary uses.
+    "langadapter>=0.1.0,<0.2",
+]
+
+[project.optional-dependencies]
+docs = [
+    "mkdocs>=1.6,<2",
+    "mkdocs-material>=9.5,<10",
+    "mkdocstrings[python]>=0.26,<1",
+    # mkdocstrings 0.30 does not fit pymdown-extensions 12 (its Highlight needs md).
+    "pymdown-extensions>=10,<12",
+]
+dev = [
+    "build>=1.0",
+    "packaging>=22",
+    "pytest-cov==6.2.1",
+    "pytest-xdist>=3.0",
+    "pyyaml>=6",
+    "ruff>=0.5",
+    "tomli>=2; python_version < '3.11'",
+]
+
+[project.urls]
+Homepage = "https://github.com/k-kammler/testuary"
+Repository = "https://github.com/k-kammler/testuary"
+Documentation = "https://k-kammler.github.io/testuary/"
+Issues = "https://github.com/k-kammler/testuary/issues"
+Changelog = "https://github.com/k-kammler/testuary/blob/main/CHANGELOG.md"
+LangAdapter = "https://github.com/k-kammler/langadapter"
+
+[project.scripts]
+testuary = "testuary.__main__:main"
+# The local browser interface (testuary.web), part of this distribution.
+testuary-web = "testuary.web:main"
+
+[tool.hatch.build]
+artifacts = ["src/testuary/demo/data/java/*"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/testuary"]
+
+[tool.hatch.build.targets.wheel.shared-data]
+# Every page the shipped README links, so the links hold in an installed copy.
+"README.md" = "share/doc/testuary/README.md"
+"LICENSE" = "share/doc/testuary/LICENSE"
+"THIRD_PARTY_NOTICES.md" = "share/doc/testuary/THIRD_PARTY_NOTICES.md"
+"models.example.ini" = "share/doc/testuary/models.example.ini"
+"CHANGELOG.md" = "share/doc/testuary/CHANGELOG.md"
+"docs/index.md" = "share/doc/testuary/docs/index.md"
+"docs/getting-started.md" = "share/doc/testuary/docs/getting-started.md"
+"docs/models-and-prompts.md" = "share/doc/testuary/docs/models-and-prompts.md"
+"docs/contributing.md" = "share/doc/testuary/docs/contributing.md"
+"docs/guide" = "share/doc/testuary/docs/guide"
+"docs/extending" = "share/doc/testuary/docs/extending"
+"docs/explanation" = "share/doc/testuary/docs/explanation"
+"docs/reference" = "share/doc/testuary/docs/reference"
+
+[tool.hatch.build.targets.sdist]
+# The source distribution carries the package, the pages the README links,
+# the two tools that regenerate pages from the code (the reference pages and
+# the language-requirements page), the quickstart and the citation file. The
+# tests and the development records stay in the repository.
+include = [
+    "src/testuary/**",
+    "/LICENSE",
+    "/THIRD_PARTY_NOTICES.md",
+    "/README.md",
+    "/models.example.ini",
+    "/CHANGELOG.md",
+    "docs/index.md",
+    "docs/getting-started.md",
+    "docs/models-and-prompts.md",
+    "docs/contributing.md",
+    "docs/guide/*.md",
+    "docs/extending/*.md",
+    "docs/explanation/*.md",
+    "docs/reference/*.md",
+    "tools/reference_pages.py",
+    "tools/language_page.py",
+    "/CITATION.cff",
+    # The quickstart: scripts, commands and two small example projects.
+    "examples/quickstart/**",
+    "/pyproject.toml",
+]
+
+
+[tool.pytest.ini_options]
+testpaths = ["tests/unit", "tests/integration", "tests/web"]
+
+pythonpath = ["src"]
+
+addopts = "--strict-markers --strict-config -m 'not slow'"
+
+markers = [
+    "slow: real-subprocess integration tests (cosmic-ray / pytest against a fixture project). Excluded from the default run. Select with `pytest -m slow`.",
+    "mutation_tool: starts a real mutation tool (Cosmic Ray or PIT); the suite split runs these apart",
+]
+
+filterwarnings = [
+    "error",
+    "ignore::pytest.PytestUnraisableExceptionWarning",
+]
+
+
+[tool.coverage.run]
+source = ["src/testuary"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+    "if __name__ == \"__main__\":",
+    '\.\.\.\s*$',
+]
+
+
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+

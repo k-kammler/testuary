@@ -1,0 +1,6 @@
+{
+  "files": {
+    "calc.toy": "# The functions under test, one per line.\ndouble(x) = x * 2\nadd(a, b) = a + b\nsign(x) = if x > 0 then 1 else if x < 0 then -1 else 0\n"
+  },
+  "target": "calc.toy"
+}

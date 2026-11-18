@@ -1,0 +1,149 @@
+{
+  "test_coverage": {
+    "tools": {
+      "read_source": {
+        "description": "Read the source of the file under test (line-numbered).\n\nThis tool becomes available after the mandatory initial ``read_tests``\ncall returns. Use it when coverage feedback does not contain enough\nsource context for a targeted edit, or to refresh after a context\ntrim. Pass ``start_line`` / ``end_line`` to page a file past the size\nlimit. An immediate consecutive whole re-read (no other tool call\nbetween) returns a short cached header; calling any other tool resets\nthe counter.",
+        "args": [
+          "end_line",
+          "start_line"
+        ]
+      },
+      "read_tests": {
+        "description": "Read your working file (line-numbered),\nnot the source under test (that is ``read_source``). Pass\n``start_line`` / ``end_line`` to page a file past the size limit.",
+        "args": [
+          "end_line",
+          "start_line"
+        ]
+      },
+      "edit_tests": {
+        "description": "Edit this agent's file by content match (no line numbers). Three\noperations from one tool:\n\n- Insert: anchor ``old_text`` on an existing unique line and put that\n  same line plus the new code in ``new_text``. To add a block, anchor on\n  the line above or below where it goes and include it in ``new_text``.\n- Replace: ``old_text`` is the exact block to swap for ``new_text``.\n- Delete: pass \"\" as ``new_text`` to remove the matched block.\n\n``old_text`` must occur exactly once unless ``replace_all`` is set.\nCopy whitespace and indentation exactly: CRLF is normalized to LF,\nline numbers copied from the read and edit views (``42<TAB>``) and\nmarkdown fences are stripped, and an\nexact miss falls back to a whitespace-loose match that re-indents\n``new_text`` to the file. The edit is rejected, and nothing is written,\non no match, a multi-match, an empty ``old_text``, a result that no\nlonger parses or that the target's parser rejects, a duplicate\ndefinition, or a test that inspects the target's source or bytecode;\nthe file is unverified until the next ``run_tests``.\n\nSeveral edits: pass ``edits``, a list of ``{old_text, new_text}``\nitems, each with an optional ``replace_all``, instead of ``old_text``\nand ``new_text``. They apply in list order, each matched against the\nfile as the previous ones left it, and the checks run once on the\nfinal result: all or nothing, and an error names the failing edit by\nits position. Use the list for changes that depend on each other,\nsuch as a new version of a test and the deletion of the old one, a\nblock header and its body, or swapping two names: one at a time, the\nfirst of them would be rejected. Several separate edit_tests calls in\none reply also apply in call order, each against the file after the\nprevious calls.\n\nArgs:\n    old_text: exact text to find; add surrounding context to make it\n        unique. To insert, this is the anchor line you keep in new_text.\n    new_text: replacement text, required for a single edit; \"\"\n        deletes the matched block.\n    replace_all: replace every occurrence instead of requiring one;\n        in a list, set it on the item.\n    edits: several edits applied in order as one change, with\n        old_text and new_text left out.",
+        "args": [
+          "edits",
+          "new_text",
+          "old_text",
+          "replace_all"
+        ]
+      },
+      "run_tests": {
+        "description": "Run the tests for the file you are editing and report green or red.\n\nReturns a compact summary: pass / fail counts, the first failing\ntracebacks, and any collection errors. A green run that emits\nunsound-async warnings (unawaited coroutines, leaked tasks,\nunraisable exceptions) is reported as RED -- a falsely-passing test\nis not green. A byte-identical re-run with no edit since the last\ncall returns the cached result; edit the file first to make progress.",
+        "args": []
+      },
+      "measure_coverage": {
+        "description": "Measure line/branch coverage of the target file AND show the source\ncode of any uncovered lines/branches in one call.\n\nThe first part of the return is the numeric summary (line %, branch %,\nmissing-line count). The second part is the actual source code of the\nuncovered regions with context, so you can write targeted tests\nwithout needing a separate tool.",
+        "args": []
+      }
+    },
+    "final_answer": {
+      "name": "emit_coverage_test_result",
+      "description": "Emit the final structured result for this run. Call this tool ONLY when you have everything you need to return; the args become the run's output.",
+      "result_fields": {
+        "test_file_name": "Filename of the on-disk working file (e.g. test_encoder.py).",
+        "explanation": "Brief explanation of test strategy and what is covered.",
+        "targeted_functions": "List of functions/methods explicitly tested.",
+        "line_coverage": "[auto] Final line-coverage % from the last measure_coverage measurement.",
+        "branch_coverage": "[auto] Final branch-coverage % from the last measure_coverage measurement.",
+        "test_count_standard": "[auto] Number of test functions in the on-disk standard test file.",
+        "test_loc_standard": "[auto] Lines of code in the on-disk standard test file.",
+        "target_loc": "[auto] Lines of code in the target source file.",
+        "target_complexity": "[auto] Cyclomatic-style complexity proxy for the target source file.",
+        "agent_iterations": "[auto] Total tool calls made during this run.",
+        "agent_writes": "[auto] edit_tests call count.",
+        "agent_runs": "[auto] run_tests call count.",
+        "agent_assess_cov": "[auto] measure_coverage call count.",
+        "agent_duration_s": "[auto] Wall-clock seconds spent in this generate_coverage_tests call.",
+        "input_tokens": "[auto] Total prompt tokens consumed across all model invocations in this run.",
+        "output_tokens": "[auto] Total completion tokens emitted across all model invocations in this run.",
+        "cache_hit_tokens": "[auto] Cached-prefix prompt tokens (provider prompt-cache hits), a subset of input_tokens.",
+        "status": "[auto] Outcome category: success | stagnation | tests_failed | context_overflow | budget_exhausted | agent_error.",
+        "error": "[auto] Error message when status is not success."
+      }
+    },
+    "loop_breaker": {
+      "file_kind": "working file",
+      "edit_action_text": "edit with ``edit_tests`` to insert, replace, or delete a block",
+      "return_action_text": "return CoverageTestResult if the coverage-phase exit conditions are met"
+    },
+    "framework_text": {
+      "tool_failure_result": "The tool failed with a temporary error ({kind}) and may not have completed. Check whether it took effect before calling it again.",
+      "omission_marker": "[... 7 chars of <what> omitted ...]",
+      "omission_marker_counted": "[... 7 <what> omitted ...]",
+      "omission_marker_with_rest": "[... 7 lines of <what> omitted, <how to see the rest> ...]",
+      "write_refused_outside": "BLOCKED by sandbox gate: sandbox check REFUSED write: target <target> is NOT under the test output folder <test output dir>. A write outside it can corrupt the canonical source; every agent write must land inside ``test_output_dir``. Check whether the orchestrator forgot to override target_file_path / test_output_dir.. Refused to protect canonical source. Report this as a bug.",
+      "write_refused_unset": "BLOCKED by sandbox gate: sandbox check refused: the test output folder is empty; target='<target>'. The agent's deps must set test_output_dir to the target's tests folder.. Refused to protect canonical source. Report this as a bug."
+    }
+  },
+  "test_mutation": {
+    "tools": {
+      "read_source": {
+        "description": "Read the source of the file under test (line-numbered).\n\nThis tool becomes available after the mandatory initial ``read_tests``\ncall returns. Use it when survivor feedback does not contain enough\nsource context for a targeted edit, or to refresh after a context\ntrim. Pass ``start_line`` / ``end_line`` to page a file past the size\nlimit. An immediate consecutive whole re-read (no other tool call\nbetween) returns a short cached header; calling any other tool resets\nthe counter.",
+        "args": [
+          "end_line",
+          "start_line"
+        ]
+      },
+      "read_tests": {
+        "description": "Read your working file (line-numbered),\nnot the source under test (that is ``read_source``). Pass\n``start_line`` / ``end_line`` to page a file past the size limit.",
+        "args": [
+          "end_line",
+          "start_line"
+        ]
+      },
+      "edit_tests": {
+        "description": "Edit this agent's file by content match (no line numbers). Three\noperations from one tool:\n\n- Insert: anchor ``old_text`` on an existing unique line and put that\n  same line plus the new code in ``new_text``. To add a block, anchor on\n  the line above or below where it goes and include it in ``new_text``.\n- Replace: ``old_text`` is the exact block to swap for ``new_text``.\n- Delete: pass \"\" as ``new_text`` to remove the matched block.\n\n``old_text`` must occur exactly once unless ``replace_all`` is set.\nCopy whitespace and indentation exactly: CRLF is normalized to LF,\nline numbers copied from the read and edit views (``42<TAB>``) and\nmarkdown fences are stripped, and an\nexact miss falls back to a whitespace-loose match that re-indents\n``new_text`` to the file. The edit is rejected, and nothing is written,\non no match, a multi-match, an empty ``old_text``, a result that no\nlonger parses or that the target's parser rejects, a duplicate\ndefinition, or a test that inspects the target's source or bytecode;\nthe file is unverified until the next ``run_tests``.\n\nSeveral edits: pass ``edits``, a list of ``{old_text, new_text}``\nitems, each with an optional ``replace_all``, instead of ``old_text``\nand ``new_text``. They apply in list order, each matched against the\nfile as the previous ones left it, and the checks run once on the\nfinal result: all or nothing, and an error names the failing edit by\nits position. Use the list for changes that depend on each other,\nsuch as a new version of a test and the deletion of the old one, a\nblock header and its body, or swapping two names: one at a time, the\nfirst of them would be rejected. Several separate edit_tests calls in\none reply also apply in call order, each against the file after the\nprevious calls.\n\nArgs:\n    old_text: exact text to find; add surrounding context to make it\n        unique. To insert, this is the anchor line you keep in new_text.\n    new_text: replacement text, required for a single edit; \"\"\n        deletes the matched block.\n    replace_all: replace every occurrence instead of requiring one;\n        in a list, set it on the item.\n    edits: several edits applied in order as one change, with\n        old_text and new_text left out.",
+        "args": [
+          "edits",
+          "new_text",
+          "old_text",
+          "replace_all"
+        ]
+      },
+      "run_tests": {
+        "description": "Run the tests for the file you are editing and report green or red.\n\nReturns a compact summary: pass / fail counts, the first failing\ntracebacks, and any collection errors. A green run that emits\nunsound-async warnings (unawaited coroutines, leaked tasks,\nunraisable exceptions) is reported as RED -- a falsely-passing test\nis not green. A byte-identical re-run with no edit since the last\ncall returns the cached result; edit the file first to make progress.",
+        "args": []
+      },
+      "measure_mutation": {
+        "description": "Run the mutation engine against the target source. The working\nfile is the one collectable suite, so its tests are the\nkill-witnesses.\n\nReturns mutation_score % plus killed / survived / timeout /\nsuspicious counts, plus a sample of surviving-mutant diffs when\nthe engine exposes them.\n\nStop semantics:\n  - goal reached + post-goal patience exhausted -> framework\n    synthesises MutationTestResult and ends the mutation phase\n  - stagnation below goal (streak hits patience) +\n    early_stop_on_stagnation -> same",
+        "args": []
+      }
+    },
+    "final_answer": {
+      "name": "emit_mutation_test_result",
+      "description": "Emit the final structured result for this run. Call this tool ONLY when you have everything you need to return; the args become the run's output.",
+      "result_fields": {
+        "mutation_test_file_name": "Filename of the on-disk working file (e.g. test_encoder.py).",
+        "explanation": "Brief explanation of which surviving mutants you targeted and how.",
+        "targeted_mutants": "Ids of the surviving mutants the new tests target, as the survivor list shows them (the id after '--- mutant').",
+        "mutation_score": "[auto] Final mutation score %.",
+        "mutation_switched": "[auto] Whether the loop switched from the selective proxy to the full catalogue.",
+        "mutation_selective_final": "[auto] Selective-proxy score at the switch (null if no switch).",
+        "mutation_full_at_switch": "[auto] Full-catalogue score the moment the loop switched (null if no switch).",
+        "test_count_mutation": "[auto] Test functions in the revised delivered suite.",
+        "test_loc_mutation": "[auto] LOC in the revised delivered suite.",
+        "agent_iterations": "[auto] Total tool calls in this run.",
+        "agent_duration_s": "[auto] Wall-clock seconds.",
+        "input_tokens": "[auto] Total prompt tokens consumed across model invocations.",
+        "output_tokens": "[auto] Total completion tokens emitted across model invocations.",
+        "cache_hit_tokens": "[auto] Cached-prefix prompt tokens (provider prompt-cache hits), a subset of input_tokens.",
+        "status": "[auto] success | stagnation | budget_exhausted | agent_error | context_overflow | inconclusive | tests_failed | skipped.",
+        "error": "[auto] Error message when status != success.",
+        "measured_suite_sha256": "[auto] SHA-256 of the suite backing mutation_matrix.",
+        "measured_execution_name": "[auto] Execution filename backing mutation_matrix.",
+        "mutation_matrix": "[auto] Latest complete full-catalogue matrix for phase-end reuse.",
+        "measurement_identity": "[auto] Target and instrument identity backing mutation_matrix."
+      }
+    },
+    "loop_breaker": {
+      "file_kind": "working file",
+      "edit_action_text": "edit with ``edit_tests`` to insert, replace, or delete a block",
+      "return_action_text": "return MutationTestResult if the mutation-phase exit conditions are met"
+    },
+    "framework_text": {
+      "tool_failure_result": "The tool failed with a temporary error ({kind}) and may not have completed. Check whether it took effect before calling it again.",
+      "omission_marker": "[... 7 chars of <what> omitted ...]",
+      "omission_marker_counted": "[... 7 <what> omitted ...]",
+      "omission_marker_with_rest": "[... 7 lines of <what> omitted, <how to see the rest> ...]",
+      "write_refused_outside": "BLOCKED by sandbox gate: sandbox check REFUSED write: target <target> is NOT under the test output folder <test output dir>. A write outside it can corrupt the canonical source; every agent write must land inside ``test_output_dir``. Check whether the orchestrator forgot to override target_file_path / test_output_dir.. Refused to protect canonical source. Report this as a bug.",
+      "write_refused_unset": "BLOCKED by sandbox gate: sandbox check refused: the test output folder is empty; target='<target>'. The agent's deps must set test_output_dir to the target's tests folder.. Refused to protect canonical source. Report this as a bug."
+    }
+  }
+}

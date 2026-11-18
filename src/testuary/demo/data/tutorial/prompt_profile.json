@@ -1,0 +1,17 @@
+{
+  "format": 1,
+  "name": "example-language-guidance",
+  "phases": {
+    "coverage": {
+      "system_prompt": {"append": "Cover each branch with one focused test."},
+      "per_language": {
+        "python": {
+          "system_prompt": {"append": "Cover each branch with one focused test. Use pytest.raises for expected exceptions."}
+        },
+        "java": {
+          "system_prompt": {"append": "Cover each branch with one focused test. Use assertThrows for expected exceptions."}
+        }
+      }
+    }
+  }
+}

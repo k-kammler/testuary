@@ -1,0 +1,52 @@
+{
+  "adapter": {
+    "class": "ToyAdapter",
+    "package": "langadapter.tutorial.example",
+    "path": "steps/06_versions.py"
+  },
+  "classes": {
+    "real": 73
+  },
+  "entries": 73,
+  "exemplar": {
+    "instance": "toycalc",
+    "run": "recorded run of Testuary 0.2.0 on calc.toy, 2026-11-12",
+    "target": "calc.toy",
+    "workspace": "calc"
+  },
+  "file_extensions": [
+    ".toy"
+  ],
+  "files": {
+    "NOTICE.md": "a59ac644d887d60b03e703fd32b1aea81ddffa2ae41b30df99ec668fed4c1d92",
+    "models.ini": "996fc073462b2b0955c7c42c3d8bad288f2278ea5ca077c0fb260417bfe62359",
+    "preset.ini": "c9cf46616e29f81cc38f74467911cf4f635cc4af69bdbea21e7c8535b8a9c6fb",
+    "project.json": "1b732c72e7f6493dec82da9300e29571a16c0b780b535cd2d98292f49a0b8f49",
+    "scenario.json.gz": "5f2bf2a3a9a14b5eb0f5cae742ecaba4f6be763deb1eeb4033ebf53720493ad9"
+  },
+  "invocation": {
+    "model": "ollama_deepseek",
+    "options": [],
+    "project": "toycalc",
+    "source_files": "calc.toy"
+  },
+  "language": "toy",
+  "recorded": {
+    "delivered_suite": {
+      "coverage_matrix.json": "0af24456f57643f9e6f58c0b6c33942bf4ab59565f5d3ae8e95e41305aa06167",
+      "kill_matrix.json": "8b6e0ad0b91a7602bdac08f12de701ab76432f3b2cec81d84504bb2d174afbaf",
+      "test_calc.toy": "92ec2603cdc48f1827807f4f5ebddcdeb32d57f0c9d3e8b78c58ca831151f448"
+    },
+    "results": {
+      "branch_coverage": "100.0",
+      "coverage_status": "success",
+      "finishing_status": "success",
+      "line_coverage": "100.0",
+      "mutation_score": "100.0",
+      "mutation_status": "success",
+      "starter_status": "ok"
+    }
+  },
+  "schema_version": 1,
+  "statement": "DEMO, not a measurement. Every model answer and measurement result was recorded in one real run of this Testuary release. The playback runs no model, test, coverage or mutation tool, and contacts no service."
+}

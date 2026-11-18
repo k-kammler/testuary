@@ -1,0 +1,215 @@
+{
+  "classes": {
+    "real": 178
+  },
+  "entries": 178,
+  "exemplar": {
+    "instance": "tenacity",
+    "run": "recorded run of Testuary 0.2.0 on tenacity/wait.py, 2026-11-12",
+    "target": "tenacity/wait.py",
+    "workspace": "tenacity_wait"
+  },
+  "files": {
+    "LICENSE-tenacity.txt": "0d67d6202a4f88a3538e2cf25b90ffe86fc4886b0c6df797ca1b0e20bac97f1d",
+    "NOTICE.md": "2edff80cf65ce3fc1925803a21dcd6f88a32bd55d5ab08e8763fe42a2a81b672",
+    "models.ini": "996fc073462b2b0955c7c42c3d8bad288f2278ea5ca077c0fb260417bfe62359",
+    "preset.ini": "15d3090b25b4c61ac703a056a404936fa127338af4f18588cf0f7ee74e0cfc24",
+    "project.json": "8d23b901c9e31b892e295ce6b5219d69220e0bc93002194bb71ea33cf1170450",
+    "scenario.json.gz": "5d912e959ad2ead2e748cf89615dd99b28e14c748e483d23e0e19b193f2df503"
+  },
+  "invocation": {
+    "model": "ollama_deepseek",
+    "options": [],
+    "project": "tenacity",
+    "source_files": "tenacity/wait.py"
+  },
+  "language": "python",
+  "language_facts": {
+    "{testuary:out}/run/_work/tenacity_wait/tenacity": {
+      "facts": {
+        "code_fence": "python",
+        "language": "Python",
+        "language_level": "Python 3.12",
+        "runtime_version": "Python 3.12.3",
+        "target_code_fence": null,
+        "test_class_pattern": "Test*",
+        "test_file_patterns": [
+          "test_*.py",
+          "*_test.py"
+        ],
+        "test_framework": "pytest",
+        "test_function_pattern": "test_*",
+        "test_language": null,
+        "timeout_marker": null,
+        "unmatched_evidence_kept": true,
+        "unsound_test_patterns": [
+          "coroutine '[^']+' was never awaited",
+          "Task was destroyed but it is pending!",
+          "PytestUnraisableExceptionWarning"
+        ],
+        "version_record": {
+          "implementation": "python",
+          "numbers": [
+            3,
+            12,
+            3
+          ],
+          "source": "context",
+          "text": "Python 3.12.3"
+        }
+      },
+      "vocabulary": {
+        "collection_rule": "Pytest only collects functions whose names start with ``test_`` (or methods on classes starting with ``Test``).",
+        "exception_assertion": "``pytest.raises``",
+        "fake_builtin_rule": "- When a test must fake a built-in function, replace it only in the\n  module under test, for example\n  ``monkeypatch.setattr(module, \"len\", fake, raising=False)``, not in\n  ``builtins``. To simulate a missing optional package, use\n  ``monkeypatch.setitem(sys.modules, \"name\", None)``.",
+        "fixture_term": "fixtures",
+        "import_rule": "imports the target module",
+        "load_error": "collection error",
+        "load_error_patterns": "  - ImportError -> verify the name actually exists in the\n    target module / fix the import path.\n  - SyntaxError / IndentationError -> check the working file for\n    unbalanced brackets, bad indentation, stray characters from\n    a previous edit.\n  - NameError at module top-level -> ensure the name is\n    imported / defined before it's used.",
+        "parametrize_term": "``@pytest.mark.parametrize``",
+        "parse_error_hints": "missing colon at end of def/if/for, unbalanced brackets/parens/quotes, mismatched indentation, accidental code-fence remnants",
+        "real_source": "real Python",
+        "single_file_rule": "Produce one ``test_*.py`` file. Do not create helper files or runner scripts.",
+        "stands_alone_advice": "  1. A test must leave the module under test as it found it. Change\n     it only through monkeypatch, which restores what it set, or\n     restore it in a fixture; reloading the module in place replaces\n     every function and class the later tests use. To run import-time\n     code (an ``if TYPE_CHECKING:`` block, an ``except ImportError:``\n     fallback), reload it in a fixture that first saves\n     ``dict(module.__dict__)`` as ``saved`` and afterwards restores it\n     with ``module.__dict__.clear()`` and ``module.__dict__.update(saved)``.\n  2. A test must restore a library setting it changes: use the\n     library's context manager (np.errstate, np.printoptions,\n     xr.set_options) or save and restore the setting in a fixture.\n  3. A test must not rely on the measurement's fixed random seed or on\n     dask's default scheduler: seed or configure what it uses.",
+        "test_declaration": "``def test_*(...)``",
+        "test_declaration_full": "``def test_*(...):`` function",
+        "test_dependencies": "Test toolkit (always available):\n  - pytest (the runner; @pytest.fixture, @pytest.mark.parametrize, pytest.raises)\n  - unittest.mock (stdlib; Mock, MagicMock, patch, patch.object, sentinel)\nThe project's own ``import`` graph is also available (import the module under test directly). Third-party libraries beyond pytest + unittest.mock are only available if the project's ``requirements.txt`` / ``pyproject.toml`` declares them; check before importing unfamiliar names.",
+        "test_file": "``test_<target_stem>.py``",
+        "timeout_marker": "",
+        "valid_source": "valid Python",
+        "validity_rule": "Allowed: the target's runtime behaviour and documented metadata (attributes, __dict__ and vars(), __name__, __doc__, annotations, inspect.signature). Forbidden: reading or analysing its source text (inspect.getsource, its file) or bytecode (__code__, dis), executing copied source, or attributing synthetic code to its source locations."
+      }
+    },
+    "{testuary:out}/workspace": {
+      "facts": {
+        "code_fence": "python",
+        "language": "Python",
+        "language_level": "Python 3.12",
+        "runtime_version": "Python 3.12.3",
+        "target_code_fence": null,
+        "test_class_pattern": "Test*",
+        "test_file_patterns": [
+          "test_*.py",
+          "*_test.py"
+        ],
+        "test_framework": "pytest",
+        "test_function_pattern": "test_*",
+        "test_language": null,
+        "timeout_marker": null,
+        "unmatched_evidence_kept": true,
+        "unsound_test_patterns": [
+          "coroutine '[^']+' was never awaited",
+          "Task was destroyed but it is pending!",
+          "PytestUnraisableExceptionWarning"
+        ],
+        "version_record": {
+          "implementation": "python",
+          "numbers": [
+            3,
+            12,
+            3
+          ],
+          "source": "context",
+          "text": "Python 3.12.3"
+        }
+      },
+      "vocabulary": {
+        "collection_rule": "Pytest only collects functions whose names start with ``test_`` (or methods on classes starting with ``Test``).",
+        "exception_assertion": "``pytest.raises``",
+        "fake_builtin_rule": "- When a test must fake a built-in function, replace it only in the\n  module under test, for example\n  ``monkeypatch.setattr(module, \"len\", fake, raising=False)``, not in\n  ``builtins``. To simulate a missing optional package, use\n  ``monkeypatch.setitem(sys.modules, \"name\", None)``.",
+        "fixture_term": "fixtures",
+        "import_rule": "imports the target module",
+        "load_error": "collection error",
+        "load_error_patterns": "  - ImportError -> verify the name actually exists in the\n    target module / fix the import path.\n  - SyntaxError / IndentationError -> check the working file for\n    unbalanced brackets, bad indentation, stray characters from\n    a previous edit.\n  - NameError at module top-level -> ensure the name is\n    imported / defined before it's used.",
+        "parametrize_term": "``@pytest.mark.parametrize``",
+        "parse_error_hints": "missing colon at end of def/if/for, unbalanced brackets/parens/quotes, mismatched indentation, accidental code-fence remnants",
+        "real_source": "real Python",
+        "single_file_rule": "Produce one ``test_*.py`` file. Do not create helper files or runner scripts.",
+        "stands_alone_advice": "  1. A test must leave the module under test as it found it. Change\n     it only through monkeypatch, which restores what it set, or\n     restore it in a fixture; reloading the module in place replaces\n     every function and class the later tests use. To run import-time\n     code (an ``if TYPE_CHECKING:`` block, an ``except ImportError:``\n     fallback), reload it in a fixture that first saves\n     ``dict(module.__dict__)`` as ``saved`` and afterwards restores it\n     with ``module.__dict__.clear()`` and ``module.__dict__.update(saved)``.\n  2. A test must restore a library setting it changes: use the\n     library's context manager (np.errstate, np.printoptions,\n     xr.set_options) or save and restore the setting in a fixture.\n  3. A test must not rely on the measurement's fixed random seed or on\n     dask's default scheduler: seed or configure what it uses.",
+        "test_declaration": "``def test_*(...)``",
+        "test_declaration_full": "``def test_*(...):`` function",
+        "test_dependencies": "Test toolkit (always available):\n  - pytest (the runner; @pytest.fixture, @pytest.mark.parametrize, pytest.raises)\n  - unittest.mock (stdlib; Mock, MagicMock, patch, patch.object, sentinel)\nThe project's own ``import`` graph is also available (import the module under test directly). Third-party libraries beyond pytest + unittest.mock are only available if the project's ``requirements.txt`` / ``pyproject.toml`` declares them; check before importing unfamiliar names.",
+        "test_file": "``test_<target_stem>.py``",
+        "timeout_marker": "",
+        "valid_source": "valid Python",
+        "validity_rule": "Allowed: the target's runtime behaviour and documented metadata (attributes, __dict__ and vars(), __name__, __doc__, annotations, inspect.signature). Forbidden: reading or analysing its source text (inspect.getsource, its file) or bytecode (__code__, dis), executing copied source, or attributing synthetic code to its source locations."
+      }
+    },
+    "{testuary:out}/workspace/projects/tenacity": {
+      "facts": {
+        "code_fence": "python",
+        "language": "Python",
+        "language_level": "Python 3.12",
+        "runtime_version": "Python 3.12.3",
+        "target_code_fence": null,
+        "test_class_pattern": "Test*",
+        "test_file_patterns": [
+          "test_*.py",
+          "*_test.py"
+        ],
+        "test_framework": "pytest",
+        "test_function_pattern": "test_*",
+        "test_language": null,
+        "timeout_marker": null,
+        "unmatched_evidence_kept": true,
+        "unsound_test_patterns": [
+          "coroutine '[^']+' was never awaited",
+          "Task was destroyed but it is pending!",
+          "PytestUnraisableExceptionWarning"
+        ],
+        "version_record": {
+          "implementation": "python",
+          "numbers": [
+            3,
+            12,
+            3
+          ],
+          "source": "context",
+          "text": "Python 3.12.3"
+        }
+      },
+      "vocabulary": {
+        "collection_rule": "Pytest only collects functions whose names start with ``test_`` (or methods on classes starting with ``Test``).",
+        "exception_assertion": "``pytest.raises``",
+        "fake_builtin_rule": "- When a test must fake a built-in function, replace it only in the\n  module under test, for example\n  ``monkeypatch.setattr(module, \"len\", fake, raising=False)``, not in\n  ``builtins``. To simulate a missing optional package, use\n  ``monkeypatch.setitem(sys.modules, \"name\", None)``.",
+        "fixture_term": "fixtures",
+        "import_rule": "imports the target module",
+        "load_error": "collection error",
+        "load_error_patterns": "  - ImportError -> verify the name actually exists in the\n    target module / fix the import path.\n  - SyntaxError / IndentationError -> check the working file for\n    unbalanced brackets, bad indentation, stray characters from\n    a previous edit.\n  - NameError at module top-level -> ensure the name is\n    imported / defined before it's used.",
+        "parametrize_term": "``@pytest.mark.parametrize``",
+        "parse_error_hints": "missing colon at end of def/if/for, unbalanced brackets/parens/quotes, mismatched indentation, accidental code-fence remnants",
+        "real_source": "real Python",
+        "single_file_rule": "Produce one ``test_*.py`` file. Do not create helper files or runner scripts.",
+        "stands_alone_advice": "  1. A test must leave the module under test as it found it. Change\n     it only through monkeypatch, which restores what it set, or\n     restore it in a fixture; reloading the module in place replaces\n     every function and class the later tests use. To run import-time\n     code (an ``if TYPE_CHECKING:`` block, an ``except ImportError:``\n     fallback), reload it in a fixture that first saves\n     ``dict(module.__dict__)`` as ``saved`` and afterwards restores it\n     with ``module.__dict__.clear()`` and ``module.__dict__.update(saved)``.\n  2. A test must restore a library setting it changes: use the\n     library's context manager (np.errstate, np.printoptions,\n     xr.set_options) or save and restore the setting in a fixture.\n  3. A test must not rely on the measurement's fixed random seed or on\n     dask's default scheduler: seed or configure what it uses.",
+        "test_declaration": "``def test_*(...)``",
+        "test_declaration_full": "``def test_*(...):`` function",
+        "test_dependencies": "Test toolkit (always available):\n  - pytest (the runner; @pytest.fixture, @pytest.mark.parametrize, pytest.raises)\n  - unittest.mock (stdlib; Mock, MagicMock, patch, patch.object, sentinel)\nThe project's own ``import`` graph is also available (import the module under test directly). Third-party libraries beyond pytest + unittest.mock are only available if the project's ``requirements.txt`` / ``pyproject.toml`` declares them; check before importing unfamiliar names.",
+        "test_file": "``test_<target_stem>.py``",
+        "timeout_marker": "",
+        "valid_source": "valid Python",
+        "validity_rule": "Allowed: the target's runtime behaviour and documented metadata (attributes, __dict__ and vars(), __name__, __doc__, annotations, inspect.signature). Forbidden: reading or analysing its source text (inspect.getsource, its file) or bytecode (__code__, dis), executing copied source, or attributing synthetic code to its source locations."
+      }
+    }
+  },
+  "recorded": {
+    "delivered_suite": {
+      "conftest.py": "d9a03d148c1ad2622ba8924c6ebe8c42c7d84456c40ec98ed129942ceceb4b26",
+      "coverage_matrix.json": "2245adf1d6727f3677a54f6c9dc8f10680b14bbcd4e26612017d6bc75091e07a",
+      "kill_matrix.json": "0f26f6744e59da3e26f077db369323ad28c892d1871d99a467f833c2e4c19b9d",
+      "project_pytest.toml": "83eff09c14d64e9a6092e5cad65312eb06ceb06ea96e9d2fd32859e4e8af9aae",
+      "pytest.ini": "cef23620de0ede73959185ff2502128b60d4534877378bcedf891daa7d80ff5b",
+      "test_wait.py": "337edb450643664c9d0b338fd25cbd697e3242e182e757aa14210046b43b8ca3"
+    },
+    "results": {
+      "branch_coverage": "100.0",
+      "coverage_status": "success",
+      "finishing_status": "success",
+      "line_coverage": "100.0",
+      "mutation_score": "99.6875",
+      "mutation_status": "budget_exhausted",
+      "starter_status": "ok"
+    }
+  },
+  "schema_version": 1,
+  "statement": "DEMO, not a measurement. Every model answer and measurement result was recorded in one real run of this Testuary release. The playback runs no model, test, coverage or mutation tool, and contacts no service."
+}

@@ -1,0 +1,86 @@
+{
+  "schema": 1,
+  "consumer": "testuary",
+  "title": "Testuary",
+  "tutorial": {
+    "title": "Run Testuary on the Toy",
+    "text": [
+      "The adapter is ready for Testuary. A real Testuary run asks a language model for tests, which needs a model service and may cost money. This step plays a recorded Testuary run of the Toy instead. Every model answer and measurement comes from the recording, and the playback runs no tool and contacts no service.",
+      "The run was recorded with this tutorial's prepared adapter, so it shows the prepared solution even where you kept your own version. Its records go to testuary-run in this directory.",
+      "For a real run of your own language, name the file langadapter new-language writes in [main] extensions of the project's settings file, and select the language: testuary --languages <name> with your project and model."
+    ],
+    "command": ["testuary", "--demo", "--demo-language", "toy", "--output-dir", "testuary-run"],
+    "install": "Testuary is a separate package: python -m pip install testuary"
+  },
+  "levels": [
+    {
+      "level": 1,
+      "title": "Run, coverage, mutation",
+      "families": [
+        {"family": "run tests", "tier": "required"},
+        {"family": "coverage", "tier": "required"},
+        {"family": "mutation", "tier": "required"}
+      ]
+    },
+    {
+      "level": 2,
+      "title": "Load repair",
+      "families": [
+        {"family": "load repair", "tier": "optional",
+         "improves": "keeps generated suites that fail to load, repaired",
+         "fallback": "a generated suite that does not load is discarded"},
+        {"family": "import pruning", "tier": "optional",
+         "improves": "keeps generated suites whose only fault is an import that does not resolve",
+         "fallback": "a generated suite with an unresolvable import does not load and is discarded"}
+      ]
+    },
+    {
+      "level": 3,
+      "title": "Further improvements",
+      "families": [
+        {"family": "syntax repair", "tier": "optional",
+         "improves": "keeps suites with a local syntax error, repaired",
+         "fallback": "a suite that does not parse is discarded"},
+        {"family": "skip removal", "tier": "optional",
+         "improves": "keeps whole-file skips from hiding the tests of a suite",
+         "fallback": "whole-file skips stay, and a suite without a passing test is rejected"},
+        {"family": "import guidance", "tier": "optional",
+         "improves": "names in the starter prompt the import line a test needs, or that it needs none",
+         "fallback": "the starter prompt asks the model to follow the language's import conventions"},
+        {"family": "kill attribution", "tier": "optional",
+         "improves": "reduces suites while keeping every mutant kill",
+         "fallback": "the suite reductions that must keep every kill are skipped"},
+        {"family": "merging", "tier": "optional",
+         "improves": "combines a phase's candidate suites into one",
+         "fallback": "the better single candidate is kept, by mutation score, then branch coverage, then line coverage, then the timing tie-break"},
+        {"family": "per-test evidence", "tier": "optional",
+         "improves": "reduces suites to the tests that add coverage or kills",
+         "fallback": "suite reduction is skipped and each phase chooses among unreduced suites. Each starter suite is scored on its own measurements"},
+        {"family": "instrumentation", "tier": "optional",
+         "improves": "finds the tests whose run warns of leaked state, such as an unawaited coroutine: the starter suites' cleanup removes them, and a loop counts their passing run as failing",
+         "fallback": "such tests are neither removed nor counted as failing"},
+        {"family": "delivered runs", "tier": "optional",
+         "improves": "runs a suite the way a user would run it, as the normal run of a language whose runs as delivered take a session seed and for the reverse-order note",
+         "fallback": "the normal run is the language's own test run, and the reverse-order note is off"},
+        {"family": "validity screening", "tier": "optional",
+         "improves": "rejects generated tests that read the implementation",
+         "fallback": "such tests are not rejected"},
+        {"family": "timing", "tier": "optional",
+         "improves": "tells equal suites apart by their run time and records it",
+         "fallback": "the timing tie-break is off, the input order decides, and no run time is recorded"},
+        {"family": "versions", "tier": "optional",
+         "improves": "notes runtime versions and refuses unsupported ones",
+         "fallback": "every runtime version is reported as untested"},
+        {"family": "containers", "tier": "optional",
+         "improves": "runs suites in a container",
+         "fallback": "suites run on this machine only"},
+        {"family": "structural metrics", "tier": "optional",
+         "improves": "reports sizes and complexity in Finishing",
+         "fallback": "those columns stay empty"},
+        {"family": "code smells", "tier": "optional",
+         "improves": "counts lint findings (measure_lint)",
+         "fallback": "those columns stay empty"}
+      ]
+    }
+  ]
+}

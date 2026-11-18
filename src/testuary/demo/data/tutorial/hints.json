@@ -1,0 +1,7 @@
+{
+  "coverage": {
+    "per_language": {
+      "python": "Prefer plain assert statements over assertion helpers."
+    }
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "classes": {
+    "real": 169
+  },
+  "entries": 169,
+  "exemplar": {
+    "instance": "jsonassert",
+    "run": "recorded run of Testuary 0.2.0 on JSONCompare.java, 2026-11-12",
+    "target": "src/main/java/org/skyscreamer/jsonassert/JSONCompare.java",
+    "workspace": "src_main_java_org_skyscreamer_jsonassert_JSONCompare"
+  },
+  "files": {
+    "LICENSE-jsonassert.txt": "901ff15abfbac7fa264e6309fb5dbbb18654626e12461ad7c994ea77f4607d6b",
+    "NOTICE.md": "19c5cfaf7370a6bacbc00c4f71d8138c4c49d1df480621c2ebb176d0bb5f2c15",
+    "models.ini": "996fc073462b2b0955c7c42c3d8bad288f2278ea5ca077c0fb260417bfe62359",
+    "preset.ini": "7cee8869da950f50694631a123d06405a29409bd0d7848b8b8214afe891c8282",
+    "project.json": "784869a710fb86b8853806860ed299064d29450ef33d2bdf09a7330c065b31dc",
+    "scenario.json.gz": "ba3a7f1ac7ee37f95c64685ff999d3b8e66da84042c0e0bef1f2e392884903ae"
+  },
+  "invocation": {
+    "model": "ollama_deepseek",
+    "options": [],
+    "project": "jsonassert",
+    "source_files": "src/main/java/org/skyscreamer/jsonassert/JSONCompare.java"
+  },
+  "language": "java",
+  "language_facts": {
+    "{testuary:out}/run/_work/src_main_java_org_skyscreamer_jsonassert_JSONCompare/jsonassert": {
+      "facts": {
+        "code_fence": "java",
+        "language": "Java",
+        "language_level": "Java 8",
+        "runtime_version": "21.0.12.1",
+        "target_code_fence": null,
+        "test_class_pattern": "*Test",
+        "test_file_patterns": [
+          "*Test.java",
+          "*Tests.java",
+          "*TestCase.java"
+        ],
+        "test_framework": "JUnit 4",
+        "test_function_pattern": "@Test",
+        "test_language": null,
+        "timeout_marker": "@Test(timeout = {seconds}000)",
+        "unmatched_evidence_kept": false,
+        "unsound_test_patterns": [],
+        "version_record": {
+          "implementation": "java",
+          "numbers": [
+            21,
+            0,
+            12,
+            1
+          ],
+          "source": "release file",
+          "text": "21.0.12.1"
+        }
+      },
+      "vocabulary": {
+        "collection_rule": "JUnit 4 runs the methods annotated with ``@Test`` (``org.junit.Test``) of the test class.",
+        "exception_assertion": "``@Test(expected = ...)``",
+        "fake_builtin_rule": "",
+        "fixture_term": "lifecycle methods (``@Before``, ``@After``)",
+        "import_rule": "declares the target's package and uses the target class directly",
+        "load_error": "compilation error",
+        "load_error_patterns": "  - cannot find symbol -> import the class from its package, or fix\n    the name of the class, method or field.\n  - package ... does not exist -> import only packages the project or\n    its test dependencies provide.\n  - incompatible types / cannot be applied to given types -> pass the\n    types the target's signatures declare.\n  - unreported exception ... must be caught or declared to be thrown\n    -> declare the test method ``throws Exception``.\n  - ';' expected / reached end of file while parsing -> check the\n    working file for unbalanced braces or parentheses and stray\n    characters from a previous edit.",
+        "parametrize_term": "the ``Parameterized`` runner",
+        "parse_error_hints": "missing semicolon or closing brace, unbalanced parentheses or quotes, a statement outside a method, accidental code-fence remnants",
+        "real_source": "real Java",
+        "single_file_rule": "Produce one test class in one ``.java`` file, named for the class, in the target's package. Do not create helper files.",
+        "stands_alone_advice": "  1. A test file must compile and run on its own: declare in it\n     every helper class it uses, not in another test file.\n  2. A test class must set up what it needs in its own ``@Before``\n     or ``@BeforeClass`` methods, not rely on what another test class\n     leaves behind (static fields, singletons, files it writes).\n  3. A test must restore what it changes beyond itself in\n     ``@After``: static fields and singletons, System properties,\n     the default Locale and TimeZone.",
+        "test_declaration": "``@Test void name()``",
+        "test_declaration_full": "``@Test`` method (``org.junit.Test``)",
+        "test_dependencies": "Test toolkit (always available):\n  - JUnit 4 (``org.junit.Test``, ``org.junit.Assert``)\nThe project's own classes and its declared test dependencies are also available; other libraries are available only if the project's build declares them.",
+        "test_file": "``<TargetClass>Test.java``",
+        "timeout_marker": "@Test(timeout = {seconds}000)",
+        "valid_source": "valid Java",
+        "validity_rule": "Allowed: the target's runtime behaviour and its API, including reflection on its classes (getDeclaredMethods, getAnnotations). Forbidden: reading its source file (the .java file through Files, a reader or stream, a Scanner or getResource) or its compiled class file (the .class bytes through getResource or a file), or declaring a type named like its class, which would test a copy in its place."
+      }
+    },
+    "{testuary:out}/workspace": {
+      "facts": {
+        "code_fence": "java",
+        "language": "Java",
+        "language_level": null,
+        "runtime_version": "21.0.12.1",
+        "target_code_fence": null,
+        "test_class_pattern": "*Test",
+        "test_file_patterns": [
+          "*Test.java",
+          "*Tests.java",
+          "*TestCase.java"
+        ],
+        "test_framework": "JUnit 5",
+        "test_function_pattern": "@Test",
+        "test_language": null,
+        "timeout_marker": "@Timeout({seconds})",
+        "unmatched_evidence_kept": false,
+        "unsound_test_patterns": [],
+        "version_record": {
+          "implementation": "java",
+          "numbers": [
+            21,
+            0,
+            12,
+            1
+          ],
+          "source": "release file",
+          "text": "21.0.12.1"
+        }
+      },
+      "vocabulary": {
+        "collection_rule": "JUnit 5 runs the methods annotated with ``@Test`` (``org.junit.jupiter.api.Test``) of the test class.",
+        "exception_assertion": "``assertThrows``",
+        "fake_builtin_rule": "",
+        "fixture_term": "lifecycle methods (``@BeforeEach``, ``@AfterEach``)",
+        "import_rule": "declares the target's package and uses the target class directly",
+        "load_error": "compilation error",
+        "load_error_patterns": "  - cannot find symbol -> import the class from its package, or fix\n    the name of the class, method or field.\n  - package ... does not exist -> import only packages the project or\n    its test dependencies provide.\n  - incompatible types / cannot be applied to given types -> pass the\n    types the target's signatures declare.\n  - unreported exception ... must be caught or declared to be thrown\n    -> declare the test method ``throws Exception``.\n  - ';' expected / reached end of file while parsing -> check the\n    working file for unbalanced braces or parentheses and stray\n    characters from a previous edit.",
+        "parametrize_term": "``@ParameterizedTest``",
+        "parse_error_hints": "missing semicolon or closing brace, unbalanced parentheses or quotes, a statement outside a method, accidental code-fence remnants",
+        "real_source": "real Java",
+        "single_file_rule": "Produce one test class in one ``.java`` file, named for the class, in the target's package. Do not create helper files.",
+        "stands_alone_advice": "  1. A test file must compile and run on its own: declare in it\n     every helper class it uses, not in another test file.\n  2. A test class must set up what it needs in its own ``@BeforeEach``\n     or ``@BeforeAll`` methods, not rely on what another test class\n     leaves behind (static fields, singletons, files it writes).\n  3. A test must restore what it changes beyond itself in\n     ``@AfterEach``: static fields and singletons, System properties,\n     the default Locale and TimeZone.",
+        "test_declaration": "``@Test void name()``",
+        "test_declaration_full": "``@Test`` method (``org.junit.jupiter.api.Test``)",
+        "test_dependencies": "Test toolkit (always available):\n  - JUnit 5 (``org.junit.jupiter.api.Test``, ``org.junit.jupiter.api.Assertions``)\nThe project's own classes and its declared test dependencies are also available; other libraries are available only if the project's build declares them.",
+        "test_file": "``<TargetClass>Test.java``",
+        "timeout_marker": "@Timeout({seconds})",
+        "valid_source": "valid Java",
+        "validity_rule": "Allowed: the target's runtime behaviour and its API, including reflection on its classes (getDeclaredMethods, getAnnotations). Forbidden: reading its source file (the .java file through Files, a reader or stream, a Scanner or getResource) or its compiled class file (the .class bytes through getResource or a file), or declaring a type named like its class, which would test a copy in its place."
+      }
+    },
+    "{testuary:out}/workspace/projects/jsonassert": {
+      "facts": {
+        "code_fence": "java",
+        "language": "Java",
+        "language_level": "Java 8",
+        "runtime_version": "21.0.12.1",
+        "target_code_fence": null,
+        "test_class_pattern": "*Test",
+        "test_file_patterns": [
+          "*Test.java",
+          "*Tests.java",
+          "*TestCase.java"
+        ],
+        "test_framework": "JUnit 4",
+        "test_function_pattern": "@Test",
+        "test_language": null,
+        "timeout_marker": "@Test(timeout = {seconds}000)",
+        "unmatched_evidence_kept": false,
+        "unsound_test_patterns": [],
+        "version_record": {
+          "implementation": "java",
+          "numbers": [
+            21,
+            0,
+            12,
+            1
+          ],
+          "source": "release file",
+          "text": "21.0.12.1"
+        }
+      },
+      "vocabulary": {
+        "collection_rule": "JUnit 4 runs the methods annotated with ``@Test`` (``org.junit.Test``) of the test class.",
+        "exception_assertion": "``@Test(expected = ...)``",
+        "fake_builtin_rule": "",
+        "fixture_term": "lifecycle methods (``@Before``, ``@After``)",
+        "import_rule": "declares the target's package and uses the target class directly",
+        "load_error": "compilation error",
+        "load_error_patterns": "  - cannot find symbol -> import the class from its package, or fix\n    the name of the class, method or field.\n  - package ... does not exist -> import only packages the project or\n    its test dependencies provide.\n  - incompatible types / cannot be applied to given types -> pass the\n    types the target's signatures declare.\n  - unreported exception ... must be caught or declared to be thrown\n    -> declare the test method ``throws Exception``.\n  - ';' expected / reached end of file while parsing -> check the\n    working file for unbalanced braces or parentheses and stray\n    characters from a previous edit.",
+        "parametrize_term": "the ``Parameterized`` runner",
+        "parse_error_hints": "missing semicolon or closing brace, unbalanced parentheses or quotes, a statement outside a method, accidental code-fence remnants",
+        "real_source": "real Java",
+        "single_file_rule": "Produce one test class in one ``.java`` file, named for the class, in the target's package. Do not create helper files.",
+        "stands_alone_advice": "  1. A test file must compile and run on its own: declare in it\n     every helper class it uses, not in another test file.\n  2. A test class must set up what it needs in its own ``@Before``\n     or ``@BeforeClass`` methods, not rely on what another test class\n     leaves behind (static fields, singletons, files it writes).\n  3. A test must restore what it changes beyond itself in\n     ``@After``: static fields and singletons, System properties,\n     the default Locale and TimeZone.",
+        "test_declaration": "``@Test void name()``",
+        "test_declaration_full": "``@Test`` method (``org.junit.Test``)",
+        "test_dependencies": "Test toolkit (always available):\n  - JUnit 4 (``org.junit.Test``, ``org.junit.Assert``)\nThe project's own classes and its declared test dependencies are also available; other libraries are available only if the project's build declares them.",
+        "test_file": "``<TargetClass>Test.java``",
+        "timeout_marker": "@Test(timeout = {seconds}000)",
+        "valid_source": "valid Java",
+        "validity_rule": "Allowed: the target's runtime behaviour and its API, including reflection on its classes (getDeclaredMethods, getAnnotations). Forbidden: reading its source file (the .java file through Files, a reader or stream, a Scanner or getResource) or its compiled class file (the .class bytes through getResource or a file), or declaring a type named like its class, which would test a copy in its place."
+      }
+    }
+  },
+  "recorded": {
+    "delivered_suite": {
+      "JSONCompareTest.java": "177ceac2231c9f615e88320799ceb1803766968ceaa3a38c5f57d6ab0e09e87a",
+      "coverage_matrix.json": "30869c82d1edbbd0a4e61650d379b7d55744de5ae0f9b318d46fb7b2ce42aab6",
+      "kill_matrix.json": "384fcb9305d6d240779e3bdd10c994e8e48e830ac8f6a1d6d17b75f780f2b39b"
+    },
+    "results": {
+      "branch_coverage": "100.0",
+      "coverage_status": "success",
+      "finishing_status": "success",
+      "line_coverage": "100.0",
+      "mutation_score": "95.23809523809524",
+      "mutation_status": "budget_exhausted",
+      "starter_status": "ok"
+    }
+  },
+  "schema_version": 1,
+  "statement": "DEMO, not a measurement. Every model answer and measurement result was recorded in one real run of this Testuary release. The playback runs no model, test, coverage or mutation tool, and contacts no service."
+}

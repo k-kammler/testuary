@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use Testuary, please cite it as below."
+type: software
+title: "Testuary"
+abstract: >-
+  Testuary writes unit tests for Python, Java and C code with a language
+  model. It runs the tests, measures which lines and branches they cover and
+  how many mutants (small deliberate bugs) they catch, and asks the model for
+  more tests wherever something is still missed, until your goals or limits
+  are reached. It then keeps only the tests that add coverage or catch an
+  extra mutant, and hands you the finished test suite with its measurements.
+authors:
+  - family-names: "Kammler"
+    given-names: "Kevin"
+license: MIT
+version: "0.2.0"
+keywords:
+  - test generation
+  - mutation testing
+  - large language models
+  - automated testing
+repository-code: "https://github.com/k-kammler/testuary"
+url: "https://github.com/k-kammler/testuary"
