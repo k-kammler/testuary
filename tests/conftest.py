@@ -101,8 +101,8 @@ def _own_user_dir(tmp_path_factory, monkeypatch: pytest.MonkeyPatch) -> None:
 
 @pytest.fixture(autouse=True)
 def _discovered_project_interpreter(request, monkeypatch: pytest.MonkeyPatch) -> None:
-    """A run that selects no project interpreter discovers one or refuses;
-    this session's interpreter stands in for the discovered environment, so
+    """A run that selects no project interpreter discovers one or refuses.
+    This session's interpreter stands in for the discovered environment, so
     tests about other behavior need not select one. A module that tests the
     discovery itself sets ``REAL_INTERPRETER_DISCOVERY = True``."""
     if not getattr(request.module, "REAL_INTERPRETER_DISCOVERY", False):
@@ -121,7 +121,7 @@ _PYTEST_CONFIGURATIONS = (("pytest.ini", "[pytest]"), ("pyproject.toml", "[tool.
 @pytest.fixture(autouse=True)
 def _stand_in_pytest_configuration(monkeypatch: pytest.MonkeyPatch) -> None:
     """LangAdapter asks pytest in the project's interpreter which configuration
-    file it reads; tests whose executors are stand-ins cannot run it, so in
+    file it reads. Tests whose executors are stand-ins cannot run it, so in
     every test the first of pytest's files in the project's root that holds
     its section stands in. LangAdapter's own tests check the real lookup."""
     from langadapter.python import adapter as python_adapter
@@ -308,7 +308,7 @@ def in_run(tmp_path: Path) -> Iterator:
     default from the user directory's files, the test's TESTUARY_ variables, no
     catalogue and no project settings file, with ``tmp_path`` as the
     project) and enters them for the rest of the test, leaving the run an
-    earlier call entered; it returns them. ``in_run.leave()`` leaves it, for
+    earlier call entered. It returns them. ``in_run.leave()`` leaves it, for
     a test that starts its own run. Configuration is read inside a run
     only."""
     stack = contextlib.ExitStack()
@@ -330,7 +330,7 @@ def in_run(tmp_path: Path) -> Iterator:
 @pytest.fixture
 def default_run(in_run):
     """A run of the bundled defaults with a model selected, as every real run
-    has one, for modules whose tests read configuration; a test replaces it
+    has one, for modules whose tests read configuration. A test replaces it
     with ``in_run(...)``. No model is called."""
     return in_run(overrides={"api": {"provider": "ollama", "model": "test-model"}})
 

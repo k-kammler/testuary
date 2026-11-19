@@ -289,7 +289,7 @@ def test_a_phase_section_takes_only_the_keys_its_phase_reads(section, key, accep
 
 
 def test_a_settings_value_names_every_layer_that_sets_it(tmp_path):
-    """``source`` is the layer whose value is in force; ``sources`` names
+    """``source`` is the layer whose value is in force, and ``sources`` names
     every layer that sets the key, in input order, so a program can offer a
     reset for a level another one overrides. No value is added."""
     first = tmp_path / "first.ini"

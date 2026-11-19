@@ -574,8 +574,8 @@ def consolidation_mutation_method() -> str:
     method = raw.lower() or "both"
     if method not in REDUCED_SUITE_MUTATION_METHODS:
         raise ValueError(
-            f"{source} = {raw!r} is not a reduced-suite mutation method; "
-            f"choose one of {', '.join(REDUCED_SUITE_MUTATION_METHODS)}"
+            f"{source} = {raw!r} is not a reduced-suite mutation method. "
+            f"Choose one of {', '.join(REDUCED_SUITE_MUTATION_METHODS)}"
         )
     return method
 
@@ -593,8 +593,8 @@ def context_rebuild() -> str:
     value = raw.lower() or "mode_change"
     if value not in CONTEXT_REBUILDS:
         raise ValueError(
-            f"{source} = {raw!r} is not a context rebuild policy; "
-            f"choose one of {', '.join(CONTEXT_REBUILDS)}"
+            f"{source} = {raw!r} is not a context rebuild policy. "
+            f"Choose one of {', '.join(CONTEXT_REBUILDS)}"
         )
     return value
 
@@ -606,8 +606,8 @@ def _reduction_tie_break_setting(raw: object) -> str:
     value = str(raw).strip().lower()
     if value not in TIE_BREAKS:
         raise ValueError(
-            f"reduction_tie_break must be one of {', '.join(TIE_BREAKS)}; "
-            f"got {raw!r}")
+            f"reduction_tie_break must be one of {', '.join(TIE_BREAKS)}, "
+            f"not {raw!r}")
     return value
 
 
@@ -681,7 +681,7 @@ def require_config(config: Dict[str, Any], key: str) -> Any:
     except KeyError:
         raise KeyError(
             f"config key {key!r} is missing. Methodology-relevant keys have "
-            f"no code-side default; the bundled config.ini (or the dict "
+            f"no code-side default. The bundled config.ini (or the dict "
             f"passed in) must define it.") from None
 
 

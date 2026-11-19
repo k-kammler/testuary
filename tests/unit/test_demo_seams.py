@@ -208,7 +208,7 @@ def test_without_a_source_the_exact_reduction_runs_the_solver():
 
 def test_a_backend_override_replaces_and_restores():
     original = languages.get_backend("python")
-    # The registry keeps file_extensions on its adapter; a stand-in must accept it.
+    # The registry keeps file_extensions on its adapter. A stand-in must accept it.
     stand_in = LanguageBackend()
     previous = languages.override_backend("python", stand_in)
     try:

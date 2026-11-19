@@ -1,6 +1,6 @@
-"""The setup's questions offer what it finds: the installed languages, the
-project's first, with how many files each has; the project's environments
-and the Pythons on PATH; the catalogue's usable model aliases. A
+"""The setup's questions offer what it finds: the installed languages (the
+project's first, with how many files each has), the project's environments
+and the Pythons on PATH, and the catalogue's usable model aliases. A
 console answer may be a choice's number."""
 from __future__ import annotations
 

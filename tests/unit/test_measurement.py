@@ -605,7 +605,7 @@ def _timing_backend(stats):
 
 
 def test_measure_suite_time_populates_fields(monkeypatch) -> None:
-    """A green benchmark sets the median, the ';'-joined samples, reps and
+    """A green benchmark sets the median, the samples joined by semicolons, reps and
     warmup on the metrics object. The early-stop hook is passed disabled
     (None) so the measurement matches the baseline's."""
     backend, seen = _timing_backend({

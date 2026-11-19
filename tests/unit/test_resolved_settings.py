@@ -69,7 +69,7 @@ def test_invalid_settings_fail_before_execution(sections, message):
 
 def test_mutation_takes_its_own_goal_keys_and_refuses_coverage_only_ones(tmp_cwd):
     """[mutation]'s goal, minimum, restore_count and extra_measurements_after_goal share
-    [coverage]'s names but are its own; goal_metric stays coverage's."""
+    [coverage]'s names but are its own, and goal_metric stays coverage's."""
     path = tmp_cwd / "goals.ini"
     path.write_text("[coverage]\ngoal=91\n[mutation]\ngoal=70\nminimum=60\nrestore_count=2\n"
                     "extra_measurements_after_goal=1\n", encoding="utf-8")

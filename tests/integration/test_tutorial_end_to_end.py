@@ -30,7 +30,8 @@ def test_the_tutorial_plays_every_step_and_its_checks_pass(tmp_path, monkeypatch
     assert play(tutorial.tutorial(), tutorial_dir, mode=INSTANT, out=out) == 0, out.getvalue()
     captured = capfd.readouterr()
     commands = captured.out + captured.err
-    assert commands.count("No problems found by a quick check") == 3, commands
+    assert commands.count("The quick check found no problem in what it tried.") == 3, commands
+    assert "No problems found" not in commands
     text = out.getvalue()
     assert "Step 4 of 6 (optional): Hints from an extension" in text
     assert "ended with status" not in text

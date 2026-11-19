@@ -2009,8 +2009,8 @@ class CodingAgent(EditTool):
                 for binding in result.removed_bindings
             ))
             raise RuntimeError(
-                f"{stage} suite contains shadowed definitions ({names}); "
-                "the suite was not rewritten because its measurements would "
+                f"{stage} suite contains shadowed definitions ({names}). "
+                "The suite was not rewritten because its measurements would "
                 "be stale"
             )
 

@@ -69,7 +69,7 @@ def test_two_ctrl_c_during_a_coverage_tool_leave_nothing(tmp_path, monkeypatch, 
 
     def write(fd, data):
         # The child module marks the tool's start and the first stop's
-        # cancel on stdout; here they drive the interrupts.
+        # cancel on stdout, and here they drive the interrupts.
         if fd == 1 and data in (b"RUNNING\n", b"CANCELLING\n"):
             written.append(data.strip().decode())
             if data == b"RUNNING\n" and "first" not in events:

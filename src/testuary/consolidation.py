@@ -862,7 +862,7 @@ def _merge_sources_inner(
             f"(shadowed duplicate or unrenamable binding)")
     if resolution.ejected:
         reasons = list(getattr(resolution, "eject_reasons", ()) or ())
-        why = "; ".join(
+        why = ", ".join(
             f"source {index}: {reasons[n] if n < len(reasons) else 'ejected'}"
             for n, index in enumerate(resolution.ejected))
         log(
@@ -1743,7 +1743,7 @@ def _evidence_disagreement(line: Optional[float], branch: Optional[float],
     evidence_line, evidence_branch = _evidence_percents(data)
     if coverage_disagreement(line, branch, evidence_line, evidence_branch):
         return (f"line coverage {line} {measured}, {evidence_line} in the "
-                f"evidence; branch coverage {branch} {measured}, {evidence_branch} "
+                f"evidence, and branch coverage {branch} {measured}, {evidence_branch} "
                 "in the evidence")
     return None
 
@@ -1967,7 +1967,7 @@ def _record_per_test_evidence(
             )
             return _fall_back(
                 res,
-                "the merged suite's per-test coverage run could not measure it; "
+                "the merged suite's per-test coverage run could not measure it, so "
                 f"the reduced candidate is unavailable: {reason}",
                 "eviction_test_failure", ["merged_unreduced"],
                 _union_bloat_stats(None, union_tests=res.pool_tests))
@@ -1978,7 +1978,7 @@ def _record_per_test_evidence(
         # Aggregate union coverage still persists: it belongs to the earlier
         # passing merged-suite run, not to the failed per-test instrument.
         return _fall_back(
-            res, "the merged suite's per-test eviction failed; "
+            res, "the merged suite's per-test eviction failed, so "
             "the reduced candidate is unavailable",
             "eviction_data_unavailable", ["merged_unreduced"],
             _union_bloat_stats(None, union_tests=res.pool_tests))
@@ -2005,7 +2005,7 @@ def _record_per_test_evidence(
         # re-measured for mutation either, so the selector, which needs every
         # axis, would never choose it, and a cover on coverage tokens alone
         # would read as a valid reduction. Record why it is absent instead.
-        return _fall_back(res, "the merged suite's mutation was not measured; the "
+        return _fall_back(res, "the merged suite's mutation was not measured, so the "
                           "reduced candidate is unavailable",
                           "merged_mutation_unmeasured", [],
                           _union_bloat_stats(data.per_test_tokens,
@@ -2019,7 +2019,7 @@ def _record_per_test_evidence(
         # ``reduction_valid`` false. A run with no mutation
         # runner can still reduce on coverage tokens.
         return _fall_back(res, "the merged suite's kills could not be attributed to "
-                          "its tests; the reduced candidate is unavailable",
+                          "its tests, so the reduced candidate is unavailable",
                           "kills_unattributed", ["merged_unreduced"],
                           _union_bloat_stats(data.per_test_tokens,
                                              renamed_names=_renamed_names(res)))
@@ -2028,7 +2028,7 @@ def _record_per_test_evidence(
     ) if data.per_test_tokens else set()
     if not token_universe:
         return _fall_back(
-            res, "the merged suite produced an empty per-test token universe; "
+            res, "the merged suite produced an empty per-test token universe, so "
             "the reduced candidate is unavailable",
             "empty_cover", ["merged_unreduced"],
             _union_bloat_stats(data.per_test_tokens,
@@ -3065,8 +3065,8 @@ def check_restored_suite(
                              timeout=timeout, target=target_file_path)
     if not getattr(run, "ok", False):
         return False, (
-            f"the restored suite does not pass its normal run ({red_verdict(run)}); "
-            "run the mutation phase again instead of reusing it")
+            f"the restored suite does not pass its normal run ({red_verdict(run)}). "
+            "Run the mutation phase again instead of reusing it")
     log("[consolidate] the restored suite passes its normal run")
     return True, ""
 
@@ -3191,7 +3191,7 @@ def reuse_inherited_phase_end(
         ancestry,
         f"inherited from the {source_phase} phase: the suite is "
         "byte-identical to the inherited suite under the same "
-        "measurement identity with complete bound evidence; nothing "
+        "measurement identity with complete bound evidence. Nothing "
         "was executed, measured, reduced or selected",
         expected, delivered_record,
     )
@@ -3350,7 +3350,7 @@ def _delivered_validity_record(phase: PhaseConsolidation, target_file: str,
         ))
         raise RuntimeError(
             "the delivered suite contains shadowed definitions "
-            f"({names}); persistence refused"
+            f"({names}), so persistence is refused"
         )
     recorded_identity = (
         (phase.merged_validity_record or {}).get("target_identity") or {}
@@ -4134,7 +4134,7 @@ def measure_interleaved(
         )
     if benchmark_runs <= 0:
         raise RuntimeError(
-            "the phase-end runtime tie-break requires at least one measured repetition; resolved "
+            "the phase-end runtime tie-break requires at least one measured repetition, but the resolved "
             f"[{config.phase_section('timing')}] run_count={benchmark_runs!r}"
         )
     for label, source in sources:
@@ -4300,7 +4300,7 @@ class TiedCandidateTimer:
                 self._measured[candidate.label] = None
             self._log("[consolidate] tie-break: no timing benchmark for "
                       + ", ".join(repr(label) for label in labels)
-                      + "; the input order decides")
+                      + ", so the input order decides")
             return
         failed = []
         for candidate in candidates:

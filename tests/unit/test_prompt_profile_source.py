@@ -1,4 +1,4 @@
-"""A profile input is captured once; it does not choose or activate a run."""
+"""A profile input is captured once. It does not choose or activate a run."""
 from dataclasses import FrozenInstanceError
 import hashlib
 import json

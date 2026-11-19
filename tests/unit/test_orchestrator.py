@@ -142,7 +142,7 @@ def test_restore_starter_baseline_from_snapshot_and_marker(tmp_path: Path, unmea
                                                           duration) -> None:
     """Restore the starter suite and measurements from its durable snapshot and marker.
     The suites that left without complete numbers come from the generation
-    manifest; one written before suites could leave leaves them unknown.
+    manifest. One written before suites could leave leaves them unknown.
     The phase's time is its ran segments', none without one."""
     ctx = _make_ctx(tmp_path)
     target_dir = ctx.results_dir / ctx.workspace
@@ -544,7 +544,7 @@ def test_phase_finishing_takes_the_coverage_its_phase_end_measured(
     delivered.write_text(source, encoding="utf-8", newline="\r\n")
     digest = hashlib.sha256(source.encode("utf-8")).hexdigest()
     # The phase ends of the mutation phase and of the coverage phase name
-    # the same source; only the coverage phase's has coverage evidence.
+    # the same source. Only the coverage phase's has coverage evidence.
     (orchestrator._archive_dir(ctx, "mutation") / "consolidation_record.json").write_text(
         json.dumps({"selected_source_sha256": digest}), encoding="utf-8")
     archive = orchestrator._archive_dir(ctx, "coverage")

@@ -41,7 +41,7 @@ def test_actual_starter_worker_reports_only_after_transport_and_delivery_persist
     assert [event.state for event in projected] == ["running", "succeeded"]
     assert len({event.identity for event in projected}) == 1
     assert result.requests_used == result.logical_requests == len(streams[0]) == 1
-    # Request events carry no limit as a total; starter-suite progress counts
+    # Request events carry no limit as a total. Starter-suite progress counts
     # the accepted suites of those requested.
     assert all(event.total is None for event in events if event.operation != "suite-processing")
     assert {event.total for event in events if event.operation == "suite-processing"} == {1}

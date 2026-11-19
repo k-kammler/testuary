@@ -20,12 +20,14 @@ refused field. No function here returns a stored key.
 """
 from __future__ import annotations
 
+import math
 import os
 import re
 import sys
 from dataclasses import dataclass, field
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Callable, Dict, List, Mapping, Optional, Sequence, Tuple, Union
+from langadapter.resources import allowed_cpus
 from testuary import __version__
 from testuary import settings as _ini_text
 
@@ -52,7 +54,7 @@ class SetupError(RuntimeError):
 
 
 def _refused(problems: Sequence[Tuple[str, str]]) -> SetupError:
-    return SetupError("; ".join(f"{field}: {problem}" for field, problem in problems), problems)
+    return SetupError(". ".join(f"{field}: {problem}" for field, problem in problems), problems)
 
 
 def _refused_setting(error: Exception, suffix: str = "") -> SetupError:
@@ -127,15 +129,85 @@ def provider_kind(kind: str) -> Provider:
     return next(provider for provider in PROVIDERS if provider.kind == kind)
 
 
+#: The root of /proc and of the cgroup file systems the CPU quota is read from.
+_SYSTEM_ROOT = Path("/")
+
+
+def _cpu_limits(version: int, directory: Path) -> Optional[float]:
+    """The CPUs the quota of the cgroup ``directory`` allows, None for no
+    quota: cpu.max under cgroups v2, cpu.cfs_quota_us over cpu.cfs_period_us
+    under v1. A file that is absent sets no quota."""
+    if version == 2:
+        if not (directory / "cpu.max").is_file():
+            return None
+        quota, period = (directory / "cpu.max").read_text(encoding="utf-8").split()
+        return None if quota == "max" else int(quota) / int(period)
+    if not (directory / "cpu.cfs_quota_us").is_file():
+        return None
+    quota = int((directory / "cpu.cfs_quota_us").read_text(encoding="utf-8"))
+    period = int((directory / "cpu.cfs_period_us").read_text(encoding="utf-8"))
+    return None if quota < 0 else quota / period
+
+
+def _cgroup_members(proc: Path) -> Dict[str, PurePosixPath]:
+    """This process's cgroup for each controller, ``cgroup2`` for the v2
+    one, from /proc/self/cgroup."""
+    members = {}
+    for line in (proc / "cgroup").read_text(encoding="utf-8").splitlines():
+        _number, controllers, member = line.split(":", 2)
+        for name in controllers.split(",") if controllers else ("cgroup2",):
+            members[name] = PurePosixPath(member)
+    return members
+
+
+def _cpu_cgroups(proc: Path):
+    """Each version and directory of this process's CPU cgroup and its
+    ancestors up to the mount, from /proc/self/mountinfo. A container's
+    cgroup namespace mounts its own cgroup as the mount's root."""
+    members = _cgroup_members(proc)
+    for line in (proc / "mountinfo").read_text(encoding="utf-8").splitlines():
+        fields, _, source = line.partition(" - ")
+        fields, source = fields.split(), source.split()
+        version = {"cgroup2": 2, "cgroup": 1}.get(source[0])
+        member = members.get("cgroup2" if version == 2 else "cpu")
+        if version is None or member is None or (version == 1 and "cpu" not in source[2].split(",")):
+            continue
+        root = PurePosixPath(fields[3])
+        inside = member.relative_to(root) if member.is_relative_to(root) else PurePosixPath()
+        point = _SYSTEM_ROOT / fields[4].lstrip("/")
+        for depth in range(len(inside.parts), -1, -1):
+            yield version, point.joinpath(*inside.parts[:depth])
+
+
+def _quota_cpus() -> Optional[int]:
+    """The CPUs the tightest CPU quota of this process's cgroup and its
+    ancestors leaves, rounded up, under cgroups v1 or v2, else None: no
+    cgroups, no quota, or files that cannot be read."""
+    try:
+        limits = [_cpu_limits(version, directory)
+                  for version, directory in _cpu_cgroups(_SYSTEM_ROOT / "proc" / "self")]
+    except (OSError, ValueError, IndexError):
+        return None
+    limits = [limit for limit in limits if limit is not None]
+    return max(1, math.ceil(min(limits))) if limits else None
+
+
 class Probe:
     """Looks at the machine for defaults and checks. The demonstration
     replaces it with answers from fixtures. ``cpu_count`` returns the number
-    of CPUs, and ``local_ollama`` whether an Ollama on this computer lists
-    its models at ``http://localhost:11434`` within two seconds."""
+    of CPUs this process may use, and ``local_ollama`` whether an Ollama on
+    this computer lists its models at ``http://localhost:11434`` within two
+    seconds."""
 
     def cpu_count(self) -> int:
-        """The number of CPUs, 1 when it cannot be read."""
-        return os.cpu_count() or 1
+        """The number of CPUs this process may use: those its affinity
+        allows (``allowed_cpus``), or the machine's where the platform has
+        no affinity, at most what a CPU quota leaves (``_quota_cpus``), 1
+        when none can be read."""
+        allowed = allowed_cpus()
+        count = len(allowed) if allowed else (os.cpu_count() or 1)
+        quota = _quota_cpus()
+        return min(count, quota) if quota else count
 
     def environment(self, name: str) -> str:
         """The environment variable ``name``, empty when it is not set."""
@@ -1094,10 +1166,12 @@ def _model_part(ask: Ask, probe: Probe, say: Say, files: _Files, result: SetupRe
     kinds = tuple(provider.kind for provider in PROVIDERS)
     say("\n".join(f"  {index}. {provider.label} ({provider.kind})"
                    for index, provider in enumerate(PROVIDERS, 1)))
+    # The list above is the menu, so the question lists no choices of its
+    # own, and its check takes a number or a name.
     numbers = {str(index): kind for index, kind in enumerate(kinds, 1)}
     kind = _asked(ask, Question(
         "model.provider", f"Which model service? A number from 1 to {len(kinds)}, or its name",
-        default=detected, choices=kinds,
+        default=detected,
         reason="Ollama answers on this machine" if detected else ""),
         lambda answer: None if numbers.get(answer, answer) in kinds else
         f"a number from 1 to {len(kinds)} or one of {', '.join(kinds)}", say)
@@ -1324,7 +1398,7 @@ def _machine_part(ask: Ask, probe: Probe, say: Say, files: _Files, result: Setup
         workers = _asked(ask, Question(
             "machine.mutation_workers", "How many mutation-testing processes may run at once?",
             default=str(default),
-            reason=f"this machine has {cpus} logical CPUs, the default is about half"),
+            reason=f"Testuary may use {cpus} of this machine's CPUs, the default is about half"),
             _positive, say)
         values.append((_ini_text.phase_section("mutation"), "engine_workers", workers))
     if "starter_requests" in unset:

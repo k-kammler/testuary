@@ -150,7 +150,7 @@ def _with_settings(project_dir):
 def test_a_dir_without_a_project_lists_the_projects_directly_below_it(serve, tmp_path):
     """Started in a directory that belongs to no project, such as one that
     holds several projects, the interface lists the projects directly below it, by
-    name, before the recent ones; runs and checks take them as listed
+    name, before the recent ones. Runs and checks take them as listed
     projects."""
     parent = tmp_path / "parent"
     tenacity, jmustache = _with_settings(parent / "tenacity"), _with_settings(parent / "jmustache")
@@ -667,7 +667,7 @@ def _settings_dirs(cases):
 
 def test_the_settings_page_opens_on_the_working_dirs_project():
     """Without a project in its address the Settings page opens on the
-    working directory's project; the global settings stay one choice away, and
+    working directory's project. The global settings stay one choice away, and
     a directory of none opens on them."""
     working = {"project_dir": "C:\\parent\\tenacity", "working": True}
     other = {"project_dir": "C:\\elsewhere", "working": False}
@@ -1107,7 +1107,7 @@ def test_git_clones_over_https_only_and_asks_for_nothing(tmp_path):
 def test_the_add_form_clones_a_github_address_then_sets_the_clone_up():
     """The Add a project form takes an optional GitHub address: with one, it
     clones into the directory named below it and the setup follows on the new
-    directory; without, the setup takes the directory itself."""
+    directory. Without, the setup takes the directory itself."""
     source = (SOURCE / "testuary" / "web" / "static" / "app.js").read_text(encoding="utf-8")
     start = source.index("function addProjectForm(state) {")
     form = source[start:source.index("\n}\n", start)]

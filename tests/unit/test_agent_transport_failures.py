@@ -260,7 +260,7 @@ def test_validation_rejections_and_transport_failures_have_separate_ceilings():
     assert state["result"].answer == "done"
     assert rejections["n"] == 9
     assert account.transient_failures == 9
-    # Ten delivered responses, each a model request; nine more sent.
+    # Ten delivered responses, each a model request, and nine more sent.
     assert tracker.logical_requests_used == 10
     assert tracker.requests_used == 19
 

@@ -884,7 +884,7 @@ def _summarize_unfinished_targets(unfinished, log) -> int:
             f"  target {number:3d} "
             f"{Path(file_path).name:30s} "
             f"{'FAILED: ' if failing else ''}"
-            f"{'; '.join(entry['reason'] for entry in entries)}",
+            f"{', and '.join(entry['reason'] for entry in entries)}",
             level=1,
         )
     # A target without a complete suite is a scientific outcome, counted
@@ -895,7 +895,7 @@ def _summarize_unfinished_targets(unfinished, log) -> int:
         (skipped, _RESUME_SKIP_REASON),
     ) if count]
     if counts:
-        log("; ".join(counts) + ".", level=0)
+        log(", ".join(counts) + ".", level=0)
     if not failed:
         return 0
     log(
@@ -978,13 +978,14 @@ def _without_cli_configuration(args):
 
 
 def check(request: "RunRequest", *, settings: "RunSettings", verify: bool = False) -> "RunReadiness":
-    """Check the request's setup without generating tests or installing
-    anything, and return a RunReadiness without printing.
+    """Check the request's setup without generating tests, and return a
+    RunReadiness without printing.
 
     Returns the setup report as a RunReadiness and prints nothing. With
     ``verify`` it is the tool check, which starts the tools and tries the
-    project in a copy without downloading. An item the check cannot try is
-    reported as not tried: only a run tries it.
+    project in a copy, and for a Java project downloads what a run would
+    when it is missing. Without ``verify`` it downloads nothing. An item the
+    check cannot try is reported as not tried: only a run tries it.
     """
     from testuary.readiness import _native_report
 
@@ -2344,7 +2345,7 @@ def _run_pipeline(args, selected_languages):
         entries = invocation.unfinished[recorded:]
         skipped = bool(entries) and all(entry["reason"] == _RESUME_SKIP_REASON for entry in entries)
         failed = any(entry["failed"] for entry in entries)
-        reasons = "; ".join(entry["reason"] for entry in entries)
+        reasons = ", and ".join(entry["reason"] for entry in entries)
         stop = getattr(args, "stop_after_phase", None)
         if failed:
             outcome, reason, resumable = "failed", reasons, True

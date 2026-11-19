@@ -160,7 +160,7 @@ def test_a_mode_change_is_the_only_turn_that_rebuilds():
     unexplained = [i for i in rebuilt_on if i not in changed_on]
     assert not unexplained, (
         f"turn(s) {unexplained} rewrote the conversation without a mode "
-        f"change; mode changes were on {changed_on}")
+        f"change. Mode changes were on {changed_on}")
 
 
 def test_the_marker_is_last_and_always_current():

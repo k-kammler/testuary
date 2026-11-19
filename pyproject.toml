@@ -4,13 +4,13 @@ build-backend = "hatchling.build"
 
 [project]
 name = "testuary"
-version = "0.2.0"
+version = "0.2.1"
 description = "Test generation with coverage and mutation feedback for Python, Java and C"
 readme = "README.md"
 requires-python = ">=3.10"
 # Testuary is MIT. The demonstrations ship sources of tenacity and
 # JSONassert under the Apache License 2.0, with their license texts beside
-# them (THIRD_PARTY_NOTICES.md); license-files ships those texts.
+# them (THIRD_PARTY_NOTICES.md), and license-files ships those texts.
 license = "MIT"
 license-files = [
     "LICENSE",
@@ -76,7 +76,7 @@ dependencies = [
     # The language backend, which brings its own parsing dependencies.
     # Released together with Testuary: a 0.1 release keeps the interface
     # Testuary uses.
-    "langadapter>=0.1.0,<0.2",
+    "langadapter>=0.1.1,<0.2",
 ]
 
 [project.optional-dependencies]
@@ -170,7 +170,7 @@ addopts = "--strict-markers --strict-config -m 'not slow'"
 
 markers = [
     "slow: real-subprocess integration tests (cosmic-ray / pytest against a fixture project). Excluded from the default run. Select with `pytest -m slow`.",
-    "mutation_tool: starts a real mutation tool (Cosmic Ray or PIT); the suite split runs these apart",
+    "mutation_tool: starts a real mutation tool (Cosmic Ray or PIT). The suite split runs these apart",
 ]
 
 filterwarnings = [

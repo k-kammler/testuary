@@ -35,7 +35,7 @@ def _report(**states):
 
 
 class LimitedBackend(GenericBackend):
-    """A Python backend whose capability report a test sets; it touches no
+    """A Python backend whose capability report a test sets. It touches no
     project environment."""
 
     def __init__(self, report):
@@ -264,7 +264,7 @@ def test_the_delivered_runs_fallback_applies_only_with_the_reverse_order_note(mo
 
 
 def test_only_a_language_that_runs_the_reverse_order_offers_it(default_run):
-    """Python runs a suite as delivered in reverse order; Java's adapter
+    """Python runs a suite as delivered in reverse order. Java's adapter
     refuses that order, JUnit ordering a class's tests itself."""
     assert languages.get_backend("python").offers_reverse_order()
     assert not languages.get_backend("java").offers_reverse_order()

@@ -1,6 +1,6 @@
 {
   "_about": [
-    "Per-language hints for the coverage phase. A hint changes model inputs; keep it the same across runs you compare.",
+    "Per-language hints for the coverage phase. A hint changes model inputs, so keep it the same across runs you compare.",
     "Within a phase, matching cells join in this order: general, per_profile, per_language, per_profile_per_language."
   ],
   "initial": {

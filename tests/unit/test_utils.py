@@ -199,7 +199,7 @@ def test_the_frozen_module_strategy_sets_pythons_interpreter_flags(strategy, fla
                                                                    in_run):
     """Under ``unfreeze`` (the default) every Python run gets ``-X
     frozen_modules=off``, so source edits to frozen stdlib modules take
-    effect; ``skip`` emits no flag."""
+    effect, and ``skip`` emits no flag."""
     from testuary.languages import language_project_context
 
     in_run(config_files=[], environment={},

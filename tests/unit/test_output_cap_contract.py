@@ -26,7 +26,7 @@ def test_actual_editing_builder_uses_positive_caps_only(
     model_cap, phase_cap, expected, harness, tmp_path, monkeypatch, in_run,
 ):
     # The model's cap from its catalogue entry, the phase's from its
-    # section; None leaves the key out.
+    # section. None leaves the key out.
     phase = "coverage" if harness is coverage_harness else "mutation"
     entry = {"provider": "openai", "model": "fixture", "api_url": "http://127.0.0.1:1/v1"}
     if model_cap is not None:

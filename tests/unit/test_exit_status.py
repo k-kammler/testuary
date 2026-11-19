@@ -68,7 +68,7 @@ def test_a_target_with_several_reasons_is_listed_and_counted_once():
     listed = [line for line in lines if line.startswith("  target ")]
     assert len(listed) == 2
     assert listed[0].endswith(" FAILED: mutation reuse refused: the record does not bind "
-                              "the suite; coverage 62.5% is below minimum 75%")
+                              "the suite, and coverage 62.5% is below minimum 75%")
     assert lines[-2:] == [
         "1 ended without a suite that meets the minimums (a result, not a failure).",
         "1 of them failed to execute, so the command exits with status 1."]
@@ -141,7 +141,7 @@ def test_runs_without_a_complete_suite_are_counted_apart_from_failures():
         _entry(4, "test pipeline crashed", True),
     ])
     assert status == 1
-    assert ("2 ended without a suite that meets the minimums (a result, not a failure); "
+    assert ("2 ended without a suite that meets the minimums (a result, not a failure), "
             "1 already complete (resume skip).") in lines
     assert lines[-1] == "1 of them failed to execute, so the command exits with status 1."
 
@@ -309,7 +309,7 @@ def test_a_crash_row_carries_the_phases_completed_before_it(tmp_path, monkeypatc
         "mutation_assertion_count", "mutation_parametrize_count", "mutation_fixture_count",
         "mutation_score"}
     # The consolidation record holds 0 where a finished row leaves an
-    # unmeasured merged count empty; a resume shows the same 0.
+    # unmeasured merged count empty, and a resume shows the same 0.
     finishing.add("mutation_merged_tests")
     columns = [column for column in row if column.startswith(("starter_", "coverage_", "mutation_"))
                and not column.endswith("duration_s") and column not in finishing]

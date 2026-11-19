@@ -700,7 +700,7 @@ def test_a_limit_stop_names_the_setting_the_user_set(
     tmp_path, monkeypatch, in_run, setting, value, reach, kind,
 ) -> None:
     """Each phase limit's stop, which tests.csv's error column records,
-    names the setting that set the limit, with its value; the stop is a
+    names the setting that set the limit, with its value. The stop is a
     ``budget_exhausted`` outcome, whose description names its kind."""
     from testuary import config
     from testuary.agent import _langgraph as lg
@@ -734,7 +734,7 @@ def _with_docstring(method, docstring):
     return stand_in
 
 
-# Python 3.10 to 3.12 keep a docstring's indentation; 3.13 and later remove
+# Python 3.10 to 3.12 keep a docstring's indentation, and 3.13 and later remove
 # the common indentation of the lines after the first when compiling. The
 # model receives the same tool descriptions from both, and from the docstring
 # this interpreter compiled.

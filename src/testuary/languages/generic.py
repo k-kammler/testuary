@@ -782,8 +782,8 @@ class GenericBackend(LanguageBackend):
         error or without the operation. Python gives ``x.y`` for both
         ``import x.y`` and ``from x.y import z`` (``z`` can be a name or a
         submodule), and a relative import keeps its leading dots. Java gives
-        ``x.y.z`` and ``x.y.Z.m`` from ``import x.y.z;`` and
-        ``import static x.y.Z.m;``, and a wildcard keeps its ``.*``.
+        ``x.y.z`` and ``x.y.Z.m`` from ``import x.y.z`` and
+        ``import static x.y.Z.m``, and a wildcard keeps its ``.*``.
         """
         if not self._offers("imports"):
             return ()

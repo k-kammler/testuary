@@ -482,7 +482,7 @@ def _exact_cover(
 
     if tie_break not in TIE_BREAKS:
         raise ValueError(
-            f"unknown reduction_tie_break {tie_break!r}; use "
+            f"unknown reduction_tie_break {tie_break!r}. Use "
             + " or ".join(repr(name) for name in TIE_BREAKS)
         )
     tests = sorted(per_test_tokens)
@@ -914,6 +914,6 @@ def solve_cover(
             forced_ids=forced_ids, imputed_cost_ms=imputed_cost_ms,
         )
     raise ValueError(
-        f"unknown reduction_solver {solver!r}; use "
+        f"unknown reduction_solver {solver!r}. Use "
         + " or ".join(repr(name) for name in _CHOICES["reduction_solver"])
     )

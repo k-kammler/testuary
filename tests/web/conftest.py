@@ -207,9 +207,9 @@ def user_dir(tmp_path_factory, monkeypatch):
 
 @pytest.fixture
 def serve(tmp_path):
-    """Start a web interface for a directory; yields (app, server, client).
+    """Start a web interface for a directory and yield (app, server, client).
     ``key`` starts it with a per-start access key, which the client sends,
-    as testuary-web --access key does; without, it is open."""
+    as testuary-web --access key does. Without, it is open."""
     started = []
 
     def start(base_dir=None, *, python=sys.executable, key=True, extensions=None):

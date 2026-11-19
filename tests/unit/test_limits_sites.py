@@ -35,7 +35,7 @@ SOURCE = Path(testuary.__file__).resolve().parent
 
 @pytest.fixture
 def limit(monkeypatch):
-    """Set limits by name: ``limit["read_chars"] = 50``; others keep their
+    """Set limits by name: ``limit["read_chars"] = 50``. Others keep their
     defaults."""
     values = {}
     defaults = _limits.defaults()

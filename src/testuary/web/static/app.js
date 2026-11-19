@@ -210,7 +210,7 @@ function hms(seconds) {
 }
 
 // The seconds a running row's time starts from: the run's clock when the
-// view carries it, else the row's own; null for a row whose time stands.
+// view carries it, else the row's own, and null for a row whose time stands.
 function clockBase(text, running, clock) {
   const match = running && CLOCK.exec(text || "");
   if (!match) return null;
@@ -239,23 +239,20 @@ function tickClocks(root, received) {
 }
 
 // How long the diagram's current step has been under way, by the run's
-// clock; it ticks with the rows.
+// clock. It ticks with the rows.
 function stepTime(item, clock) {
   if (item.state !== "running" || !Number.isFinite(item.since_s) || !Number.isFinite(clock)) return null;
   return `for ${hms(clock - item.since_s)}`;
 }
 
-// The heading and style of a run's cause by the run's overall tone. A run
-// that succeeded can still name a cause, such as a loop that used all its
-// requests: the panel shows it as a note, not as a problem. An ended job
-// that is no failure in Testuary's words (refused, a problem the check
+// The heading and style of a run's cause by the run's overall tone. An ended
+// job that is no failure in Testuary's words (refused, a problem the check
 // found) says that word, as its badge does.
 function causeHeading(tone, ended) {
   if (ended && ended.word && ended.failure === false) {
     return [`${ended.word[0].toUpperCase()}${ended.word.slice(1)}: `, "panel cause-warning"];
   }
   if (tone === "failed") return ["Why the run failed: ", "panel cause"];
-  if (tone === "succeeded") return ["Note: ", "panel cause-note"];
   return ["What went wrong: ", "panel cause"];
 }
 
@@ -489,7 +486,7 @@ function optionName(option) {
 
 // The directory browser: a dialog over the page that lists directory names from
 // the server, since a browser cannot hand a local path to a page. A click or
-// Enter opens a directory; "Use this directory" takes the directory shown.
+// Enter opens a directory, and "Use this directory" takes the directory shown.
 function chooseDir({ title, start }) {
   return new Promise((resolve) => {
     const opener = document.activeElement;
@@ -579,7 +576,7 @@ function field({ id, label, option, input, unit, hint, browse }) {
     el("span", { class: "error", id: `${id}-error`, "aria-live": "polite" }));
 }
 
-// A group of radio buttons; the first option is the default.
+// A group of radio buttons. The first option is the default.
 function choices({ name, legend, option, options, hint }) {
   return el("fieldset", { "data-field": name, "aria-describedby": hint ? `${name}-hint ${name}-error` : `${name}-error` },
     el("legend", optionName(option), legend),
@@ -699,7 +696,7 @@ function projectHeading(entry) {
     el("p", { class: "small muted" }, pathText(entry.project_dir, shortPath(entry.project_dir))));
 }
 
-// A long path's last directories, for headings and lists; the full path stays on hover.
+// A long path's last directories, for headings and lists. The full path stays on hover.
 function shortPath(path) {
   const parts = path.split(/[\\/]/).filter(Boolean);
   return parts.length > 3 ? `.../${parts.slice(-2).join("/")}` : path;
@@ -747,7 +744,7 @@ function projectEntry(entry) {
 
 // Each file's values as the job's end-of-run summary states them, one line
 // per file, which names its file when the job has several. A file without
-// a complete suite says how it ended; a demonstration's values are demo
+// a complete suite says how it ended. A demonstration's values are demo
 // values.
 function valueLines(job) {
   const files = job.values || [];
@@ -762,7 +759,7 @@ function valueLines(job) {
 }
 
 // The run directory a job writes into or wrote, by its last part, the
-// full path on hover; an ended job's opens on the results page.
+// full path on hover. An ended job's opens on the results page.
 function dirName(path) {
   return path.split(/[\\/]/).filter(Boolean).pop();
 }
@@ -879,8 +876,8 @@ async function home() {
 // Testuary's setup (testuary.setup): every check and every message is
 // Testuary's, each shown beside the field it concerns.
 
-// Each problem of a refusal beside its field; one the form has no field
-// for, and the message without problems, at the form's end.
+// Each problem of a refusal beside its field. One the form has no field
+// for, and the message without problems, show at the form's end.
 function showProblems(form, error) {
   const problems = error.problems && error.problems.length ? error.problems : [[error.field, error.message]];
   let focused = false;
@@ -991,7 +988,7 @@ function secretField(input, label) {
 }
 
 // The provider name after the service changes to ``chosen``: a built-in
-// service's own; for another OpenAI-compatible API the name typed for it,
+// service's own. For another OpenAI-compatible API, the name typed for it,
 // the model's own when it is one, else none, never the name of the
 // service chosen before.
 function providerName(chosen, typed, previous, entry) {
@@ -1426,7 +1423,7 @@ function consoleText(text) {
 }
 
 // Select all and Deselect all for a list's file boxes, beside how many are
-// ticked; a box ticked by hand updates the count too.
+// ticked. A box ticked by hand updates the count too.
 function tickAll(boxes) {
   const count = el("span", { class: "muted small" });
   const show = () => { count.textContent = `${boxes.filter((box) => box.checked).length} of ${boxes.length} ticked`; };
@@ -1448,7 +1445,7 @@ function openAnswer(chosen, other) {
 function setupInput(view) {
   const question = view.question;
   if (question.key === "targets" && view.files) {
-    // Testuary numbers the files it lists; the answer names the chosen ones.
+    // Testuary numbers the files it lists, and the answer names the chosen ones.
     const boxes = view.files.map((path) => el("input", { type: "checkbox", value: path, checked: true }));
     const group = el("fieldset", { "data-field": "answer" }, el("legend", { text: question.prompt.split("?")[0] + "?" }),
       tickAll(boxes),
@@ -1550,7 +1547,7 @@ async function setupStep(box, start, dir, answers, asked = []) {
     return;
   }
   if (!view.question) {
-    // The list shows the new project at once; the summary stays above it.
+    // The list shows the new project at once, and the summary stays above it.
     const missing = view.missing.map(missingItem);
     projectNotice = { project_dir: view.project_dir, written: view.written, missing, preview: preview && preview.textContent };
     await render();
@@ -1670,7 +1667,7 @@ function settingInput(setting) {
 }
 
 // A purpose shown whole when it is short, such as a limit's sentence that
-// zero disables it; else its first sentence, with the rest on request.
+// zero disables it. Otherwise its first sentence, with the rest on request.
 function purposeParts(purpose) {
   const text = purpose || "";
   if (text.length <= 160) return [text, ""];
@@ -1866,7 +1863,7 @@ async function settingsView(query) {
   const asked = query.get("scope");
   const scope = !project || asked === "global" ? "global" : asked || "project";
   // Each page edits and resets its own level only. The global page shows
-  // the global file's own values; the project's shows only as text.
+  // the global file's own values, and the project's shows only as text.
   const load = () => Promise.all(settingsRequests(scope, project).map((path, index) =>
     index ? call(path).catch(() => null) : call(path)));
   const [view, context] = await load();
@@ -1930,7 +1927,7 @@ async function settingsView(query) {
     const set = section.settings.filter((setting) => setting.source && setting.source !== "default").length;
     return set ? ` ${set} set here or in a file` : "";
   };
-  // A saved or reset row drawn anew from the settings as they are now; a
+  // A saved or reset row is drawn anew from the settings as they are now. A
   // failure to read them draws the page anew.
   const changed = async (name, key, said) => {
     let fresh = null;
@@ -2053,7 +2050,7 @@ async function demoView() {
 }
 
 // The listed projects as a choice by name, the one the address names
-// chosen; the full directory on hover.
+// chosen, with the full directory on hover.
 function projectChoice(listed, query) {
   const usable = (listed.projects || []).filter((entry) => !entry.error);
   const chosen = query.get("project_dir") || (usable[0] ? usable[0].project_dir : "");
@@ -2072,7 +2069,7 @@ function missingNamed(named, files) {
 
 // The project's source files as a checklist, as Testuary's setup finds
 // them: one list for the project's language, else a list per language
-// with its own Select all. The files its settings name are ticked; leaving
+// with its own Select all. The files its settings name are ticked, and leaving
 // exactly those ticked runs the project's own list. A named file the directory
 // lacks is named.
 function fileChecklist(project) {
@@ -2168,7 +2165,7 @@ async function checkView(query) {
     judged,
     files.box,
     checkbox({ id: "verify", label: toolCheckLabel, option: "--verify",
-      hint: "Starts each test, coverage and mutation tool the settings select once, to see that it works, and in a copy of the project tries its build where a run builds it and finds its tests without running one, unless the project has its own build wrapper, which may download its build tool. Without it the quick check reads the settings and finds the tools." }));
+      hint: "Starts each test, coverage and mutation tool the settings select once, to see that it works, and in a copy of the project tries its build where a run builds it and finds its tests without running one, unless the project has its own build wrapper, which may download its build tool. For a Java project it downloads what a run would when it is missing. Without it the quick check reads the settings and finds the tools." }));
   jobForm(form, "Run the check (sends nothing to a model)", () => {
     if (files.empty()) throw NO_FILE;
     return ["/api/check", { project_dir: project.value, files: files.chosen(),
@@ -2176,7 +2173,7 @@ async function checkView(query) {
   }, () => project.options.length > 0);
   return [
     el("h1", { text: "Check" }),
-    el("p", { text: "The quick check reads your models, your settings and the project's settings, finds the tools, and tells you what is ready and what to fix before a run. The tool check also starts each tool once and, in a copy of the project, tries its build where a run builds it and finds its tests without running one, unless the project has its own build wrapper, which may download its build tool. Neither installs anything, runs a test or sends anything to a model, and neither shows a key." }),
+    el("p", { text: "The quick check reads your models, your settings and the project's settings, finds the tools, and tells you what is ready and what to fix before a run. The tool check also starts each tool once and, in a copy of the project, tries its build where a run builds it and finds its tests without running one, unless the project has its own build wrapper, which may download its build tool. For a Java project the tool check downloads what a run would when it is missing. Neither runs a test or sends anything to a model, and neither shows a key." }),
     catalogueError(listed),
     project.options.length ? null : noProjectNote(),
     form,
@@ -2411,7 +2408,7 @@ function jobState(job) {
 }
 
 // Where a scrolling text box shows its new text, from its last position
-// (scrollTop, scrollHeight, clientHeight; null for a new box): at its end
+// (scrollTop, scrollHeight, clientHeight, or null for a new box): at its end
 // while the reader is at the end, so it follows the output, else where the
 // reader left it. A hidden box has no height and follows.
 function nextScroll(previous, scrollHeight) {
@@ -2478,7 +2475,7 @@ async function jobView(id) {
   let phasesSeen = null;
 
   // The status panel is built once. Its state word is announced when it
-  // changes; the clock and the force countdown update in place, so a button
+  // changes. The clock and the force countdown update in place, so a button
   // keeps the keyboard focus.
   const announced = el("span", { role: "status", "aria-live": "polite", class: "status-line" });
   const time = el("span", { class: "muted figures" });
@@ -2731,7 +2728,7 @@ function fileList(files, open) {
 }
 
 // The results dashboard. Every number and word comes from Testuary's result
-// files as the server reads them; the page lays them out and computes no
+// files as the server reads them. The page lays them out and computes no
 // value of its own: no mean, no sum, no comparison.
 
 function known(value) {

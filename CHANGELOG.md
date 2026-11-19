@@ -2,6 +2,67 @@
 
 All notable changes are listed here, newest first.
 
+## 0.2.1
+
+A bug-fix release. Installing 0.2.0 from the package index on Windows and
+Linux found the problems it fixes. It requires LangAdapter 0.1.1.
+
+### Changed
+
+- `testuary check` without a selected model reports the missing model as one
+  problem, still looks at the project and its tools, and ends with exit status
+  1. 0.2.0 refused this check with exit status 2. Every other model problem,
+  such as an alias that models.ini lacks, still refuses the check with exit
+  status 2, and `testuary generate` still refuses to run without a model.
+- `testuary check --verify` downloads what a Java run would when it is
+  missing: what the build needs and, unless `LANGADAPTER_JAVA_TOOLS_OFFLINE`
+  is set, the JUnit launcher, JaCoCo and PIT, within `setup_timeout_seconds`.
+  A fresh machine completes the tool check without a run. The quick check
+  downloads nothing. The tool check option of the web interface's Check page
+  says so.
+- Reasons and notes in a run's record files, and lines of its log, read as
+  plain sentences without semicolons. A full stop, a comma, ", and" or ", so"
+  joins their parts, with the same meaning. The warning on unresolved
+  mutation kills, for example, ends with "Re-measure this suite on a quiet
+  node to confirm.", and a model request given up after its retries names its
+  last failure in a sentence of its own, "Last failure", in the phase's
+  failure text and the log. A script that matches one of these texts may need
+  a new pattern.
+
+### Fixed
+
+- `testuary check` and `testuary check --verify` do not report "No problems
+  found" while a required part is left to a run. The first line says that the
+  check found no problem in what it tried, names each language without a
+  check of its own, and points to the parts listed under Not tried yet.
+- Without a selected model, the check leaves out a run directory named after
+  the model alias and lists it under Not tried yet.
+- An optional step of the tool check that found no tests in a project without
+  test sources reads "works", not "failed".
+- `testuary generate` for a C file on native Windows is refused before any
+  phase, naming Linux and WSL.
+- `testuary check` of a C project on Linux reports the compiler with its
+  gcov, LangAdapter's extra for C, stdbuf for tests written with utest.h,
+  prlimit when `c_address_space_limit` is set, and Mull, and names the step
+  to take for each one that is missing. `testuary check --verify` starts
+  each tool it found once.
+- `testuary setup` suggests mutation workers from the CPUs Testuary may use:
+  those its CPU affinity allows, within the CPU limit of its cgroup or
+  container.
+- `testuary setup` lists the model services once.
+- `testuary-web` prints no traceback when a browser or another client drops
+  its connection. Other errors of a request are reported as before.
+- `testuary --help` lists `--demo`, `--demo-language` and `--home`, and its
+  usage shows that the options of a command follow the command.
+- A run that succeeded ends without Recent issue lines on the compact
+  terminal display, and the web interface's job page names no cause for it.
+  What failed on its way stays in the run's log.
+
+### Documentation
+
+- The README and getting started give the Windows activation lines for cmd
+  and for PowerShell under its default execution policy.
+
 ## 0.2.0
 
 First public release. Testuary writes unit tests for Python, Java and C

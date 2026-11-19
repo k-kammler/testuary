@@ -118,7 +118,8 @@ def test_actual_composition_uses_original_captured_context_and_honest_scope(tmp_
     assert request.context.root == str(root) and contexts[0][1] == str(root)
     assert request.context.environment.inherit is False
     assert dict(request.context.environment) == {"PATH": "captured tools"}
-    assert request.source_files == ("module.native-a",) and request.allow_acquisition is False
+    # The tool check downloads what a run would. The quick check never does.
+    assert request.source_files == ("module.native-a",) and request.allow_acquisition is verify
     assert request.inputs.required == ("module.native-a",)
     assert 0 < request.probe_timeout_s <= 10 and 0 < request.total_timeout_s <= 120
     assert next(item for item in report.items if item.key.endswith("item.runtime")).status == "verified"

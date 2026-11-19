@@ -16,7 +16,7 @@ from tool_fixtures import same_code_environment
 pytestmark = pytest.mark.slow
 
 # The child: the chat model library starts one process at its first import,
-# a stand-in for any library that does; then the Python demonstration.
+# a stand-in for any library that does, and then the Python demonstration.
 _PROCESS_AT_IMPORT = """
 import subprocess
 import sys

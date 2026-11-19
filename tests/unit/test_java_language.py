@@ -269,7 +269,7 @@ def test_a_merge_validation_and_a_benchmark(project):
 
 def test_pits_own_timeout_rule_unless_a_value_is_fixed(tmp_path):
     """``auto`` leaves the per-mutant timeout to PIT's rule (each test of a
-    mutant's run: 1.25 times its normal time plus 4 seconds); a configured
+    mutant's run: 1.25 times its normal time plus 4 seconds). A configured
     value stays fixed."""
     from langadapter import ProjectContext
     from langadapter.java.adapter import JavaAdapter

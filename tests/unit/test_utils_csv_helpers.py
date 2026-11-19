@@ -70,7 +70,7 @@ def test_parse_targets_spec_open_range_from_start() -> None:
 
 @pytest.mark.parametrize("spec", ["top5", "TOP3", "Top 2", "bottom5", "BOTTOM3"])
 def test_parse_targets_spec_refuses_named_forms(spec) -> None:
-    """Targets are selected by number and range only; topN and bottomN are
+    """Targets are selected by number and range only, and topN and bottomN are
     refused, naming the accepted forms."""
     with pytest.raises(ValueError, match="is not a position or range. Use N, A-B, A- or -B$"):
         config_module.parse_targets_spec(spec, total=100)
@@ -269,7 +269,7 @@ def test_phase_artifact_path_places_later_runs_in_their_dirs(tmp_cwd: Path) -> N
 
 
 def test_run_idx_from_artifact_path_inverts_run_dir() -> None:
-    """A run directory's name gives its run; any other directory is the first run's,
+    """A run directory's name gives its run. Any other directory is the first run's,
     whatever the directories above it are called."""
     from pathlib import Path as _P
     for i in (0, 1, 7):

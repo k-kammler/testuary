@@ -457,7 +457,7 @@ def test_every_model_invocation_is_charged_to_model():
         and any(getattr(arg, "id", None) == "msgs_in" for arg in node.args)
     }
     assert invocations, (
-        "no model invocation found; the search is looking at the wrong thing")
+        "no model invocation found. The search is looking at the wrong thing")
     assert invocations <= timed, (
         "model invocation(s) outside a timed span: "
         f"{sorted(invocations - timed)}")

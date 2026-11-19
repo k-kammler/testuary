@@ -1,7 +1,7 @@
 {
   "_about": [
     "Optional hints for the working-directory hints.json. Changing active hint values changes model inputs.",
-    "Within each phase, resolution order is general, per_profile[hint_profile], per_language[language], then per_profile_per_language[hint_profile][language]. hint_profile is set in [project] of the project's settings file (.testuary/project.ini) or of a configuration file; empty selects no profile cells.",
+    "Within each phase, resolution order is general, per_profile[hint_profile], per_language[language], then per_profile_per_language[hint_profile][language]. hint_profile is set in [project] of the project's settings file (.testuary/project.ini) or of a configuration file. An empty hint_profile selects no profile cells.",
     "Each cell accepts a string or a list of lines. Non-empty matching cells are joined with blank lines under one '## Additional guidance' heading in the system prompt.",
     "Hints apply only to their named phase. Empty matching cells add no guidance. Repeat a hint in another phase only when that is part of the intended experiment.",
     "This _about block is explanatory metadata. Hint resolution does not consume it, and the validator skips keys that begin with an underscore."

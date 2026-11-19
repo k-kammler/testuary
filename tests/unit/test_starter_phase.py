@@ -592,7 +592,7 @@ def test_zero_coverage_suite_is_reclassified_not_green(tmp_path, monkeypatch):
     assert meta["classification"] == "zero_coverage"
 
 
-#: Passes in a normal run; the stand-in coverage tool below cannot run it.
+#: Passes in a normal run. The stand-in coverage tool below cannot run it.
 UNMEASURABLE = """\
 from calc import add
 
@@ -791,7 +791,7 @@ def test_replies_that_spend_the_whole_output_limit_say_so(tmp_path, monkeypatch)
     assert res.status == "cancelled_zero_passing"
     assert res.detail.startswith(
         "the model used the whole output limit (max_output_tokens = 8192) without "
-        "answering in 2 of 2 replies; raise max_output_tokens; no green tests from 0")
+        "answering in 2 of 2 replies. Raise max_output_tokens. No green tests from 0")
 
 
 def test_an_empty_reply_below_the_output_limit_is_not_called_a_limit(tmp_path, monkeypatch):
@@ -2043,7 +2043,7 @@ def test_each_starter_suite_is_measured_alone_as_accepted(
 
     monkeypatch.setattr(consolidate_mod, "consolidate_phase_end", capture_evidence)
     # The two suites interfere once merged, so the merge is no candidate
-    # and the suites tie; a fixed time breaks the tie by name.
+    # and the suites tie. A fixed time breaks the tie by name.
     monkeypatch.setattr(
         consolidate_mod,
         "benchmark_tied_candidates",
@@ -2086,7 +2086,7 @@ def test_each_starter_suite_is_measured_alone_as_accepted(
 
 def _mutation_tool_measures_nothing_of(monkeypatch, marker):
     """The stand-in mutation tool measures nothing of a starter suite holding
-    ``marker`` when it runs that suite alone; every other suite kills one of
+    ``marker`` when it runs that suite alone. Every other suite kills one of
     two mutants."""
     from contextlib import contextmanager
     from testuary import config

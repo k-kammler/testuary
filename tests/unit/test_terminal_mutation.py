@@ -1,6 +1,6 @@
 """Mutation measurement progress from the backend's public record, rendered as observations.
 
-The records are built here with the backend's own type; they are display
+The records are built here with the backend's own type. They are display
 inputs, not native measurements.
 """
 from __future__ import annotations
@@ -43,7 +43,7 @@ def test_progress_is_a_running_count_without_a_score():
     event = _event(12, 40, 52.5)
     assert (event.state, event.level, event.label) == ("running", "operation", "Mutation testing")
     assert (event.completed, event.total, event.work_unit) == (12, 40, "mutants run")
-    # The run clock is the producer's; the record's own clock is not substituted.
+    # The run clock is the producer's. The record's own clock is not substituted.
     assert event.elapsed_s == 52.5 and event.metrics == () and event.phase == "mutation"
 
 

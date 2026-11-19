@@ -1,4 +1,4 @@
-"""Offline Java pipeline acceptance; no JDK, measurement or model service."""
+"""Offline Java pipeline acceptance, with no JDK, measurement or model service."""
 from __future__ import annotations
 
 import csv

@@ -1,5 +1,5 @@
 """The shared model-request policy: classification, ceilings, waits and
-records. The cases that concern the policy itself; the phase callers have
+records, in the cases that concern the policy itself. The phase callers have
 their own tests."""
 from __future__ import annotations
 
@@ -402,7 +402,7 @@ def test_the_retry_schedule_is_pinned():
     (ValueError("unsupported role"), False),
 ])
 def test_which_failures_are_sent_again(exc, retried):
-    """A transient failure is sent again after its wait; any other failure
+    """A transient failure is sent again after its wait. Any other failure
     ends the request at once with the provider's error."""
     account, waits = _account()
     send = _script(exc, "ok")
@@ -734,7 +734,7 @@ def test_a_request_given_up_reads_as_one_plain_sentence(cause, sentence):
 
 def test_a_request_given_up_names_the_service_without_its_credentials():
     """With the address the phase's model settings give, the sentence names
-    the service, without credentials or query; the exception's text is
+    the service, without credentials or query. The exception's text is
     never shown."""
     service = mr.service_address("http://user:secret@10.0.0.5:11434/v1?key=abc")
     assert service == "http://10.0.0.5:11434/v1"

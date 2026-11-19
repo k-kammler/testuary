@@ -92,6 +92,24 @@ def test_host_route_admission_leaves_source_membership_and_native_execution_unkn
     assert config.active_settings() is None
 
 
+@pytest.mark.parametrize("output, named", [("", True), ("runs/${model}", True), ("fixed", False)])
+def test_without_a_model_a_run_dir_named_after_it_is_not_looked_at(output, named, tmp_path, monkeypatch):
+    # A check without a model showed the default run directory as results/_.
+    settings = RunSettings(base_dir=tmp_path, sections={
+        "api": {"model": ""}, "project": {"source_dir": "original", "output_dir": output}}, models={})
+    settings, request, configuration = facts(tmp_path, settings=settings)
+    if named:
+        monkeypatch.setattr(orchestrator, "_admit_output", lambda *a, **k: pytest.fail("run directory admitted"))
+    report = _output_report(configuration, request, settings)
+    [admission] = [item for item in report.items if item.key == "output.admission"]
+    if named:
+        assert report.output_dir is None and admission.status == "unverified"
+        assert admission.reason == "It is named after the model alias, and no model is selected yet."
+        assert not any(item.key == "output.original_separation" for item in report.items)
+    else:
+        assert report.output_dir == str(tmp_path / "fixed") and admission.status == "verified"
+
+
 def test_a_run_dir_in_the_projects_testuary_dir_is_named_so(tmp_path):
     """The default run directory lies in the project's Testuary directory,
     inside the project directory. The check accepts it and says where it is,

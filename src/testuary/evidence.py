@@ -557,11 +557,11 @@ def reuse_problems(recorded: Any, current: GenerationCondition) -> tuple[str, ..
     answers."""
     if not isinstance(recorded, Mapping):
         return ("recorded generation condition is unknown: these results have no generation "
-                "records, so they cannot be resumed or reused; start a fresh run in an empty "
+                "records, so they cannot be resumed or reused. Start a fresh run in an empty "
                 "output directory",)
     if type(recorded.get("format")) is not int or recorded.get("format") != 1:
         return ("recorded generation condition format is unknown, so these results cannot be "
-                "resumed or reused; start a fresh run in an empty output directory",)
+                "resumed or reused. Start a fresh run in an empty output directory",)
     problems = []
     if recorded.get("service_identity_known") is not True or not current.service_identity_known:
         problems.append("service identity is unknown (unrecorded endpoint routing)")
@@ -676,7 +676,7 @@ def require_matching_condition(recorded: Any, current: GenerationCondition) -> N
     problems = reuse_problems(recorded, current)
     if problems:
         raise ConfigurationError(
-            f"requested {current.phase} reuse refused: " + "; ".join(problems)
+            f"requested {current.phase} reuse refused: " + ". ".join(problems)
             + ". Use a new output/run or select an explicitly compatible stage."
         )
 

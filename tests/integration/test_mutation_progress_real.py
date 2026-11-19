@@ -3,7 +3,7 @@
 The backend polls its session database about once a second,
 MutationSession.run passes the observed target's callback, and RunProgress
 turns each record into the display's "Mutation testing" row, which ends
-with the run. Marked ``slow``; skipped without ``cosmic-ray``.
+with the run. Marked ``slow``, and skipped without ``cosmic-ray``.
 """
 from __future__ import annotations
 

@@ -375,7 +375,7 @@ def test_validator_breaks_rejection_loop_on_early_stop(agent, monkeypatch):
     assert agent.session.early_submission_rejections == 2
     err3 = agent.validate_output(state={}, parsed=parsed)
     assert err3 is None, (
-        f"validator should accept on the cap-th stuck rejection; got {err3!r}"
+        f"validator should accept on the cap-th stuck rejection, got {err3!r}"
     )
     assert agent.session.early_stop_result is not None
     assert agent.session.early_stop_reason == "final_answers_without_measurement"

@@ -1,7 +1,7 @@
 """The suite a phase inherits is not checked at the phase's entry.
 
 The phase end that delivered it chose it among suites that pass, and the
-loop's start shows the model what the suite does; nothing runs or is removed
+loop's start shows the model what the suite does. Nothing runs or is removed
 before the loop. The next phase end reuses the inherited evidence of an
 unchanged suite: it passed its normal run, and no acceptance as delivered is
 recorded or needed.
@@ -29,7 +29,7 @@ pytestmark = pytest.mark.usefixtures("default_run")
 
 #: A module setting that the first test raises and the second needs at its
 #: default: under the measurement helper, which restores the module before
-#: each test, both pass; as delivered the second fails.
+#: each test, both pass. As delivered the second fails.
 TARGET = (
     "LIMIT = 0\n\n\n"
     "def classify(n):\n"
@@ -99,7 +99,7 @@ def test_the_coverage_phase_checks_nothing_at_its_entry(tmp_path, monkeypatch):
     baseline = work_tests / "test_calc.py"
     baseline.write_text(CLEAN_SUITE, encoding="utf-8")
     monkeypatch.setattr(orchestrator, "_dump_resolved_preset", lambda ctx: None)
-    # The reused starter suites carry no generation records here; the
+    # The reused starter suites carry no generation records here. The
     # entry, not the reuse check, is under test.
     monkeypatch.setattr(orchestrator, "_guard_generation_reuse", lambda ctx: None)
     monkeypatch.setattr(

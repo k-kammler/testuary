@@ -68,7 +68,7 @@ def test_first():
 def test_second():
     assert STATE == [1]
 '''
-#: The reload removed; one test more than the earlier best green suite.
+#: The reload removed, with one test more than the earlier best green suite.
 REPAIRED = '''import calc
 from calc import Box, add
 
@@ -245,7 +245,7 @@ def test_a_reload_that_breaks_nothing_stays_green_with_a_note(tmp_path):
 
 
 def test_the_reverse_order_run_is_kept_per_file_content(tmp_path, monkeypatch):
-    """No run as delivered decides; the reverse-order diagnostic's run is
+    """No run as delivered decides. The reverse-order diagnostic's run is
     made once per file content."""
     set_phase_value(monkeypatch, tc._AGENT_CONFIG, "report_reverse_order_failures", True)
     agent = _coverage_agent(tmp_path, PLAIN)
@@ -254,7 +254,7 @@ def test_the_reverse_order_run_is_kept_per_file_content(tmp_path, monkeypatch):
     calls = {"n": 0}
 
     def counting(self, *args, **kwargs):
-        # The normal run is a run as delivered too; the reverse runs count.
+        # The normal run is a run as delivered too. The reverse runs count.
         calls["n"] += bool(kwargs.get("reverse"))
         return real(self, *args, **kwargs)
 

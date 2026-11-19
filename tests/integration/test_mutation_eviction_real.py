@@ -28,7 +28,7 @@ from testuary.reduction import solve_cover
 pytestmark = [pytest.mark.slow, pytest.mark.usefixtures("default_run"), pytest.mark.mutation_tool]
 
 #: ``x * settings.FACTOR`` made ``x ** settings.FACTOR`` gives 9 for 3 once
-#: the first test has set FACTOR to 2, and 3 without it; the second test
+#: the first test has set FACTOR to 2, and 3 without it. The second test
 #: accepts 3 or 6, so it passes on the original program either way and kills
 #: the mutant only after the first test. FACTOR lives in another module,
 #: which the instrument's per-test restore of the target leaves as it is.
@@ -61,7 +61,7 @@ def _measure(target, root, tests, matrix):
 def test_a_lossless_reduction_loses_a_kill_that_needs_a_removed_test(
         tmp_path, monkeypatch):
     if not cosmic_ray_installed():
-        pytest.skip("cosmic-ray not installed; the test runs it")
+        pytest.skip("cosmic-ray not installed. The test runs it")
     monkeypatch.setenv("PYTHONIOENCODING", "utf-8")
     monkeypatch.setenv("PYTHONUTF8", "1")
     root = tmp_path / "proj"
@@ -76,7 +76,7 @@ def test_a_lossless_reduction_loses_a_kill_that_needs_a_removed_test(
     backend.setup_test_env(str(tests), str(root),
                            target_file_path=str(target))
 
-    # The full suite kills the mutant; the second test is its killer.
+    # The full suite kills the mutant, and the second test is its killer.
     full_matrix = tmp_path / "full_matrix.json"
     full, rows = _measure(target, root, tests, full_matrix)
     assert len(rows) == 1 and len(full) == 1, rows

@@ -13,7 +13,7 @@ authors:
   - family-names: "Kammler"
     given-names: "Kevin"
 license: MIT
-version: "0.2.0"
+version: "0.2.1"
 keywords:
   - test generation
   - mutation testing

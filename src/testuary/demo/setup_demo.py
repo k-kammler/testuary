@@ -264,7 +264,7 @@ def _verify(outdir: Path, result: _setup.SetupResult, manifest: Dict) -> None:
     if written != recorded:
         differences.append(f"[{alias}] model and address {written} instead of {recorded}")
     if differences:
-        raise Outdated("the setup differs from the recorded run: " + "; ".join(differences))
+        raise Outdated("the setup differs from the recorded run: " + ". ".join(differences))
 
 
 def _parser() -> argparse.ArgumentParser:

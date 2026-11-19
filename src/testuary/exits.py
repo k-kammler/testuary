@@ -57,7 +57,8 @@ STATUSES: Dict[str, Tuple[ExitStatus, ...]] = {
     CHECK: (
         ExitStatus(0, "The check found no problem. Parts that only a real run can "
                       "try are listed under \"not tried yet\".", "ready", False),
-        ExitStatus(1, "The check found a problem.", "problem", False),
+        ExitStatus(1, "The check found a problem, such as a missing tool or no selected model.",
+                   "problem", False),
         ExitStatus(2, "A setting was refused or a choice is ambiguous.", "refused", False),
         ExitStatus(INTERRUPTED, "The check was stopped with Ctrl+C. No setup was "
                                 "changed.", "interrupted", False),

@@ -117,7 +117,7 @@ def test_a_measured_run_that_fails_returns_the_loop_to_editing(monkeypatch, tmp_
 def test_the_replies_after_a_refused_measurement_name_the_coverage_tool(monkeypatch, tmp_path):
     """The suite passed run_tests and only the coverage tool's run failed, so
     while that refusal is the latest result the replies name the tool, not a
-    failing run_tests; a run of the edited file ends it."""
+    failing run_tests. A run of the edited file ends it."""
     red = _trr(ok=False, returncode=1, line_coverage=40.0)._replace(
         passed=0, failed=1,
         output="FAILED tests/test_foo.py::test_x - assert 1 == 2\n1 failed in 0.1s\n")
@@ -151,7 +151,7 @@ def test_the_replies_after_a_refused_measurement_name_the_coverage_tool(monkeypa
 def test_a_stagnant_measurement_shows_no_suite_report(monkeypatch, tmp_path):
     """A measurement long into stagnation reports the coverage and
     nothing about the suite's per-test redundancy or cost, though the backend
-    could give per-test evidence; the suite stays as it was."""
+    could give per-test evidence. The suite stays as it was."""
     _install_backend(monkeypatch, cov=_trr(line_coverage=70.0, branch_coverage=60.0))
     fake = tc.languages.get_backend("python")
     fake.collect_eviction_data = lambda *args, **kwargs: SimpleNamespace(

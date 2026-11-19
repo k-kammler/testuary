@@ -344,7 +344,7 @@ def test_coverage_boundary_delivers_the_reduced_suite_and_its_sidecars(
 
     record = _record(run)
     selection = record.pop("selection_audit")
-    # The normal run decides at the phase end; no check as delivered is
+    # The normal run decides at the phase end, and no check as delivered is
     # recorded.
     assert "portability" not in record
     # Without the earlier generation scope and request inputs, the ancestry
@@ -648,7 +648,7 @@ def test_coverage_boundary_leaves_a_red_merge_out_and_keeps_its_tests(
     tmp_path, monkeypatch,
 ):
     """A test that passes in the agent's suite but fails once merged leaves
-    the merged suite out of the choice; nothing is removed, and the agent's
+    the merged suite out of the choice. Nothing is removed, and the agent's
     suite, which passes, is delivered as it is."""
     run = _drive_coverage_boundary(
         tmp_path, monkeypatch, AGENT_SUITE_MERGE_RED)

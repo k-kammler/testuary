@@ -389,7 +389,7 @@ def test_compact_test_output_collection_error_footer() -> None:
 
 
 def test_red_footer_counts_junit_failed_tests() -> None:
-    """JUnit's launcher summary ("1 tests failed") is counted; the
+    """JUnit's launcher summary ("1 tests failed") is counted. The
     containers line is not."""
     out = (
         "Test run finished after 83 ms\n"

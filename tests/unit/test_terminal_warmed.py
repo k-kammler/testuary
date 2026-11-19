@@ -1,6 +1,6 @@
 """Warmed suite timing records from the public backend types, rendered as observations.
 
-The records are constructed here with the backend's own validation; they are
+The records are constructed here with the backend's own validation. They are
 display inputs, not native measurements.
 """
 from __future__ import annotations

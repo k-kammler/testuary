@@ -1089,7 +1089,7 @@ def rejection_reason(
             "environment": "the container command or the project's runtime changed",
             "project_exec": "the execution mode changed",
         }
-        return "; ".join(named.get(k, f"{k} changed")
+        return ", ".join(named.get(k, f"{k} changed")
                          for k in sorted(differing))
     changed = _finishing_changed(phase, run_block)
     if changed:

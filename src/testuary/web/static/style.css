@@ -271,7 +271,7 @@ td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
 ul.files { list-style: none; padding: 0; margin: 6px 0; }
 ul.files li { margin: 2px 0; overflow-wrap: anywhere; }
 ul.files .link-button { overflow-wrap: anywhere; text-align: left; }
-/* The setup's found paths, each whole; another path in the row's width. */
+/* The setup's found paths, each shown whole, and another path in the row's width. */
 .open-answer .check { align-items: center; }
 .open-answer .check input[type="text"] { flex: 1; min-width: 0; }
 .notice-box #fresh_dir { display: block; width: calc(100% - 28px); max-width: 640px; margin: 2px 0 6px 28px; }
@@ -343,7 +343,7 @@ progress.tone-refused, progress.tone-limit_reached { accent-color: var(--warning
 .console-text { white-space: pre-wrap; overflow-wrap: anywhere; }
 
 /* The results dashboard: the tracks lay out Testuary's percentages from 0
-   to 100; the text beside each states the value. */
+   to 100, and the text beside each states the value. */
 h4 { font-size: 14px; margin: 14px 0 4px; }
 .path { overflow-wrap: anywhere; margin-top: -4px; }
 .score-switch { display: flex; flex-wrap: wrap; gap: 4px 18px; align-items: baseline; border: none; padding: 0; margin: 4px 0 8px; max-width: none; }
@@ -398,7 +398,7 @@ tr.detail > td { background: var(--bg); padding: 4px 12px 14px; }
 .chart-row.starter .fill { background: var(--muted); }
 ul.list li.chosen a { font-weight: 700; }
 
-/* A disabled button looks disabled; a disabled field is grayed with its hint. */
+/* A disabled button looks disabled, and a disabled field is grayed with its hint. */
 button:disabled, button.primary:disabled { background: var(--disabled-bg); color: var(--disabled-text);
   border-color: var(--line); border-style: dashed; cursor: not-allowed; opacity: .8; }
 .field.disabled { opacity: .55; }
@@ -443,7 +443,6 @@ button:disabled, button.primary:disabled { background: var(--disabled-bg); color
 
 /* The run's phases and steps: the current one highlighted, finished ones marked, the rest gray. */
 .cause { border-left: 4px solid var(--failed); }
-.cause-note { border-left: 4px solid var(--line); }
 .cause-warning { border-left: 4px solid var(--warning); }
 /* A command's own error text keeps its lines. A long path in it, such as an
    interpreter's, breaks inside the panel. */

@@ -28,7 +28,7 @@ def no_native_tools(monkeypatch):
 
     monkeypatch.setattr(subprocess, "Popen", forbidden)
     monkeypatch.setattr(subprocess, "run", forbidden)
-    # The bytecode store's helper is a native command; its own tests run it.
+    # The bytecode store's helper is a native command. Its own tests run it.
     monkeypatch.setattr(preparation, "bytecode_store", lambda backend: {})
     monkeypatch.setattr(config, "project_exec_mode", lambda: "local")
     monkeypatch.setattr(project, "project_work_dir", lambda: None)

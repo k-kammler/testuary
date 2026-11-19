@@ -540,7 +540,7 @@ def test_an_undeclared_suite_dir_is_refused_with_both_named(project, default_run
 @pytest.mark.parametrize("copies", [True, False], ids=["copies", "in-place"])
 def test_the_declaration_follows_the_adapters_fact_not_its_language(project, monkeypatch, copies, default_run):
     """An adapter that copies a suite directory outside the project
-    (``copies_external_suite``) refuses one its caller did not declare; one
+    (``copies_external_suite``) refuses one its caller did not declare. One
     that runs such a suite in place needs no declaration, whatever its
     language."""
     for adapter in (lb.LangAdapter, NativePython, NativeJava):

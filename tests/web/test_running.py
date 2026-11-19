@@ -2,7 +2,7 @@
 this user's Testuary directory (web/running/<port>.json: its process, port,
 directory, start time and a stop secret) and removes the record when it ends.
 --stop asks this user's running interfaces, by that secret, to end as
-Ctrl+C ends them; --replace does so on the chosen port, then starts. No
+Ctrl+C ends them, and --replace does so on the chosen port, then starts. No
 process is signaled by its number, so another program, also one on the
 port, is never touched."""
 from __future__ import annotations
@@ -174,7 +174,7 @@ def test_a_port_held_by_another_program_is_named_as_not_testuarys_and_left_alone
 
 
 def test_the_stop_request_needs_the_records_secret(serve):
-    """Only a request carrying the record's secret stops an interface; one
+    """Only a request carrying the record's secret stops an interface. One
     started outside testuary-web's own start (here, the test's) is not
     stopped from outside at all."""
     app, server, client = serve(key=False)

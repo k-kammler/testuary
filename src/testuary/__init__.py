@@ -1,7 +1,7 @@
 """Testuary generates unit tests for Python and Java, and for C on Linux, with
 coverage and mutation feedback."""
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
 """The installed Testuary version."""
 
 RESULTS_VERSION = "0.2"

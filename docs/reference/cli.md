@@ -16,12 +16,21 @@ Generate and measure tests for selected targets.
 - [`testuary setup`](#testuary-setup): Ask for and write what a run needs: model access in models.ini and what runs in parallel on this machine in config.ini, both in your user directory, and a project's settings in .testuary/project.ini in its directory. Without a part, walk all three, skipping the parts already set.
 - [`testuary tutorial`](#testuary-tutorial): Learn Testuary's extension points step by step: a model alias, a prompt profile and an extension's hints, each applied, shown and checked, without contacting a model.
 
-generate (the default in a project) writes and measures tests, and its flags also work without 'generate'. check checks the setup without contacting a model (the quick check). setup asks for model access, what runs in parallel on this machine and a project. init copies example files. provision installs the runtime the project asks for. new-language writes a new language's file. tutorial teaches the extension points offline. Use 'testuary \[FILES\]' in a project to run its \[project\] source_files, or the targets named, and 'testuary --demo' for the offline demonstration.
+generate (the default in a project) writes and measures tests, and its flags also work without 'generate'. check checks the setup without contacting a model (the quick check). setup asks for model access, what runs in parallel on this machine and a project. init copies example files. provision installs the runtime the project asks for. new-language writes a new language's file. tutorial teaches the extension points offline. Use 'testuary \[FILES\]' in a project to run its \[project\] source_files, or the targets named.
 
 ## testuary
 
 - `--version`
   Print the installed Testuary and LangAdapter versions and exit.
+
+- `--demo`
+  Play back one recorded run offline: every model answer and measurement comes from a recording shipped with Testuary, so it needs no model, network, project or test tools. It uses the recorded settings and lists any of yours it overrides. The run directory, the display options, the event file and the demonstration's language are yours.
+
+- `--demo-language` `LANGUAGE`
+  Language of the offline demonstration: python (the default), java, or another language whose demonstration data come with Testuary, such as toy. Requires --demo. Default: `python`.
+
+- `--home` `DIR`
+  The user directory that holds models.ini and the global config.ini, in place of TESTUARY_HOME or the platform's user directory.
 
 ## testuary generate
 
@@ -140,7 +149,7 @@ Generate test suites for the selected targets with a language model. A run asks 
 Check the setup without contacting a model or installing anything (the quick check). --verify also starts the tools and tries the project in a copy.
 
 - `--verify`
-  Also start the tools a run needs once and try the project in a copy as a run does, to see that they work (the tool check). Python imports pytest, coverage and the mutation tool with the project's interpreter and collects the tests. Java runs java and javac, resolves the build, compiles and finds the tests, and starts the measurement tools a run needs. The first run tries the build of a project with its own build wrapper, which may download its build tool. The check runs no test, installs nothing and contacts no model. What it cannot try is reported as not tried.
+  Also start the tools a run needs once and try the project in a copy as a run does, to see that they work (the tool check). Python imports pytest, coverage and the mutation tool with the project's interpreter and collects the tests. Java runs java and javac, resolves the build, compiles and finds the tests, and starts the measurement tools a run needs. The first run tries the build of a project with its own build wrapper, which may download its build tool. The check runs no test and contacts no model. For Java it downloads what a run would when it is missing: what the build needs and, unless LANGADAPTER_JAVA_TOOLS_OFFLINE is set, the JUnit launcher, JaCoCo and PIT. What it cannot try, and a language whose adapter has no check of its own, is listed under Not tried yet.
 
 - `--json`
   Print the report as JSON instead of text (API keys removed).

@@ -32,7 +32,7 @@ def test_root_label_and_work_override_are_independent(selection, tmp_path, monke
     project = {"name": "label", "source_dir": "actual source", "python_import_root": "src"} \
         if selection == "explicit" else ({"name": "label"} if selection == "label" else {})
     settings = RunSettings(base_dir=tmp_path, sections={"project": project})
-    # A label alone names the project; the project directory stays its root.
+    # A label alone names the project, and the project directory stays its root.
     expected = tmp_path / "actual source" if selection == "explicit" else tmp_path
     monkeypatch.chdir(other)
     with config_module.use_run_settings(settings):

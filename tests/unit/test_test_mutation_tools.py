@@ -41,7 +41,7 @@ def _set_engine(monkeypatch, factory) -> None:
 
 class _FakeRunner:
     """The agent's mutation runner over a fake engine: a run of its own
-    session is the engine's ``run``; the catalogue is the engine's."""
+    session is the engine's ``run``, and the catalogue is the engine's."""
 
     def __init__(self, engine, log=None) -> None:
         self.engine = engine
@@ -75,7 +75,7 @@ def _trr(rc: int = 0, out: str = "", *, timed_out: bool = False):
 def _install_backend(monkeypatch, result_or_fn, *, under_coverage=None):
     """Route the mutation phase's test runs (run_tests and the
     measure_mutation's normal run) through a fake backend. ``result_or_fn`` is
-    a TestRunResult or a callable ``(test_paths) -> TestRunResult``;
+    a TestRunResult or a callable ``(test_paths) -> TestRunResult``.
     ``under_coverage``, when given, is the result of a run under the
     coverage tool."""
     def _run(test_paths, source_dir, *, timeout,
@@ -1422,7 +1422,7 @@ def test_measure_mutation_session_reuse_wires_log_fn_into_engine(
     agent.measure_mutation()
     assert fake_session.log_fn_at_run_time == agent.log, (
         "Session-reuse path failed to wire log_fn into the engine config "
-        "before calling session.run; the progress poller is disabled and "
+        "before calling session.run. The progress poller is disabled and "
         "the inconclusive-abort gate has no observer."
     )
 

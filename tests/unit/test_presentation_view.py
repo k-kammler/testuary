@@ -202,15 +202,15 @@ def test_a_failed_run_ends_what_it_left_running_and_names_its_cause():
     view.add(_event(phase="pipeline", operation="run", level="run", target="all targets",
                     state="failed", message="Run ended with an execution error. More text."))
     assert view.snapshot(4).cause == "Run ended with an execution error."
-    # A run that ended without failing names a failure it had, and none
-    # without one or while it goes on.
+    # A run names no failure while it goes on, and none once it has
+    # succeeded: what failed on its way stays in the log.
     view = RunView()
     view.add(_event(phase="starter", operation="request/1", state="failed",
                     message="Request limit reached"))
     assert view.snapshot(4).cause is None
     view.add(_event(phase="pipeline", operation="run", level="run", target="all targets",
                     state="succeeded", message="Run completed"))
-    assert view.snapshot(4).cause == "Request limit reached"
+    assert view.snapshot(4).cause is None
     quiet = RunView()
     quiet.add(_event(phase="pipeline", operation="run", level="run", target="all targets",
                      state="succeeded", message="Run completed"))
@@ -308,7 +308,7 @@ def test_a_diagram_counts_the_starter_suites_and_the_loops_requests_and_values()
 
 def test_the_step_a_limit_ends_names_the_limit():
     """The step names the limit in its message's words, without the
-    request count; an older event file's "Limit reached" stays generic."""
+    request count. An older event file's "Limit reached" stays generic."""
     view = RunView()
     view.add(_event(phase="mutation", operation="step/assess", level="step"))
     lines = [view.add(_event(phase="mutation", operation="step/assess", level="step",
@@ -340,6 +340,26 @@ def test_a_loop_that_ends_at_its_limit_reads_limit_reached_and_is_no_issue():
                              message="Model request ended with an error", elapsed_s=3.0))
     assert "FAILED" in failed.line
     assert view.snapshot(4).issues == (f"Recent issue: {failed.line}",)
+
+
+@pytest.mark.parametrize("ending", ["succeeded", "failed", "cancelled"])
+def test_only_a_run_that_succeeded_ends_without_its_recent_issues(ending):
+    """A run that succeeded recovered from every failure it showed, whose
+    lines stay in the log above the view: its final screen names no Recent
+    issue beside Overall SUCCEEDED. A run that ended otherwise keeps them."""
+    view = RunView()
+    view.add(_event(phase="pipeline", operation="run", level="run", target="all targets"))
+    failed = view.add(_event(operation="step/edit", level="step", label="Model edits the tests",
+                             state="failed", message="Edit refused", elapsed_s=2.0))
+    assert failed.logged and "FAILED" in failed.line
+    assert view.snapshot(4).issues == (f"Recent issue: {failed.line}",)
+    view.add(_event(phase="pipeline", operation="run", level="run", target="all targets",
+                    state=ending, elapsed_s=3.0))
+    issues = view.snapshot(4).issues
+    if ending == "succeeded":
+        assert issues == ()
+    else:
+        assert f"Recent issue: {failed.line}" in issues
 
 
 def test_a_mutation_measurements_count_reads_as_mutants_run_not_as_a_score():

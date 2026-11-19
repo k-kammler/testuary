@@ -538,7 +538,7 @@ def test_a_keyed_mutant_is_identified_by_file_operator_and_occurrence():
 def _carrier_trial(monkeypatch, *, normal_ok, coverage_ok):
     """One carrier repair round with a fake backend whose normal run (no
     coverage tool) passes when ``normal_ok`` and whose run under the coverage
-    tool passes when ``coverage_ok``; the load recovery finds nothing."""
+    tool passes when ``coverage_ok``. The load recovery finds nothing."""
     from testuary import consolidation
 
     class Backend:

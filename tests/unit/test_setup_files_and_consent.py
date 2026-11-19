@@ -194,7 +194,7 @@ def test_a_confirmed_update_replaces_exactly_the_asked_keys(tmp_path):
     parser.read(settings_file, encoding="utf-8")
     written = {f"{key} = {value}" for key, value in parser["project"].items()}
     assert set(shown.splitlines()[1:]) <= written
-    # The answered keys hold exactly the answers; the others stay.
+    # The answered keys hold exactly the answers, and the others stay.
     assert "python_import_root" not in parser["project"] and not parser.has_option("api", "model")
     assert parser["project"]["hint_profile"] == "speed"
     assert parser["project"]["requirements"] == "req.txt\ncontinued"

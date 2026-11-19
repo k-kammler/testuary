@@ -2059,7 +2059,7 @@ def _reuse_coverage_phase_end(
             if inherited.kill_matrix is not None else None
         ),
         tests=inherited.delivered_tests,
-        note="inherited from the starter phase; no measurement, reduction "
+        note="inherited from the starter phase, with no measurement, reduction "
              "or selection |",
     )
 
@@ -2128,13 +2128,13 @@ def _phase_coverage(
         _record_outcome(
             result, "coverage", "failed",
             "the request limit ended the coverage phase before any "
-            "coverage measurement; the suite on disk is unmeasured.",
+            "coverage measurement, so the suite on disk is unmeasured.",
             failure_kind=phase_state.METHOD_FAILURE,
         )
     elif status is None:
         _record_outcome(
             result, "coverage", "failed",
-            "the coverage phase returned no status; an unclassified end "
+            "the coverage phase returned no status, and an unclassified end "
             "fails closed.",
         )
     else:
@@ -2232,7 +2232,7 @@ def _restored_test_file_collects(
     if res.ok or res.collected:
         return True, ""
     return False, (
-        f"the test file did not load (exit={res.returncode}); output tail:\n"
+        f"the test file did not load (exit={res.returncode}). Output tail:\n"
         + (res.output or "")[-2000:]
     )
 
@@ -2323,7 +2323,7 @@ def _restore_coverage_test_file_from_disk(
     _record_outcome(
         result, "coverage", "failed",
         "no coverage test file on disk to reuse under "
-        "--reuse coverage; the standard suite is mandatory",
+        "--reuse coverage, and the standard suite is mandatory",
     )
     return None
 
@@ -2427,7 +2427,7 @@ def _phase_mutation(
                 result, "mutation", "failed",
                 "inconclusive: engine returned with 0 useful outcomes "
                 "(every mutant INCOMPETENT or untested). 0% score is "
-                "not a real measurement; see the [CRITICAL] line in "
+                "not a real measurement. See the [CRITICAL] line in "
                 f"{ctx.target_logs_dir / 'mutation.jsonl'} for the breakdown and the "
                 "likely root causes (worker import error, broken "
                 "test_command, etc.).",
@@ -2443,7 +2443,7 @@ def _phase_mutation(
                 result, "mutation", "failed",
                 "the inherited suite arrived red at the mutation phase entry "
                 "(it was green at the coverage handoff, so a test is flaky or "
-                "the test environment changed); the phase never ran.",
+                "the test environment changed), and the phase never ran.",
                 # Unjudged: a generated suite that turns red later is often
                 # flaky, the method's own outcome, not only the environment.
             )
@@ -2824,7 +2824,7 @@ def _phase_finishing(
                                "mutation_measurement", None)
             detail = finishing_error or (
                 "the final mutation measurement did not resolve its "
-                "catalogue; no standard-suite score is reported"
+                "catalogue, so no standard-suite score is reported"
                 if measured == "incomplete" else
                 "Finishing produced no standard-suite full-catalogue "
                 "mutation score"

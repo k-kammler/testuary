@@ -450,7 +450,7 @@ class TransportExhausted(Exception):
                  attempt: Optional[int] = None):
         detail = f"{reason}"
         if last is not None:
-            detail += f"; last failure {type(last).__name__}: {failure_text(last)}"
+            detail += f". Last failure {type(last).__name__}: {failure_text(last)}"
         super().__init__(detail)
         self.reason = reason
         self.attempt = attempt

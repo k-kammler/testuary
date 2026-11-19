@@ -33,7 +33,7 @@ def resolved_configs(tmp_cwd, in_run):
 def test_shared_config_keys_resolve_identically(resolved_configs):
     cov, mut = resolved_configs
     shared = set(cov) & set(mut)
-    assert shared, "the two agent configs share no keys; the parent link broke"
+    assert shared, "the two agent configs share no keys. The parent link broke"
     divergent = {
         key: (cov[key], mut[key])
         for key in sorted(shared)

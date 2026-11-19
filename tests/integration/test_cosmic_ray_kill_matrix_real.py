@@ -28,7 +28,7 @@ def test_cosmic_ray_capture_writes_killers_against_real_schema(
     tmp_path: Path, fixtures_dir: Path,
 ) -> None:
     if not cosmic_ray_installed():
-        pytest.skip("cosmic-ray not installed; integration test requires it")
+        pytest.skip("cosmic-ray not installed. The integration test requires it")
     work = tmp_path / "project"
     shutil.copytree(fixtures_dir / "tiny_project", work)
     target = work / "src" / "arith.py"
@@ -54,7 +54,7 @@ def test_cosmic_ray_capture_writes_killers_against_real_schema(
     # attribution sets includes_kills, which the mutation set cover requires.
     attributed = [m for m in killed if m.get("killer")]
     assert len(attributed) == len(killed), (
-        f"all killed mutants must be attributed to a test; "
+        f"all killed mutants must be attributed to a test. "
         f"{len(killed) - len(attributed)} unattributed"
     )
     assert all("::" in m["killer"] for m in attributed), (

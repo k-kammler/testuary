@@ -441,7 +441,7 @@ def _files(root, names):
 def test_the_source_list_follows_each_languages_own_rules(tmp_path):
     """Every language's sources are listed by its file extensions, the directories it
     ignores, the files it names as no sources and its test-file rule, with
-    no language branch; an empty file holds nothing to test (AP4)."""
+    no language branch. An empty file holds nothing to test (AP4)."""
     probe = _setup.Probe()
     python = _files(tmp_path / "py", {
         "mod.py": "x = 1\n", "pkg/core.py": "y = 2\n", "pkg/__init__.py": "",
@@ -468,3 +468,98 @@ def test_a_link_that_leads_nowhere_is_no_source_file(tmp_path):
     except OSError:
         pytest.skip("this system lets the test create no links")
     assert _setup.Probe().source_files(python, "python") == ["mod.py"]
+
+
+def test_the_terminal_shows_the_model_services_once_and_takes_a_number(project, monkeypatch, capsys):
+    """The terminal lists each model service once, with its label and kind,
+    and a number picks one."""
+    import builtins
+
+    monkeypatch.chdir(project)
+    answers = {"Which model service": "6", "The service's API address": "https://api.together.xyz/v1",
+               "Keep the API key": "environment", "The model's name": "big-model"}
+    shown = []
+
+    def typed(prompt):
+        if prompt.startswith("Which model service"):
+            shown.extend(line.strip() for line in capsys.readouterr().out.splitlines()
+                         if re.fullmatch(r"\s+\d+\. .+", line))
+        return next((answer for start, answer in answers.items() if prompt.startswith(start)), "")
+
+    monkeypatch.setattr(builtins, "input", typed)
+    _setup.run_setup(_setup.terminal_ask, _Probe(ollama=False, models=("big-model",)), print,
+                     project, part="model")
+    assert shown == [f"{index}. {provider.label} ({provider.kind})"
+                     for index, provider in enumerate(_setup.PROVIDERS, 1)]
+    assert "[together_big_model]" in _user("models.ini").read_text(encoding="utf-8")
+
+
+def _cgroups(root, version, mount_root, member, quota):
+    """A /proc and cgroup file system under ``root`` for a process in the
+    cgroup ``member`` whose CPU quota is ``quota`` microseconds per 100000
+    (None: no quota), under the version's usual mount, whose root is
+    ``mount_root`` (a container's cgroup namespace mounts its own cgroup as
+    the root)."""
+    proc = root / "proc" / "self"
+    proc.mkdir(parents=True)
+    point = "/sys/fs/cgroup" if version == 2 else "/sys/fs/cgroup/cpu,cpuacct"
+    kind = "cgroup2 cgroup2 rw" if version == 2 else "cgroup cgroup rw,cpu,cpuacct"
+    (proc / "mountinfo").write_text(
+        f"22 1 8:1 / / rw - ext4 /dev/sda1 rw\n30 22 0:26 {mount_root} {point} rw - {kind}\n",
+        encoding="utf-8")
+    (proc / "cgroup").write_text(
+        f"0::{member}\n" if version == 2 else f"5:memory:{member}\n4:cpu,cpuacct:{member}\n",
+        encoding="utf-8")
+    top = root / point.lstrip("/")
+    inside = top.joinpath(*[part for part in member[len(mount_root):].split("/") if part])
+    inside.mkdir(parents=True, exist_ok=True)
+    for directory, limit in ((top, None), (inside, quota)):
+        if version == 2:
+            (directory / "cpu.max").write_text(f"{limit or 'max'} 100000\n", encoding="utf-8")
+        else:
+            (directory / "cpu.cfs_quota_us").write_text(f"{limit or -1}\n", encoding="utf-8")
+            (directory / "cpu.cfs_period_us").write_text("100000\n", encoding="utf-8")
+
+
+class _Machine(_Probe):
+    """``_Probe`` with the setup's own CPU count."""
+
+    cpu_count = _setup.Probe.cpu_count
+
+
+@pytest.mark.parametrize("version, mount_root, member", [
+    (2, "/", "/user.slice/job"), (2, "/", "/"), (1, "/", "/job"), (1, "/docker/abc", "/docker/abc")])
+def test_the_suggested_workers_follow_the_cpus_a_quota_leaves(project, monkeypatch, version, mount_root,
+                                                             member):
+    """On a machine of 16 CPUs, a CPU quota of 4 (a container started with
+    --cpus 4) leaves 4 to the setup's count under cgroups v1 and v2, and
+    the machine part suggests half of them."""
+    _cgroups(project / "system", version, mount_root, member, 400000)
+    monkeypatch.setattr(_setup.os, "cpu_count", lambda: 16)
+    monkeypatch.setattr(_setup, "allowed_cpus", lambda: list(range(16)), raising=False)
+    monkeypatch.setattr(_setup, "_SYSTEM_ROOT", project / "system", raising=False)
+    assert _setup.Probe().cpu_count() == 4
+    _result, ask, _said = _run(project, {}, probe=_Machine(), part="machine")
+    question = ask.questions["machine.mutation_workers"]
+    assert question.default == "2" and question.reason.startswith("Testuary may use 4 ")
+
+
+@pytest.mark.parametrize("allowed, quota, expected", [
+    (list(range(3)), None, 3), (list(range(3)), 800000, 3), (list(range(8)), 250000, 3), (None, None, 16)])
+def test_the_cpu_count_takes_the_affinity_and_the_quota(project, monkeypatch, allowed, quota, expected):
+    """The count is the CPUs the affinity allows, the machine's where the
+    platform has no affinity, and at most what a quota leaves, rounded up."""
+    _cgroups(project / "system", 2, "/", "/job", quota)
+    monkeypatch.setattr(_setup.os, "cpu_count", lambda: 16)
+    monkeypatch.setattr(_setup, "allowed_cpus", lambda: allowed, raising=False)
+    monkeypatch.setattr(_setup, "_SYSTEM_ROOT", project / "system", raising=False)
+    assert _setup.Probe().cpu_count() == expected
+
+
+def test_the_cpu_count_without_cgroups_is_the_affinity(project, monkeypatch):
+    """Where no cgroup can be read, as on Windows and macOS, the count is
+    the affinity's, else the machine's."""
+    monkeypatch.setattr(_setup.os, "cpu_count", lambda: 6)
+    monkeypatch.setattr(_setup, "allowed_cpus", lambda: None, raising=False)
+    monkeypatch.setattr(_setup, "_SYSTEM_ROOT", project / "nothing", raising=False)
+    assert _setup.Probe().cpu_count() == 6

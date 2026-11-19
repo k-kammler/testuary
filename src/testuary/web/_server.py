@@ -19,6 +19,7 @@ import os
 import re
 import secrets
 import socket
+import sys
 import time
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -56,6 +57,9 @@ TOKEN_HEADER = "X-Testuary-Web-Token"
 STOP_HEADER = "X-Testuary-Web-Stop"
 STREAM_POLL_SECONDS = 0.2
 KEEPALIVE_SECONDS = 10.0
+#: What a request's read or write raises when its client closed or reset
+#: the connection.
+_DROPPED = (BrokenPipeError, ConnectionResetError, ConnectionAbortedError)
 #: An extension's read-only route: its extension's id and its path.
 _ROUTE = re.compile(r"/api/ext/(%s)/(%s)" % (_registry.ID.pattern, _registry.ROUTE_PATH.pattern))
 _JOB = re.compile(r"/api/jobs/([0-9a-f-]{1,64})(/stream|/stop|/force|/continue)?")
@@ -1175,7 +1179,7 @@ class Handler(BaseHTTPRequestHandler):
                     quiet_since = time.monotonic()
                 else:
                     time.sleep(STREAM_POLL_SECONDS)
-        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+        except _DROPPED:
             return
 
 
@@ -1279,3 +1283,10 @@ class Server(ThreadingHTTPServer):
     def __init__(self, app: App, port: int = 0) -> None:
         super().__init__(("127.0.0.1", port), Handler)
         self.app = app
+
+    def handle_error(self, request, client_address) -> None:
+        # A client that closed or reset its connection ends the request's
+        # read or write: the interface serves on, with nothing to report.
+        if isinstance(sys.exc_info()[1], _DROPPED):
+            return
+        super().handle_error(request, client_address)

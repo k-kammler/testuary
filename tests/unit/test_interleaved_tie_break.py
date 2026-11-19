@@ -207,7 +207,7 @@ def test_a_red_candidate_leaves_the_rounds_and_gives_no_time(controlled):
     winner = consolidate.pick_phase_result(candidates, runtime_of=_timer(adapter, root, target), required_axes=consolidate._PHASE_END_AXES)
 
     # Its failed timing run gives the agent no time, so the input order
-    # decides; it is not rejected.
+    # decides. It is not rejected.
     assert winner.label == "baseline"
     assert candidates[1].green is True
     assert candidates[1].suite_timing["status"] == "failed"

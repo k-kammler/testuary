@@ -247,7 +247,7 @@ def test_setup_test_env_resolves_source_dir_relative_for_sibling_test_dir(
     # The path is computed at runtime, and the absolute path does not appear.
     assert "os.path.dirname" in body
     assert str(source_dir) not in body, (
-        "conftest baked in the absolute source_dir path; this "
+        "conftest baked in the absolute source_dir path. This "
         "breaks cosmic-ray worker clones (they import the unmutated "
         "original instead of the mutated clone). Use a runtime-relative "
         "expression based on __file__."

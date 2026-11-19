@@ -46,7 +46,10 @@ python -m pip install testuary
 ```
 
 On Windows, create the environment with `python -m venv testuary-env` and
-activate it with `testuary-env\Scripts\activate`. On Debian and Ubuntu,
+activate it with `testuary-env\Scripts\activate` in cmd or PowerShell. In
+PowerShell, run `Set-ExecutionPolicy -Scope Process RemoteSigned` first: the
+default policy of Windows PowerShell refuses the activation script, and this
+command allows local scripts in that window only. On Debian and Ubuntu,
 `python3 -m venv` needs the package `python3-venv`
 (`sudo apt install python3-venv`), as [Set up your machine](https://k-kammler.github.io/testuary/guide/machine/)
 describes.
@@ -120,7 +123,7 @@ The results go to `.testuary/results/ollama_qwen` in the project's directory.
 At a paid service, model requests can cost money. To see a run of all four phases without
 a model, play back the offline demonstration with `testuary --demo --output-dir demo-python`.
 
-The [quickstart directory](https://github.com/k-kammler/testuary/tree/v0.2.0/examples/quickstart)
+The [quickstart directory](https://github.com/k-kammler/testuary/tree/v0.2.1/examples/quickstart)
 of the repository, also in the source distribution, holds these first steps
 as scripts and commands: the demonstrations, the web interface started from
 the console or from Python, and two small projects, one Python file and one
@@ -148,13 +151,13 @@ Java class, to run with your own model.
 - [Measurement and recovery](https://k-kammler.github.io/testuary/explanation/measurement-and-recovery/)
 - [Result files](https://k-kammler.github.io/testuary/reference/result-files/)
 - [Contributing](https://k-kammler.github.io/testuary/contributing/)
-- [Changelog](https://github.com/k-kammler/testuary/blob/v0.2.0/CHANGELOG.md)
+- [Changelog](https://github.com/k-kammler/testuary/blob/v0.2.1/CHANGELOG.md)
 
 ## License
 
 Testuary is licensed under the
-[MIT license](https://github.com/k-kammler/testuary/blob/v0.2.0/LICENSE).
+[MIT license](https://github.com/k-kammler/testuary/blob/v0.2.1/LICENSE).
 A few files from other projects, in the demonstration data, keep their own
 licenses, and so do the installed dependencies.
-[Third-party material](https://github.com/k-kammler/testuary/blob/v0.2.0/THIRD_PARTY_NOTICES.md)
+[Third-party material](https://github.com/k-kammler/testuary/blob/v0.2.1/THIRD_PARTY_NOTICES.md)
 lists them.

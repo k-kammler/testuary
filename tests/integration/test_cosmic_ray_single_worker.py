@@ -50,7 +50,7 @@ def test_cosmic_ray_single_worker_run_produces_score(
     operator) kills at least 70 %, and the measurement holds the run its
     survivors' text and kill matrix are read from."""
     if not cosmic_ray_installed():
-        pytest.skip("cosmic-ray not installed; integration test requires it")
+        pytest.skip("cosmic-ray not installed. The integration test requires it")
 
     monkeypatch.setenv("PYTHONIOENCODING", "utf-8")
     monkeypatch.setenv("PYTHONUTF8", "1")
@@ -67,7 +67,7 @@ def test_cosmic_ray_single_worker_run_produces_score(
         "Log messages:\n" + "\n".join(log_messages)
     )
     assert result.score >= 70.0, (
-        f"fixture suite should kill >= 70 % of mutants; got "
+        f"fixture suite should kill >= 70 % of mutants, got "
         f"score={result.score:.1f} (killed={result.killed}, "
         f"survived={result.survived}, total={result.total})"
     )
@@ -89,7 +89,7 @@ def test_cosmic_ray_http_workers_kill_mutants_in_sibling_layout(
     prepared with the production conftest, so imports resolve as in a real
     run."""
     if not cosmic_ray_installed():
-        pytest.skip("cosmic-ray not installed; integration test requires it")
+        pytest.skip("cosmic-ray not installed. The integration test requires it")
 
     monkeypatch.setenv("PYTHONIOENCODING", "utf-8")
     monkeypatch.setenv("PYTHONUTF8", "1")
@@ -121,11 +121,11 @@ def test_cosmic_ray_http_workers_kill_mutants_in_sibling_layout(
 
     assert result.killed > 0, (
         f"sibling-layout HTTP workers killed no mutants (score "
-        f"{result.score:.1f}); they are importing the live unmutated "
+        f"{result.score:.1f}). They are importing the live unmutated "
         f"source instead of their clone.\nLogs:\n"
         + "\n".join(log_messages)
     )
     assert result.score >= 70.0, (
-        f"expected most mutants killed; got score={result.score:.1f} "
+        f"expected most mutants killed, got score={result.score:.1f} "
         f"(killed={result.killed}, survived={result.survived})"
     )

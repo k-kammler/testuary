@@ -169,7 +169,7 @@ def test_every_page_links_this_versions_guide(serve):
 
 def test_the_check_button_says_what_it_checks():
     """The Check page's button says it runs the check and sends nothing to
-    a model; the projects' link to it says what it opens."""
+    a model. The projects' link to it says what it opens."""
     import re
 
     from conftest import SOURCE

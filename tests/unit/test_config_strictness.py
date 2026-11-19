@@ -55,8 +55,8 @@ def test_bundled_config_defines_every_measurement_key(key):
     """The bundled layer defines the key in at least one section."""
     sections = _bundled_sections()
     assert any(key in kv for kv in sections.values()), (
-        f"{key!r} is not defined anywhere in the bundled config.ini; "
-        f"a strict read of it would fail on every run")
+        f"{key!r} is not defined anywhere in the bundled config.ini. "
+        f"A strict read of it would fail on every run")
 
 
 def test_no_defaulted_reads_of_measurement_keys():

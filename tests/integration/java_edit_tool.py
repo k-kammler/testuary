@@ -176,7 +176,7 @@ def main() -> int:
     report = {"original": TESTS}
     # Configuration is read inside a run only: the backend's setup and the
     # agents read the settings file's JDK and Maven. A run selects a model,
-    # as every run does; the scripted model answers and none is called.
+    # as every run does. The scripted model answers and none is called.
     run = resolve_settings(base_dir=WORK, models={}, project_settings=False,
                            overrides={"api": {"provider": "ollama", "model": "test-model"}})
     with config.use_run_settings(run):

@@ -127,7 +127,7 @@ def test_the_diagram_is_the_plan_in_the_states_the_run_shows(tmp_path):
 
 
 def test_a_step_a_limit_ended_names_the_limit_in_the_diagram(tmp_path):
-    """The step a limit ended carries its event's words for the limit; every
+    """The step a limit ended carries its event's words for the limit. Every
     other step carries none."""
     view = _jobs.Progress(tmp_path)
     view.add(_line({"plan": dataclasses.asdict(_plan())}))
@@ -356,7 +356,7 @@ def test_a_rows_tone_is_its_state_and_a_scientific_outcome_a_warning():
 
 def test_an_event_files_records_are_its_json_objects(tmp_path):
     """The web's readers of an event file share one parser: a line is a
-    record when it is a JSON object; a cut, empty or other line is none."""
+    record when it is a JSON object. A cut, empty or other line is none."""
     assert _jobs.record('{"event": {"level": "run"}}') == {"event": {"level": "run"}}
     assert _jobs.record(b'{"completion": {}}') == {"completion": {}}
     assert [_jobs.record(line) for line in ("", "{cut", "[1, 2]", "3")] == [None] * 4

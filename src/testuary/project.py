@@ -372,7 +372,7 @@ def launch_environment() -> Dict[str, str]:
     if not settings.environment_captured:
         raise RuntimeError(
             "these run settings captured no launch environment, so native commands "
-            "cannot start; construct RunSettings with environment=dict(os.environ) "
+            "cannot start. Construct RunSettings with environment=dict(os.environ) "
             "or use resolve_settings()")
     from testuary.settings import model_credential_variables
 

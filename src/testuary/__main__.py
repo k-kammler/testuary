@@ -251,6 +251,10 @@ def _primary_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         allow_abbrev=False,
         prog="testuary", description="Generate and measure tests for selected targets.",
+        # A command is the first word, so no option stands before one.
+        usage="%(prog)s [-h] [--version]\n"
+              "       %(prog)s [--demo [--demo-language LANGUAGE]] [--home DIR] [FILE ...]\n"
+              "       %(prog)s COMMAND [OPTIONS]",
         epilog="generate (the default in a project) writes and measures tests, and its "
                "flags also work without 'generate'. check checks the setup without "
                "contacting a model (the quick check). setup asks for model access, what "
@@ -258,13 +262,18 @@ def _primary_parser() -> argparse.ArgumentParser:
                "provision installs the runtime the project asks for. new-language writes a "
                "new language's file. tutorial teaches the extension points offline. "
                "Use 'testuary [FILES]' in a project to run its [project] source_files, "
-               "or the targets named, and 'testuary --demo' for the offline demonstration.",
+               "or the targets named.",
     )
     parser.add_argument(
         "command", nargs="?", choices=("generate", "check", "init", "provision", "new-language", "setup", "tutorial"),
         help="Select a command, each described below. COMMAND --help lists its options.",
     )
     parser.add_argument("--version", action=_VersionAction)
+    # The demonstration and the user directory also work without a
+    # command, so the main help lists them with the help a run gives them.
+    for action in _build_parser()._actions:
+        if action.dest in ("demo", "demo_language", "home"):
+            parser._add_action(action)
     return parser
 
 
@@ -300,8 +309,12 @@ def _build_parser(*, prog: str = "testuary", checking: bool = False) -> argparse
                  "the tests. Java runs java and javac, resolves the build, compiles and finds "
                  "the tests, and starts the measurement tools a run needs. The first run tries "
                  "the build of a project with its own build wrapper, which may download its "
-                 "build tool. The check runs no test, installs nothing and contacts no model. "
-                 "What it cannot try is reported as not tried.",
+                 "build tool. The check runs no test and contacts no model. For Java it "
+                 "downloads what a run would when it is missing: what the build needs and, "
+                 "unless LANGADAPTER_JAVA_TOOLS_OFFLINE is set, the JUnit launcher, JaCoCo "
+                 "and PIT. "
+                 "What it cannot try, and a language whose adapter has no check of its own, "
+                 "is listed under Not tried yet.",
         )
         parser.add_argument("--json", dest="json_output", action="store_true",
                             help="Print the report as JSON instead of text (API keys removed).")

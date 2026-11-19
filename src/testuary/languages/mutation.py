@@ -1268,7 +1268,7 @@ def unresolved_kill_alarm(matrix: Optional[Dict[str, Any]]) -> Optional[str]:
         f"[mutation] {n}/{killed} kills are UNRESOLVED: recorded killed with "
         f"no attributed killer, and the verification re-run also died before "
         f"pytest could report. The score may contain environment-induced "
-        f"kills; re-measure this suite on a quiet node to confirm."
+        f"kills. Re-measure this suite on a quiet node to confirm."
     )
 
 

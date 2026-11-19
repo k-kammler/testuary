@@ -692,7 +692,7 @@ def test_switching_the_final_mutation_measurement_measures_again_on_resume(tmp_p
 def test_a_java_container_run_records_its_jdk(tmp_path):
     """A container run of another language records the runtime its adapter
     describes, so a resume notices a changed JDK, and is complete without a
-    Python interpreter; a Python run's record stays as it was."""
+    Python interpreter. A Python run's record stays as it was."""
     from testuary.settings import resolve_settings
 
     def java_settings(jdk):

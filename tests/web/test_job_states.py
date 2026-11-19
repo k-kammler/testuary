@@ -143,8 +143,10 @@ def _heading(tone):
     return json.loads(done.stdout)
 
 
-def test_the_panel_names_a_succeeded_runs_cause_as_a_note():
-    assert _heading("succeeded") == ["Note: ", "panel cause-note"]
+def test_the_panel_heading_follows_the_runs_tone():
+    """A run that succeeded names no cause of its own, so the heading of
+    an error its command printed after the run says what went wrong."""
+    assert _heading("succeeded") == ["What went wrong: ", "panel cause"]
     assert _heading("failed") == ["Why the run failed: ", "panel cause"]
     assert _heading("incomplete") == ["What went wrong: ", "panel cause"]
     assert _heading(None) == ["What went wrong: ", "panel cause"]
@@ -169,13 +171,10 @@ def test_the_run_view_takes_its_cause_heading_from_the_runs_tone():
     source = APP.read_text(encoding="utf-8")
     assert "causeHeading(view && view.layers[0] ? view.layers[0].tone : null, this.endedWord)" in source
     assert '"What went wrong: "' in source and source.count('"What went wrong: "') == 1
-    # The note is neutral: not the cause panel's failure color.
-    note = re.search(r"^\.cause-note \{([^}]*)\}", STYLE.read_text(encoding="utf-8"), re.M)
-    assert note and "--failed" not in note.group(1)
 
 
 def test_a_jobs_values_read_as_its_end_of_run_summary_states_them():
-    """One file's values stand alone; with several files each line names
+    """One file's values stand alone. With several files each line names
     its file. A value the run did not measure says so, a file without
     values says how it ended, and a demonstration's values read as demo
     values."""
@@ -225,8 +224,8 @@ def test_a_page_parts_nested_lists_are_its_elements():
 
 def test_the_settings_page_shows_the_common_settings_first_and_finds_every_one():
     """A section shows its common settings and every setting a file or the
-    environment sets; the search matches every word in a setting's label,
-    name, purpose or section; a refusal drops the section and key its row
+    environment sets. The search matches every word in a setting's label,
+    name, purpose or section. A refusal drops the section and key its row
     names."""
     names = ["COMMON_SETTINGS", "shownFirst"]
     assert page_value(names, 'shownFirst("coverage", { name: "goal", source: "default" })') is True
@@ -260,7 +259,7 @@ def test_the_page_script_parses_as_a_whole():
 def test_a_settings_row_says_its_value_and_purpose_as_they_are():
     """An unset choice reads "not set", not as its first option, which a Save
     would write. A short purpose is shown whole, such as the sentence that
-    zero disables a limit; a long one shows its first sentence and the rest
+    zero disables a limit. A long one shows its first sentence and the rest
     on request."""
     assert page_value(["choiceOptions"], 'choiceOptions({ kind: "choice", choices: ["java", "python"], value: null })') == [
         ["", "not set"], ["java", "java"], ["python", "python"]]
@@ -295,7 +294,7 @@ def test_an_address_in_the_setups_text_is_a_link():
 
 def test_another_service_starts_with_its_own_provider_name():
     """Changing to another OpenAI-compatible API leaves no earlier service's
-    provider name in the field; a model of that kind keeps its own."""
+    provider name in the field. A model of that kind keeps its own."""
     custom = {"kind": "openai-compatible", "provider": ""}
     ollama = {"kind": "ollama-local", "provider": "ollama"}
     assert page_value(["providerName"], "providerName(%s, 'ollama', 'ollama-local', null)" % json.dumps(custom)) == ""
@@ -352,7 +351,7 @@ def test_the_guide_names_the_setup_file_a_test_can_need_and_offers_its_copy():
 
 
 def test_a_models_badge_says_set_up_and_its_test_says_what_the_service_answered():
-    """Set up is what the catalogue tells; whether the service answers only
+    """Set up is what the catalogue tells. Whether the service answers only
     a connection test tells, in its own words, as a refusal is amber and a
     missing answer red."""
     assert page_value(["modelBadge"], "[modelBadge({ usable: true }), modelBadge({ usable: false })]") == [
@@ -374,7 +373,7 @@ def test_a_cause_that_the_model_service_gave_no_answer_leads_to_its_connection_t
 def test_a_running_rows_time_follows_the_runs_clock_and_the_current_step_counts_its_own():
     """A running row's time starts from the run's clock at its newest
     observation, not the row's own last one, so it moves while other work
-    reports; the diagram's current step shows how long it has been under
+    reports. The diagram's current step shows how long it has been under
     way."""
     names = ["CLOCK", "clockBase"]
     assert page_value(names, 'clockBase("00:01:39", true, 300.4)') == 300
@@ -583,7 +582,7 @@ def _file_box(files, project_files, language="python"):
 
 
 def test_the_source_file_box_shows_no_null_when_no_named_file_is_missing():
-    """The box names a file the settings name that the directory lacks; with
+    """The box names a file the settings name that the directory lacks. With
     none missing it shows the files alone, without a stray "null" (seen on
     a Run page on Windows)."""
     shown = _file_box({"python": ["calc/io.py", "calc/ops.py"]}, ["calc/ops.py"])
@@ -681,7 +680,7 @@ def test_one_files_project_card_names_its_value_without_statistics_across_files(
 
 def test_a_scrolled_text_box_keeps_the_readers_place():
     """The terminal text and the progress log follow new output only while
-    the reader is at their end; a reader who scrolled up keeps the place,
+    the reader is at their end. A reader who scrolled up keeps the place,
     and a new or hidden box starts at its end."""
     assert page_value(["nextScroll"], "[nextScroll(null, 900),"
                       "nextScroll({scrollTop: 480, scrollHeight: 900, clientHeight: 420}, 1200),"
@@ -719,7 +718,7 @@ const document = { createElement: () => new Node(), createTextNode: (text) => ne
 def test_select_all_and_deselect_all_tick_every_file():
     """Wherever files are ticked (the Run and Check pages, the project
     setup's files), Select all and Deselect all tick or clear every one,
-    beside how many are ticked; a box ticked by hand updates the count."""
+    beside how many are ticked. A box ticked by hand updates the count."""
     node = shutil.which("node")
     if node is None:
         pytest.skip("needs Node.js to run the page's script")
@@ -882,7 +881,7 @@ def test_a_set_up_project_links_its_settings_page():
 
 
 def test_the_checks_items_are_folded_below_its_summary():
-    """The check's page says its findings in the summary; the items table
+    """The check's page says its findings in the summary. The items table
     repeats them as data and is folded, as the limits are."""
     source = APP.read_text(encoding="utf-8")
     start = source.index("function reportView(")
@@ -1036,7 +1035,7 @@ process.stdout.write(JSON.stringify(seen));
 
 
 def test_a_step_a_limit_ended_names_the_limit():
-    """A step the diagram marks with the limit's words shows them; without
+    """A step the diagram marks with the limit's words shows them. Without
     them, as from an older event file, it says "limit reached"."""
     words = page_value(["STEP_WORDS", "stepWord"], "[" + ", ".join(
         f"stepWord({json.dumps(item)})" for item in (

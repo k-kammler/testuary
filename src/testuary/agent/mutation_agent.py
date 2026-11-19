@@ -185,18 +185,18 @@ class MutationTestResult(BaseModel):
     )
     unknown_usage_requests: SkipJsonSchema[Optional[int]] = Field(
         default=None,
-        description="[auto] Physical requests whose token usage the provider did not report; the token totals undercount by their usage.",
+        description="[auto] Physical requests whose token usage the provider did not report. The token totals undercount by their usage.",
     )
     input_tokens: Optional[int] = Field(default=None, description="[auto] Total prompt tokens consumed across model invocations.")
     output_tokens: Optional[int] = Field(default=None, description="[auto] Total completion tokens emitted across model invocations.")
     cache_hit_tokens: Optional[int] = Field(default=None, description="[auto] Cached-prefix prompt tokens (provider prompt-cache hits), a subset of input_tokens.")
     failure_kind: SkipJsonSchema[Optional[str]] = Field(
         default=None,
-        description="[auto] infrastructure when a model request failure ended the run; otherwise unjudged.",
+        description="[auto] infrastructure when a model request failure ended the run, otherwise unjudged.",
     )
     unknown_cache_requests: SkipJsonSchema[Optional[int]] = Field(
         default=None,
-        description="[auto] Requests with reported token usage whose cache split the provider did not report; cache_hit_tokens sums the others.",
+        description="[auto] Requests with reported token usage whose cache split the provider did not report. cache_hit_tokens sums the others.",
     )
     status: Optional[str] = Field(default=None, description="[auto] success | stagnation | budget_exhausted | agent_error | context_overflow | inconclusive | tests_failed | skipped.")
     error: Optional[str] = Field(default=None, description="[auto] Error message when status != success.")
@@ -909,7 +909,7 @@ class MutationAgent(CodingAgent):
         self.debug(
             f"[{log_prefix}] raw outcomes: killed={results.killed} "
             f"survived={results.survived} timeout={results.timeout} "
-            f"suspicious={results.non_viable} untested={results.untested}; "
+            f"suspicious={results.non_viable} untested={results.untested}, "
             f"mode={session.mutation_mode} workers={engine_args.workers} "
             f"per_mutant_timeout={applied_text} "
             f"elapsed={engine_elapsed:.1f}s", level=2,
@@ -1295,7 +1295,7 @@ class MutationAgent(CodingAgent):
             return self._tool_refusal(
                 "coverage", msg, [active] if active else [],
                 f"[{log_prefix}] the suite did not finish under the coverage tool "
-                f"within {suite_run_timeout_seconds}s after a green normal run; the mutation "
+                f"within {suite_run_timeout_seconds}s after a green normal run, so the mutation "
                 "tool does not start")
         if not covered.ok:
             return self._red_under_coverage_message(covered, log_prefix)
@@ -1432,7 +1432,7 @@ class MutationAgent(CodingAgent):
                                     what="the test output", keep="tail"))
             what = "the coverage tool's run of the suite ended without a test result"
         return self._tool_refusal(
-            "coverage", msg, stopping, f"[{log_prefix}] {what} after a green normal run; "
+            "coverage", msg, stopping, f"[{log_prefix}] {what} after a green normal run, so "
             "the mutation tool does not start")
 
     def _tool_refusal(self, tool: str, msg: str, stopping: List[str], line: str) -> str:

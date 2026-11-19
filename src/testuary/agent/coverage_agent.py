@@ -471,18 +471,18 @@ class CoverageTestResult(BaseModel):
     )
     unknown_usage_requests: SkipJsonSchema[Optional[int]] = Field(
         default=None,
-        description="[auto] Physical requests whose token usage the provider did not report; the token totals undercount by their usage.",
+        description="[auto] Physical requests whose token usage the provider did not report. The token totals undercount by their usage.",
     )
     input_tokens: Optional[int] = Field(default=None, description="[auto] Total prompt tokens consumed across all model invocations in this run.")
     output_tokens: Optional[int] = Field(default=None, description="[auto] Total completion tokens emitted across all model invocations in this run.")
     cache_hit_tokens: Optional[int] = Field(default=None, description="[auto] Cached-prefix prompt tokens (provider prompt-cache hits), a subset of input_tokens.")
     failure_kind: SkipJsonSchema[Optional[str]] = Field(
         default=None,
-        description="[auto] infrastructure when a model request failure ended the run; otherwise unjudged.",
+        description="[auto] infrastructure when a model request failure ended the run, otherwise unjudged.",
     )
     unknown_cache_requests: SkipJsonSchema[Optional[int]] = Field(
         default=None,
-        description="[auto] Requests with reported token usage whose cache split the provider did not report; cache_hit_tokens sums the others.",
+        description="[auto] Requests with reported token usage whose cache split the provider did not report. cache_hit_tokens sums the others.",
     )
     status: Optional[str] = Field(default=None, description="[auto] Outcome category: success | stagnation | tests_failed | context_overflow | budget_exhausted | agent_error.")
     error: Optional[str] = Field(default=None, description="[auto] Error message when status is not success.")
@@ -825,8 +825,8 @@ class CoverageAgent(CodingAgent):
                     return CoverageTestResult(
                         test_file_name=target_test.name,
                         explanation=(
-                            f"Test generation interrupted ({error_msg}); the "
-                            "on-disk test file is the last-green snapshot, "
+                            f"Test generation interrupted ({error_msg}). The "
+                            "on-disk test file is the last-green snapshot, and "
                             "the downstream phases can run against it."
                         ),
                         targeted_functions=[],

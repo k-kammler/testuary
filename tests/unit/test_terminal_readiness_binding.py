@@ -1,4 +1,4 @@
-"""Controlled typed-report rendering; no native readiness or provider evidence."""
+"""Controlled typed-report rendering, with no native readiness or provider evidence."""
 from __future__ import annotations
 
 from dataclasses import replace
@@ -106,9 +106,11 @@ def test_actual_type_preserves_scope_and_reported_status_without_generation(mode
                     "version: 21.0.4", "release target", "Selected: 8", "guest Maven",
                     "version: 3.9.9", "Fix:")
     else:
-        # The summary states facts in words; the overall status label stays detailed.
+        # The summary states facts in words. The overall status label stays detailed.
         reach = "tool check" if scope == "verification" else "quick check"
-        assert output.splitlines()[1].startswith(f"No problems found by a {reach}")
+        # A required part not tried and a nonzero exit status: no claim of no problems.
+        assert output.splitlines()[1].startswith(f"The {reach} found no failure, but some required")
+        assert "No problems found" not in output
         expected = ("Target" + "s:", "  src/alpha,one.py", "  src/second target.py",
                     "Model: example-model via local",
                     "API key: found, not tried by this check.",
@@ -131,7 +133,7 @@ def test_actual_type_preserves_scope_and_reported_status_without_generation(mode
     assert "READY" not in output and "Diagnostic:" not in output
     assert "100%" not in output and "00:00:" not in output
     assert report.as_dict() == before
-    # Records are not split for the terminal width; paths stay whole.
+    # Records are not split for the terminal width, and paths stay whole.
     if mode == "detailed":
         assert "Source directory: /work/Example  Project | Where it runs: in a container" in output.splitlines()
 
@@ -197,7 +199,7 @@ def test_item_reason_and_action_are_used_without_recomputing_overall_status(mode
     lines = output.splitlines()
     assert "Source directory: /work/Example  Project (in a container)" in lines
     if status == "verified":
-        # A verified item shows its selection; its reason stays in detailed.
+        # A verified item shows its selection. Its reason stays in detailed.
         assert "  subject Python /work/Example  Project/.venv/bin/python" in lines
         assert reason not in output and action not in output
     elif status == "unverified":
@@ -286,7 +288,7 @@ def test_readiness_retains_console_redaction_controls_and_exact_path_spaces():
     with presenter:
         _synthetic(report, presenter)
     output = stream.getvalue()
-    # The selection is shown with its exact spaces; the console removes the color codes.
+    # The selection is shown with its exact spaces. The console removes the color codes.
     assert any(line.startswith("  Native discovery (/work/Example  Project): ")
                for line in output.splitlines())
     assert secret not in output and "fixture-bearer" not in output

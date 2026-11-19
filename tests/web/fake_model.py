@@ -35,8 +35,8 @@ class FakeModel(BaseHTTPRequestHandler):
         pass
 
     def do_GET(self):
-        # The models it serves, as an OpenAI-compatible service lists them;
-        # with a key, only the right one.
+        # The models it serves, as an OpenAI-compatible service lists them.
+        # With a key, only the right one.
         given = self.headers.get("Authorization", "")
         if given and given != f"Bearer {KEY}":
             self.send_response(401)

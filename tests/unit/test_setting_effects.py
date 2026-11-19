@@ -26,7 +26,7 @@ def _turns(start, count):
 @pytest.mark.parametrize("trigger, expected", [(0, 6), (1, 2)])
 def test_context_rebuild_trigger_tokens_rebuilds_within_one_tool_set(trigger, expected):
     """[main] context_rebuild_trigger_tokens: without it, a turn with the
-    same tool set extends the kept conversation; reached, it rebuilds,
+    same tool set extends the kept conversation. Reached, it rebuilds,
     which keeps only the last history_messages."""
     hook = _context.make_context_hook(lambda state: "", keep_last=2, rebuild="mode_change",
                                       rebuild_trigger_tokens=trigger)

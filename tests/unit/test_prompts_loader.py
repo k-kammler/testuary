@@ -42,7 +42,7 @@ def test_list_of_lines_joins_with_newline(agent_name: str) -> None:
     prompts = load_agent_prompts(agent_name)
     sp = prompts["system_prompt"]
     # Each shipped prompt is multi-line in its source.
-    assert "\n" in sp, f"{agent_name} system_prompt looks single-line; check JSON"
+    assert "\n" in sp, f"{agent_name} system_prompt looks single-line. Check JSON"
 
 
 def test_tool_messages_section_when_present_is_a_dict() -> None:

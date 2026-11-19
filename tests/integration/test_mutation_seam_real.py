@@ -3,7 +3,7 @@ one real project, its suites without the instrument as Testuary runs them:
 the counts, the in-loop score, both summary lines, the survivors' text the
 model reads and the kill matrix. Mutant ids are run-local.
 
-Marked ``slow``; skipped without ``cosmic-ray``.
+Marked ``slow``, and skipped without ``cosmic-ray``.
 """
 from __future__ import annotations
 

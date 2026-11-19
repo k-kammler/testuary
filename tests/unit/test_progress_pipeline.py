@@ -61,7 +61,7 @@ def test_a_file_without_a_suite_ends_short_and_says_why(tmp_path, monkeypatch):
 
 def test_a_file_whose_replies_hit_the_output_limit_says_so(tmp_path, monkeypatch):
     reason = ("the model used the whole output limit (max_output_tokens = 8192) without "
-              "answering in 3 of 3 replies; raise max_output_tokens; no green tests from 0 "
+              "answering in 3 of 3 replies. Raise max_output_tokens. No green tests from 0 "
               "generated suites (syntax 0, collection 0, unsalvageable 0)")
 
     def body(ctx):
@@ -92,7 +92,7 @@ def test_a_phase_stop_plans_and_counts_one_repetition(tmp_path, monkeypatch):
 
 def test_a_reuse_of_every_phase_counts_four_and_a_failed_file_is_not_topped_up(
         tmp_path, monkeypatch):
-    # No saved suite exists, so the file fails before its phases; the plan and
+    # No saved suite exists, so the file fails before its phases. The plan and
     # the count are the subject.
     monkeypatch.setattr(orchestrator, "_preflight_reuse_requirements", lambda *a: [])
     monkeypatch.setattr(orchestrator, "_preflight_generation_reuse", lambda *a: None)

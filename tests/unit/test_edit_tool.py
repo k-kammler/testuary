@@ -50,7 +50,7 @@ def edit_setup(request, tmp_path):
 
 
 def _respond(agent, calls):
-    """One model response holding ``calls``; the tool results in order."""
+    """One model response holding ``calls``, and the tool results in order."""
     calls = [{"name": "edit_tests", "id": f"e{i}", "args": args} for i, args in enumerate(calls)]
     # As run() does, the session holds the graph's usage tracker.
     tracker = agent.session.usage_tracker_ref = lg.UsageTracker(request_limit=1)
@@ -508,7 +508,7 @@ def test_a_later_list_item_that_misses_says_so(edit_setup):
 
 
 def test_a_later_list_item_whose_anchor_an_earlier_item_deleted(edit_setup):
-    """The count is the list's working copy, labeled so; nothing claims a
+    """The count is the list's working copy, labeled so. Nothing claims a
     write, and read_tests is not offered as the list's state."""
     agent, path = edit_setup
     result = _respond_list(agent, [
@@ -566,7 +566,7 @@ def test_a_long_list_region_is_cut_inside_its_new_text(edit_setup):
 
 
 def test_a_merged_view_does_not_call_unchanged_lines_submitted_text(edit_setup):
-    """Two inserts within eleven lines share one view; its cut omits lines
+    """Two inserts within eleven lines share one view. Its cut omits lines
     of neither new_text."""
     agent, path = edit_setup
     body = "".join(f"\n\ndef test_x{i}():\n    assert f({i + 10}) == {i + 11}\n" for i in range(3))

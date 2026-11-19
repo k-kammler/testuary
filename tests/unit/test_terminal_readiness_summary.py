@@ -124,8 +124,11 @@ def test_actual_check_summary_groups_blockers_and_detailed_lists_every_item(
     if mode == "detailed":
         assert f"Target: {expected.source_files[0]}" in lines
         check = "quick check" if expected.scope == "inspection" else "tool check"
-        assert lines[0] == (f"Testuary {check}: {shown_report._OVERALL[expected.status]} "
-                            f"(exit status {expected.exit_code})")
+        left = any(item.required and item.status == "unverified" and item.tried_by == "run"
+                   for item in expected.items)
+        overall = ("no problem found in what it tried, some required parts left to a run"
+                   if expected.status == "verified" and left else shown_report._OVERALL[expected.status])
+        assert lines[0] == f"Testuary {check}: {overall} (exit status {expected.exit_code})"
         for item in expected.items:
             assert any(line.startswith(f"{item.key} (") or f"({item.key}, " in line for line in lines)
         assert any(line.startswith("Limit | Coverage phase | max_requests_per_phase:") for line in lines)
@@ -143,16 +146,24 @@ def test_actual_check_summary_groups_blockers_and_detailed_lists_every_item(
     for raw in ("native.python.", "max_requests_per_phase", "openai-chat", "Testuary |", "unverified",
                 "Next action", "scope", "inspection", "certify", "native", "membership"):
         assert raw not in own
-    count = f"{len(problems)} problem{'s' if len(problems) != 1 else ''} found" if problems else (
-        "No problems found")
-    reach = "by a quick check" if expected.scope == "inspection" else "by a tool check"
-    assert lines[0].startswith(f"{count} {reach}")
-    if not problems and expected.exit_code:
+    check = "quick check" if expected.scope == "inspection" else "tool check"
+    # The required items only a run tries, as the producer marked them.
+    left = [item for item in expected.items
+            if item.required and item.status == "unverified" and item.tried_by == "run"]
+    if problems:
+        count = f"{len(problems)} problem{'s' if len(problems) != 1 else ''} found"
+        assert lines[0].startswith(f"{count} by a {check}") and "no model" in lines[0]
+    elif expected.exit_code:
         # The first line agrees with the exit status. The reach follows as a sentence.
-        assert lines[0].endswith(f"so this check ends with exit status {expected.exit_code}.")
+        assert lines[0] == (f"The {check} found no failure, but some required parts were not "
+                            f"tried, so it ends with exit status {expected.exit_code}.")
         assert "no model" in lines[1]
+    elif left:
+        # A check that left required parts to a run never says it found no problems.
+        assert lines[0].startswith(f"The {check} found no problem in what it tried.")
+        assert "No problems found" not in text and "no model" in lines[1]
     else:
-        assert "no model" in lines[0]
+        assert lines[0].startswith(f"No problems found by a {check}") and "no model" in lines[0]
     for reason, action in problems:
         assert any(" ".join(reason.split()) in " ".join(line.split()) for line in lines)
         if action:
@@ -410,6 +421,79 @@ def test_a_refused_deeper_check_does_not_claim_that_tools_started():
     assert "starts tools" not in text and text.splitlines()[-1] == "Next step: Name the source files."
 
 
+_C_WITHOUT_CHECK = (
+    ReadinessItem("configuration.credentials", True, "unverified",
+                  reason="No API key is configured.", tried_by="run"),
+    ReadinessItem("native.c.assessment", True, "unverified",
+                  reason="this language's adapter has no setup check", tried_by="run"),
+    ReadinessItem("native.c.operation.tests.run_suite", True, "unverified",
+                  reason="not checked: this language's adapter has no setup check",
+                  action="start a run, which tries it for the first time", tried_by="run"),
+)
+
+
+@pytest.mark.parametrize("scope, status", [("inspection", "unverified"), ("verification", "verified")])
+def test_a_language_without_a_check_of_its_own_is_named_and_no_problems_are_not_claimed(scope, status):
+    # The C trial on Linux without gcc: both checks ended "No problems found" with exit status 0.
+    report = _report(_C_WITHOUT_CHECK, scope=scope, status=status, exit_code=0)
+    check = "quick check" if scope == "inspection" else "tool check"
+    _, text = _render(report, "plain")
+    lines = text.splitlines()
+    assert lines[0] == (f"The {check} found no problem in what it tried. C has no check of its own, so "
+                        "a run tries its tools first. The required parts it left to a run are "
+                        "listed under Not tried yet.")
+    assert "No problems found" not in text and "no problems found" not in text
+    start = lines.index("Not tried yet:")
+    assert "    start a run, which tries it for the first time" in lines[start:]
+    _, detailed = _render(report, "detailed")
+    assert "no problems found" not in detailed
+
+
+def test_two_languages_without_a_check_of_their_own_are_named_together():
+    items = (*_C_WITHOUT_CHECK,
+             ReadinessItem("native.toy.assessment", True, "unverified",
+                           reason="this language's adapter has no setup check", tried_by="run"))
+    _, text = _render(_report(items, scope="verification", status="verified", exit_code=0), "plain")
+    assert text.splitlines()[0] == (
+        "The tool check found no problem in what it tried. C and Toy have no check of their own, "
+        "so a run tries their tools first. The required parts it left to a run are listed under "
+        "Not tried yet.")
+
+
+def test_a_tool_check_that_left_required_parts_to_a_run_does_not_claim_no_problems():
+    # The Java trial with empty caches: the build and tool jars were left to the first run.
+    items = (ReadinessItem("native.java.assessment", True, "verified", reason="ran what it could"),
+             ReadinessItem("native.java.item.jvm", True, "verified", "/jdk/bin/java", "21.0.13"),
+             *(ReadinessItem(f"native.java.item.{name}", True, "unverified",
+                             reason="the build needs a download first",
+                             action="start a run with network access", tried_by="run")
+               for name in ("build_descriptor", "jacoco", "pitest", "build_resolution")))
+    report = _report(items, scope="verification", status="verified", exit_code=0)
+    _, text = _render(report, "plain")
+    lines = text.splitlines()
+    assert lines[0] == ("The tool check found no problem in what it tried. The required parts it "
+                        "left to a run are listed under Not tried yet.")
+    assert "No problems found" not in text
+    assert "    start a run with network access" in lines[lines.index("Not tried yet:"):]
+    _, detailed = _render(report, "detailed")
+    assert detailed.splitlines()[0] == ("Testuary tool check: no problem found in what it tried, "
+                                        "some required parts left to a run (exit status 0)")
+
+
+def test_a_check_without_a_model_names_the_one_problem_first():
+    # The check went past a missing model to look at the project (exit status 1, not 2).
+    items = tuple(ReadinessItem(f"configuration.model.{phase}", True, "missing_setup",
+                                reason="No model is selected.", action="Run testuary setup model.")
+                  for phase in ("starter", "coverage", "mutation"))
+    report = _report(items, status="missing_setup", exit_code=1, model=None, provider=None,
+                     model_alias=None)
+    _, text = _render(report, "plain")
+    lines = text.splitlines()
+    assert lines[:2] == ["1 problem found by a quick check: no model is selected.",
+                         "A quick check runs nothing in your project and contacts no model."]
+    assert lines[-1] == "Next step: Run testuary setup model."
+
+
 def test_verification_names_untried_parts_and_the_exit_status_without_inventing_problems():
     items = (ReadinessItem("native.java.item.jvm", True, "verified", "/jdk/bin/java", "21.0.11"),
              ReadinessItem("native.java.item.build_descriptor", True, "unverified", "maven",
@@ -425,8 +509,8 @@ def test_verification_names_untried_parts_and_the_exit_status_without_inventing_
     _, text = _render(_report(items, scope="verification", status="unverified"), "plain")
     lines = text.splitlines()
     assert lines[:2] == [
-        "No problems found by a tool check, but some required parts were not tried, so this "
-        "check ends with exit status 1.",
+        "The tool check found no failure, but some required parts were not tried, so it "
+        "ends with exit status 1.",
         "A tool check contacts no model, starts each tool once and, in a copy of your project, "
         "tries its build where a run builds it and finds its tests without running one."]
     start = lines.index("Found and working:")

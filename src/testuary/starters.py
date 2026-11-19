@@ -248,7 +248,7 @@ def _output_limit_detail(hits: int, replies: int, limit: int) -> str:
     """Why a phase got no suite when replies spent the whole output limit
     without text: a reasoning model can think until the limit."""
     return (f"{OUTPUT_LIMIT_DETAIL} (max_output_tokens = {limit}) without "
-            f"answering in {hits} of {replies} replies; raise max_output_tokens")
+            f"answering in {hits} of {replies} replies. Raise max_output_tokens")
 
 
 def _resolve_concurrent_requests(cfg: Dict[str, Any]) -> int:
@@ -1198,7 +1198,7 @@ class _StarterPhase:
                                         "run_idx": self.run_idx, "origin": self.generation_origin},
             })
         if unrecorded is not None:
-            self.observe_request(index, "failed", "Response preserved; request record unavailable")
+            self.observe_request(index, "failed", "Response preserved, request record unavailable")
             raise unrecorded
         self.observe_request(index, "succeeded", "Reply received. Processing it next.")
         return _SlotResponse(slot=i, code=code, usage=usage_total,
@@ -1624,7 +1624,7 @@ class _StarterPhase:
             finally:
                 self.write_manifest(self.res.generation_seconds or 0.0, False)
             self.drop_delivery(i)
-            self.observe_saved(i, "succeeded", "Saved response processing recorded; no new request")
+            self.observe_saved(i, "succeeded", "Saved response processing recorded, no new request")
 
     def restore_reused(self):
         # Reuse a prior run's persisted suites instead of paying the model
@@ -1721,15 +1721,15 @@ class _StarterPhase:
             self.res.detail = (
                 f"validation or suite execution remains unresolved for "
                 f"{self.res.n_validation_unresolved} of {self.res.n_generated} generated "
-                f"suites ({self.unresolved_detail[0] if self.unresolved_detail else ''}); "
-                f"their responses are kept and validated again on resume")
+                f"suites ({self.unresolved_detail[0] if self.unresolved_detail else ''}). "
+                f"Their responses are kept and validated again on resume")
         else:
             self.res.status = "cancelled_zero_passing"
             self.res.detail = _zero_green_detail(self.res)
             if self.output_limit_replies["hits"]:
                 self.res.detail = (_output_limit_detail(self.output_limit_replies["hits"],
                                                         self.output_limit_replies["replies"], self._max_out)
-                                   + "; " + self.res.detail)
+                                   + ". " + self.res.detail[:1].upper() + self.res.detail[1:])
         self.res.duration_s = self.phase_seconds()
         return self.res
 
@@ -2458,10 +2458,10 @@ class _StarterPhase:
             # which ranks as unmeasured rather than as free.
             runtime_ms=float(data.suite_time_ms) if data.suite_time_ms is not None else None,
             green=True, status="ranking_estimate", status_reason=(
-                ("measured alone under the starter-suite name; materialized "
+                ("measured alone under the starter-suite name, and materialized "
                  "under the delivered filename before selection when competitive")
                 if self.measured is not None else
-                ("derived from the pooled run of the starter suites; measured "
+                ("derived from the pooled run of the starter suites, and measured "
                  "under the delivered filename before selection when competitive")
                 if self.derived_governs else
                 "no mutation score: the per-suite mutation measurement produced no result"

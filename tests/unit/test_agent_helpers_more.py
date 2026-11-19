@@ -94,7 +94,7 @@ def test_agent_logger_enable_streaming_writes_initial_file(
 
 def test_agent_logger_streaming_writes_one_line_per_event(tmp_path: Path) -> None:
     """With streaming on, every event is one more line naming its record,
-    with the fields the in-memory entry has, in order; ``save`` ends the log."""
+    with the fields the in-memory entry has, in order, and ``save`` ends the log."""
     lg = ah.AgentLogger("proj")
     lg.init()
     path = lg.enable_streaming(str(tmp_path), "log.jsonl")

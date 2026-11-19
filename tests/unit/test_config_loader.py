@@ -218,7 +218,7 @@ def test_load_models_reads_the_user_dir(tmp_cwd: Path) -> None:
 def test_api_key_comes_from_models_ini_provider_section_not_config(
     tmp_cwd: Path,
 ) -> None:
-    """API keys come from models.ini's ``[<provider>]`` section; config.ini
+    """API keys come from models.ini's ``[<provider>]`` section, and config.ini
     supplies the api_url and may hold no key."""
     (tmp_cwd / "config.ini").write_text(
         "[api]\nmodel = ollama_test\nprovider = ollama\n\n"
@@ -634,7 +634,7 @@ def test_explicit_overlay_can_disable_phase_end_evidence_reuse(
 
 
 def test_phase_ids_and_agent_names_name_their_sections(tmp_cwd: Path) -> None:
-    """One mapping names each phase's config.ini section, another its agent;
+    """One mapping names each phase's config.ini section, another its agent.
     load_config takes the phase id or the agent name for it."""
     from testuary.settings import AGENT_NAMES, PHASE_SECTIONS, _defaults, phase_section
 

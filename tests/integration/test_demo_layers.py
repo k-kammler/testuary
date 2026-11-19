@@ -56,7 +56,7 @@ def test_plain_log_reports_layers_with_totals_and_source_paths(tmp_path):
     assert re.search(r"\| Run \| \d+ of \d+ phases done \(\d+%\)", run[-1])
     files = [line for line in events if f"| {source} | " in line]
     assert files, "events name the selected source path"
-    # Progress names the source path, not the internal per-file directory name; the
+    # Progress names the source path, not the internal per-file directory name. The
     # final summary may list delivered files inside that directory.
     assert not any(exemplar["workspace"] in line for line in events)
     for phase in ("Starter phase", "Coverage phase", "Mutation phase"):

@@ -15,7 +15,7 @@ from testuary.languages import LanguageBackend
 
 
 def _stand_in(oracle):
-    # The registry keeps file_extensions on its adapter; a stand-in must accept it.
+    # The registry keeps file_extensions on its adapter. A stand-in must accept it.
     return LanguageBackend()
 
 

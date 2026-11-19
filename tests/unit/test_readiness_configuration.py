@@ -107,6 +107,23 @@ def test_configuration_errors_agree_with_execution_before_any_factory(fields, ex
     assert config.active_settings() is None and not list(tmp_path.iterdir())
 
 
+def test_a_check_without_a_model_reports_it_and_goes_on_while_other_model_errors_refuse(tmp_path):
+    from testuary.readiness import _readiness_summary
+
+    # No model selected: the check reports the model items as missing and goes on.
+    report = _configuration_report(RunRequest(("module.py",)), inputs(tmp_path, sections={"api": {"model": ""}}))
+    models = [item for item in report.items if item.key.startswith("configuration.model.")]
+    assert [item.key for item in models] == [
+        "configuration.model.starter", "configuration.model.coverage", "configuration.model.mutation"]
+    assert {item.status for item in models} == {"missing_setup"}
+    assert all("testuary setup model" in item.action for item in models)
+    assert report.model_alias is None and report.credentials_configured is None
+    assert _readiness_summary(report.items, scope="inspection") == ("missing_setup", 1)
+    # A name that is no alias of models.ini stays a refusal.
+    with pytest.raises(ConfigurationError):
+        _configuration_report(RunRequest(("module.py",)), inputs(tmp_path, sections={"api": {"model": "absent"}}))
+
+
 def test_report_captures_paths_policy_and_limits_without_certifying_them(tmp_path, monkeypatch):
     settings = inputs(tmp_path, sections={"api": {"model": "selected"},
         "starter": {"attempts_per_suite": 2},

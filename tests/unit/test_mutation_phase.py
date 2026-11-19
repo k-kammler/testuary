@@ -109,7 +109,7 @@ C_PROJECT = {
     "src/main.c": "#include \"calc.h\"\n\nint main(void) {\n    return (int)clamp(0, 0, 1);\n}\n",
 }
 #: Two utest.h tests that share a static variable. The first lowers the
-#: limit, so the second, which passes either way, reaches ``return x;``
+#: limit, so the second, which passes either way, reaches ``return x``
 #: (line 10 of calc.c) when it runs alone, and not after the first in the
 #: one program of the suite run.
 C_SHARED_STATIC_TESTS = """\
@@ -178,7 +178,7 @@ def _c_phase_end(tmp_path: Path, project: dict, target: str, candidate1: str,
 @needs_c
 def test_a_c_suite_whose_tests_share_a_static_keeps_its_measured_coverage(
         tmp_path: Path) -> None:
-    """A real C suite whose second test covers ``return x;`` alone and not
+    """A real C suite whose second test covers ``return x`` alone and not
     in the one program of the suite run: the phase end keeps the run's
     coverage, records the line only the per-test evidence covers, and
     delivers both tests."""

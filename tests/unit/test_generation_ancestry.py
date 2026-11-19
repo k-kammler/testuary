@@ -549,8 +549,8 @@ def test_selected_record_repeat_keeps_detached_previous_construction(boundary, m
     ctx = boundary.ctx
     origin_file(orchestrator._archive_dir(ctx, phase) / "generation/record.json", phase, profile="repeat2")
     old = run_boundary(boundary, monkeypatch, phase)
-    # The next actual construction receives the previously selected source;
-    # the phase record and captured profile may both be overwritten afterwards.
+    # The next actual construction receives the previously selected source.
+    # The phase record and captured profile may both be overwritten afterwards.
     parent_phase = "starter" if phase == "coverage" else "coverage"
     record = selected(EDIT, old)
     record.update(execution_name="test_subject.py", measurement_identity={})

@@ -68,7 +68,7 @@ def test_layers_show_overall_file_phase_step_and_operation_with_bars(width):
         assert row in text
     assert text.index("Overall") < text.index("Target") < text.index("Phase") < text.index("Step")
     # Five bars where they fit: overall, file, phase, step and the operation row.
-    # Block characters, or # and - on an ASCII-only console; narrow rows may
+    # Block characters, or # and - on an ASCII-only console. Narrow rows may
     # show the numbers only.
     bars = [line for line in lines if re.search("[" + "\u2588\u2591#-" + "]{6,} +[0-9]+%", line)]
     assert len(bars) == (5 if width >= 100 else len(bars)) and bars
@@ -298,8 +298,8 @@ def test_compact_log_records_a_step_once_at_start_and_once_at_its_outcome():
         presenter(_event(operation="step/consolidation", level="step", label="Consolidation",
                          state="succeeded", elapsed_s=95))
         presenter(_event(level="phase", message="Phase started", elapsed_s=140))
-    # Log records start with a timestamp once cursor controls are removed;
-    # the pinned view's own rows never do.
+    # Log records start with a timestamp once cursor controls are removed.
+    # The pinned view's own rows never do.
     text = re.sub(r"\x1b\[[0-?]*[ -/]*[@-~]|\r", "\n", stream.getvalue())
     records = [line for line in text.splitlines() if re.match(r"\d{2}:\d{2}:\d{2} ", line)]
     steps = [line for line in records if "| Consolidation" in line]

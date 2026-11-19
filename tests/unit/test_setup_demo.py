@@ -84,7 +84,7 @@ def test_the_wizard_starts_no_process_and_opens_no_connection(tmp_path, played, 
 def test_the_probe_answers_what_the_python_setup_asks_of_this_interpreter(tmp_path):
     """Python's setup asks the interpreter its version, naming nothing, and
     which of the modules it names it cannot import. The probe answers as
-    this interpreter by what is asked, whatever the script's words; another
+    this interpreter by what is asked, whatever the script's words. Another
     program does not start."""
     import platform
     import sys
@@ -238,3 +238,16 @@ def test_a_recorded_ollama_cloud_alias_is_set_up_as_recorded():
     with pytest.raises(setup_demo.demo_cli.DataMismatch, match="not an Ollama Cloud alias"):
         setup_demo._model_answers(manifest, "[ollama_deepseek]\nprovider = openai\n"
                                   "model = x\napi_url = http://h/v1\n")
+
+
+def test_the_demonstration_lists_each_model_service_once(tmp_path, played, capsys):
+    """Without a terminal too, the model services appear once, with their
+    labels, before the question that takes a number or a name."""
+    import re
+
+    assert setup_demo.main(["--demo", "--demo-speed", "instant", "--output-dir", str(tmp_path / "o")]) == 0
+    text = capsys.readouterr().out
+    shown = [line.strip() for line in text[:text.index("Which model service?")].splitlines()
+             if re.fullmatch(r"\s+\d+\. .+", line)]
+    assert shown == [f"{index}. {provider.label} ({provider.kind})"
+                     for index, provider in enumerate(_setup.PROVIDERS, 1)]

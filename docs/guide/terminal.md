@@ -166,9 +166,17 @@ The first line says how many problems it found and how far it looked. The
 quick check reads the settings and finds the tools. The tool check,
 `--verify`, also starts each tool once and, in a copy of the project, tries its
 build where a run builds it and finds its tests without running one, unless the
-project has its own build wrapper, which may download its build tool. Both
-install nothing, run no test and contact no model. Required parts that only
-a run can try do not change the exit status. The check ends with an exit
+project has its own build wrapper, which may download its build tool. The
+quick check downloads nothing. For a Java project the tool check downloads
+what a run would when it is missing: what the build needs and, unless
+`LANGADAPTER_JAVA_TOOLS_OFFLINE` is set, the JUnit launcher, JaCoCo and PIT.
+The setup time limit, `setup_timeout_seconds`, bounds these downloads. Neither check
+runs a test or contacts a model. Required parts that only
+a run can try do not change the exit status. The first line then says that the
+check found no problem in what it tried, never that it found no problems, and
+names each language whose adapter has no check of its own, whose tools only a run
+tries. Those parts are listed under "not tried yet" with the step to take.
+The check ends with an exit
 status other than 0 when it found no problem but a required part that the
 check itself should have tried was not tried. The first line then says so, and
 the next line says how far the check looked.
@@ -190,7 +198,12 @@ The report ends with one next step:
 
 When no fix was reported, the next step points to the detailed view instead of
 guessing one. A refused setting stops the check before it looks at the project,
-and the first line says so. `--display detailed` lists every item by its plain
+and the first line says so. No selected model is no refusal: the check reports
+it as one problem, with exit status 1, and looks at the project and its tools.
+A run directory named after the model alias is left out until a model is
+selected.
+Any other model problem, such as an alias that models.ini lacks, refuses the
+check. `--display detailed` lists every item by its plain
 name with its key, status and reason, also when the output is redirected. Its
 status words are the summary's: not tried yet, found (quick check) or works
 (tool check), missing, not supported, more than one found and refused.

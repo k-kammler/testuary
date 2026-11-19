@@ -464,3 +464,59 @@ def test_a_testuary_that_does_not_answer_ends_the_start_with_a_line(tmp_path, mo
     assert error.startswith("testuary-web: Testuary did not answer 'testuary --version' within 300 "
                             "seconds: check that it runs in ")
     assert "Traceback" not in error
+
+
+def test_a_client_that_drops_its_connection_leaves_no_traceback(serve, capsys):
+    """A client that resets its connection in the middle of a request ends
+    the request's read with a connection error: the interface prints no
+    traceback and serves the next request."""
+    import socket
+    import struct
+    import threading
+
+    _, server, client = serve()
+    handled = threading.Event()
+    report = server.handle_error
+
+    def reported(request, client_address):
+        try:
+            report(request, client_address)
+        finally:
+            handled.set()
+
+    server.handle_error = reported
+    dropped = socket.create_connection(("127.0.0.1", server.server_address[1]))
+    dropped.sendall(b"GET / HTTP/1.1")
+    dropped.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER, struct.pack("ii", 1, 0))
+    dropped.close()
+    assert handled.wait(30)
+    assert client.request("GET", "/")[0] == 200
+    error = capsys.readouterr().err
+    assert "Traceback" not in error and "ConnectionResetError" not in error, error
+
+
+def test_a_connection_error_of_the_interface_itself_is_reported(serve, capsys, monkeypatch):
+    """A connection error that is not the client's, such as an extension's
+    refused connection to a stopped service, is reported as any other
+    error of a request."""
+    import threading
+
+    app, server, client = serve()
+    handled = threading.Event()
+    report = server.handle_error
+
+    def reported(request, client_address):
+        try:
+            report(request, client_address)
+        finally:
+            handled.set()
+
+    def refused(body):
+        raise ConnectionRefusedError("the extension's service is stopped")
+
+    server.handle_error = reported
+    monkeypatch.setattr(app, "update_group", refused)
+    with pytest.raises((http.client.HTTPException, ConnectionError)):
+        client.request("POST", "/api/ext/settings", {"group": "stand-in"})
+    assert handled.wait(30)
+    assert "ConnectionRefusedError: the extension's service is stopped" in capsys.readouterr().err

@@ -1,6 +1,6 @@
 """The normal test run (normal_run): a language with the measurement
 instrument runs as delivered without it, with the fixed session seed, and
-one without the instrument through run_test_files; no run places the
+one without the instrument through run_test_files. No run places the
 instrument."""
 from __future__ import annotations
 
@@ -21,7 +21,7 @@ pytestmark = pytest.mark.usefixtures("default_run")
 TARGET = "def add(a, b):\n    return a + b\n"
 
 #: Passes when something seeds random with 0 before the test, as the
-#: instrument did; fails under the run as delivered's session seed (1).
+#: instrument did, and fails under the run as delivered's session seed (1).
 SEEDED = (
     "import random\n"
     "from calc import add\n\n"
@@ -91,7 +91,7 @@ LANGUAGES = [
 @pytest.mark.parametrize("delivers, seeds, instrument, method", LANGUAGES)
 def test_the_normal_run_follows_the_language(delivers, seeds, instrument, method):
     """A language whose runs as delivered take a session seed runs as
-    delivered with the fixed seed; any other runs the backend's
+    delivered with the fixed seed. Any other runs the backend's
     run_test_files with the module under test. The instrument decides
     nothing."""
     backend = _Backend(delivers, seeds, instrument)
@@ -112,7 +112,7 @@ def test_the_normal_run_follows_the_language(delivers, seeds, instrument, method
 @pytest.mark.parametrize("language, delivered", [("python", True), ("java", False), ("c", False)])
 def test_each_languages_normal_run_stays_as_it_was(language, delivered, tmp_path):
     """Python's runs as delivered take the session seed, so its normal run
-    is the run as delivered; Java's and C's take none, so theirs is the
+    is the run as delivered. Java's and C's take none, so theirs is the
     language's own test run."""
     backend = languages.get_backend(language)
     assert backend is not None
@@ -242,7 +242,7 @@ def test_a_prepared_suite_dir_carries_no_instrument(tmp_path):
 
 
 class _MeasuredBackend(_Backend):
-    """Passes its normal run; test_traced fails under the coverage tool."""
+    """Passes its normal run, and test_traced fails under the coverage tool."""
 
     def run_test_files(self, paths, source_dir, **kwargs):
         self.calls.append(("run_test_files", tuple(paths), kwargs))
@@ -323,7 +323,7 @@ def test_the_mutation_green_check_is_the_normal_run():
 def test_a_several_file_mutation_green_check_runs_them_as_the_tool_does():
     """The mutation tool runs a directory of several files in one session, so
     its green check, whose time sizes the per-mutant timeout, runs them in
-    one session too; a one-file suite's check stays the normal run."""
+    one session too. A one-file suite's check stays the normal run."""
     from testuary import measurement
 
     backend = _Backend(delivers=True, seeds=True)

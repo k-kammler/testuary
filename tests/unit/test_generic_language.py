@@ -354,7 +354,7 @@ def test_a_level_1_language_keeps_its_best_starter_suite_from_different_seeds(
                       source=source) == 0
     assert set(source.given) == set(_DifferentSeeds.SUITES)
     (archived,) = (tmp_path / "out" / "results").glob("*/r0/archive/starter/result.calc")
-    # Either two-test suite covers two of the three lines; the one-test suite one.
+    # Either two-test suite covers two of the three lines, and the one-test suite one.
     assert archived.read_text(encoding="utf-8") in _DifferentSeeds.SUITES[:2]
 
 
@@ -718,7 +718,7 @@ def test_the_timeout_journal_is_asked_where_the_adapter_provides_it(calc, monkey
 def test_a_run_as_delivered_is_seeded_where_the_adapter_states_it(calc, monkeypatch, declared,
                                                                    seeded):
     """Where the adapter states seeds_delivered_runs (Python's), its run as
-    delivered takes a session seed; one that states nothing takes none."""
+    delivered takes a session seed. One that states nothing takes none."""
     adapter = type("Adapter", (), {} if declared is None else {"seeds_delivered_runs": declared})
     backend = languages.get_backend("calc")
     monkeypatch.setattr(type(backend), "project_backend", lambda self, source_dir=None: adapter())

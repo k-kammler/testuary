@@ -515,7 +515,7 @@ def test_phase_end_measures_the_candidates_under_the_delivered_name(tmp_path):
 def test_phase_end_stages_under_the_fixed_scratch_name_by_default(tmp_path):
     """By default candidates are staged under a fixed scratch module name, so
     the module-coupled test fails there and the merged suite is no
-    candidate, named by the scratch module; nothing is removed. Production
+    candidate, named by the scratch module. Nothing is removed. Production
     phase ends pass ``stage_as_delivered=True``."""
     backend, target, root = _project(tmp_path)
     res = phase_end(
@@ -873,7 +873,7 @@ SUITE_BAD = ("from calc import add\n\n"
 
 def test_a_merged_suite_with_a_failing_test_is_no_candidate_and_keeps_its_tests(tmp_path):
     """A test that fails in the merged file leaves the merged suite out of
-    the phase end's choice, with the reason; no test is removed, and no
+    the phase end's choice, with the reason. No test is removed, and no
     reduction is made from it."""
     backend, target, root = _project(tmp_path)
     res = phase_end(
@@ -1104,7 +1104,7 @@ def test_phase_end_no_candidate2_for_many_suites_or_one_suite(tmp_path):
 def test_phase_end_measures_candidate2_without_a_runner(tmp_path):
     """Without a mutation runner candidate 2 is still measured standalone,
     for its coverage and per-test evidence, so a coverage-only phase end
-    chooses it on its own numbers; it has no kill matrix."""
+    chooses it on its own numbers. It has no kill matrix."""
     backend, target, root = _project(tmp_path)
     res = phase_end(
         backend, [SUITE_A, SUITE_SIGN],
@@ -1119,7 +1119,7 @@ def test_phase_end_measures_candidate2_without_a_runner(tmp_path):
 
 
 def test_phase_end_candidate2_red_leaves_the_sidecars_absent(tmp_path):
-    """A candidate 2 that is red standalone leaves both sidecars None; its
+    """A candidate 2 that is red standalone leaves both sidecars None. Its
     failing test also fails in the merge, which is then no candidate either,
     and nothing is removed from it."""
     backend, target, root = _project(tmp_path)

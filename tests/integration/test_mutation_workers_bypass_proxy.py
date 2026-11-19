@@ -33,7 +33,7 @@ def test_http_workers_measure_with_every_proxy_variable_set_and_no_no_proxy(
     in_run,
 ) -> None:
     if not cosmic_ray_installed():
-        pytest.skip("cosmic-ray not installed; integration test requires it")
+        pytest.skip("cosmic-ray not installed. The integration test requires it")
     listener = socket.socket()
     listener.bind(("127.0.0.1", 0))
     listener.listen(16)
@@ -72,7 +72,7 @@ def test_http_workers_measure_with_every_proxy_variable_set_and_no_no_proxy(
     monkeypatch.setenv("PYTHONIOENCODING", "utf-8")
     monkeypatch.setenv("PYTHONUTF8", "1")
     # The run captures the environment with the proxy variables, as a
-    # cluster job's run does; its commands start with that environment.
+    # cluster job's run does. Its commands start with that environment.
     in_run(overrides={"api": {"provider": "ollama", "model": "test-model"}})
 
     work = tmp_path / "work"

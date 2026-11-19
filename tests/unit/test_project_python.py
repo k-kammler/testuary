@@ -94,7 +94,7 @@ def test_a_configured_version_reaches_the_resolver(monkeypatch, tmp_path, in_run
 
 
 # Provisioning: LangAdapter's Python adapter makes the environment
-# (tests/python/test_provision.py there); Testuary names and keeps it.
+# (tests/python/test_provision.py there), and Testuary names and keeps it.
 
 def _record_provisioning(monkeypatch, recorded, *, fails=None):
     from langadapter.python.adapter import PythonAdapter

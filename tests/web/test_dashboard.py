@@ -429,7 +429,7 @@ def test_a_phase_end_that_kept_its_suite_or_chose_none_says_so(tmp_path):
 
 def test_the_measurements_a_tool_refused_show_the_tests_that_stopped_it(tmp_path):
     """The loops' JSON Lines logs record a measurement a tool refused with the
-    tool and the tests that stopped it; each shows as a sentence under its
+    tool and the tests that stopped it. Each shows as a sentence under its
     loop, in the log's order. Other lines, and a line a stopped process left
     unfinished, show nothing."""
     from testuary.presentation.view import phase_label

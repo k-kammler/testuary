@@ -103,6 +103,17 @@ def test_item_uses_typed_outcome_readiness_and_ambiguity(
     assert not list(tmp_path.iterdir()) and config.active_settings() is None
 
 
+def test_an_optional_item_that_found_no_tests_is_no_failure(tmp_path):
+    # The Java trial: a project without test sources showed test discovery as failed.
+    settings, configuration, request = facts(tmp_path)
+    item = ProjectSetupItem("test_discovery", False, None, Outcome.NO_TESTS,
+                            reason="the project has no test sources")
+    report = observation(request, item=item, scope="verification")
+    result = _compose_setup_report(configuration, report, request=request, settings=settings)
+    mapped = next(value for value in result.items if value.key == "native.item.test_discovery")
+    assert mapped.status == "verified" and mapped.reason == "the project has no test sources"
+
+
 @pytest.mark.parametrize("ambiguous,label", [(True, "Candidates: "), (False, "Looked in: ")])
 def test_an_items_candidates_are_the_choices_found_or_the_places_looked_in(ambiguous, label, tmp_path):
     """An ambiguous item's candidates are the choices the check found, and

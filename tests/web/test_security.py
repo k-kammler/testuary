@@ -61,7 +61,7 @@ def test_the_page_needs_no_token_and_the_interface_does(serve):
 def _page_tokens(steps):
     """pageToken as the page runs it, evaluated by Node: each step is a
     tab's address fragment and which storage it sees ("shared", "none" or
-    "broken"); the result is each tab's token."""
+    "broken"). The result is each tab's token."""
     node = shutil.which("node")
     if node is None:
         pytest.skip("needs Node.js to run the page's script")

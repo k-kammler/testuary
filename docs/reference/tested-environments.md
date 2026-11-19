@@ -1,30 +1,33 @@
 # Tested environments
 
-Testuary 0.2.0 was tested in the combinations below. Other combinations may
-work, but they were not tested. How projects are run in each language, and in
-containers, comes from LangAdapter, whose
+Testuary was tested in the combinations below. The Release column names the
+newest Testuary version tested in each combination, 0.2.1 or 0.2.0. Other
+combinations may work, but they were not tested. How projects are run in each
+language, and in containers, comes from LangAdapter, whose
 [tested environments](https://k-kammler.github.io/langadapter/reference/tested-environments/)
 list the language tools in more detail.
 
 ## Where Testuary runs
 
-| What | Tested |
-| --- | --- |
-| Operating systems | Windows 11, Ubuntu 24.04 under WSL, AlmaLinux 8.10 |
-| Python for Testuary itself | 3.10, 3.11, 3.12, 3.13 and 3.14, installed from the built wheels into a new virtual environment |
-| Testuary's own test suite | Python 3.10, 3.11, 3.12, 3.13 and 3.14 on Windows 11 and on Ubuntu 24.04 under WSL |
+| What | Tested | Release |
+| --- | --- | --- |
+| Operating systems | Windows 11, Ubuntu 24.04 under WSL | 0.2.1 |
+| Operating systems | AlmaLinux 8.10 | 0.2.0 |
+| Python for Testuary itself | 3.10, 3.11, 3.12, 3.13 and 3.14, installed from the built wheels into a new virtual environment | 0.2.1 |
+| Testuary's own test suite | Python 3.12 and 3.14 on Windows 11 and on Ubuntu 24.04 under WSL | 0.2.1 |
+| Testuary's own test suite | Python 3.10, 3.11 and 3.13 on Windows 11 and on Ubuntu 24.04 under WSL | 0.2.0 |
 
 ## Projects
 
-| Language | Tested |
-| --- | --- |
-| Python | pytest 8.1.1, coverage 7.6.8 and Cosmic Ray 8.4.1 in the project's virtual environment (on Python 3.14 and 3.15 pytest 8.4.2, coverage 7.16.2 and Cosmic Ray 8.4.1), project Python 3.12 in full runs |
-| Java | Maven 3.9 and a project's Maven wrapper, JUnit 4.13.2 and JUnit 5, JDK 17 and JDK 21 in full runs |
-| C | utest.h test programs, gcov through gcovr and Mull, with GCC 13.3 on Ubuntu 24.04 under WSL. [LangAdapter's C guide](https://k-kammler.github.io/langadapter/guide/c/) lists what a project needs |
+| Language | Tested | Release |
+| --- | --- | --- |
+| Python | pytest 8.1.1, coverage 7.6.8 and Cosmic Ray 8.4.1 in the project's virtual environment (on Python 3.14 and 3.15 pytest 8.4.2, coverage 7.16.2 and Cosmic Ray 8.4.1), project Python 3.12 in full runs | 0.2.0 |
+| Java | Maven 3.9 and a project's Maven wrapper, JUnit 4.13.2 and JUnit 5, JDK 17 and JDK 21 in full runs | 0.2.0 |
+| C | utest.h test programs, gcov through gcovr and Mull, with GCC 13.3 on Ubuntu 24.04 under WSL. [LangAdapter's C guide](https://k-kammler.github.io/langadapter/guide/c/) lists what a project needs | 0.2.1 |
 
-Full runs, all four phases from the starter phase to Finishing, were tested for
-a Python project on Ubuntu 24.04, and for a Python and a Java project on
-AlmaLinux 8.10.
+Full runs, all four phases from the starter phase to Finishing, were tested
+with Testuary 0.2.0 for a Python project on Ubuntu 24.04, and for a Python and
+a Java project on AlmaLinux 8.10.
 
 ## Support ranges
 
@@ -39,10 +42,10 @@ that uses LangAdapter, on the project's Python or newer.
 
 ## Model services
 
-| What | Tested |
-| --- | --- |
-| Whole runs with real model requests | Ollama Cloud |
-| Request protocols | OpenAI-compatible chat, OpenAI Responses and Ollama, against local loopback services in the test suite |
+| What | Tested | Release |
+| --- | --- | --- |
+| Whole runs with real model requests | Ollama Cloud | 0.2.0 |
+| Request protocols | OpenAI-compatible chat, OpenAI Responses and Ollama, against local loopback services in the test suite | 0.2.1 |
 
 ## macOS
 
@@ -79,9 +82,9 @@ the bundle, its `Contents/Home` or its `java`.
   project interpreter from such an environment is used like any other
   interpreter, but the environments' own activation is not part of the
   tests. The environment Testuary provisions through uv for
-  `[project] python_version` was tested: CPython 3.12.13 on Ubuntu 24.04
-  under WSL, from the built wheel, with a suite run, coverage and a Cosmic
-  Ray session in it.
+  `[project] python_version` was tested with Testuary 0.2.0: CPython
+  3.12.13 on Ubuntu 24.04 under WSL, from the built wheel, with a suite run,
+  coverage and a Cosmic Ray session in it.
 - Gradle projects in full runs, and the Gradle wrapper.
 - Testuary itself on Python 3.15. LangAdapter's parser library,
   tree-sitter 0.25, has no wheels for 3.15, so Testuary installs there

@@ -243,7 +243,7 @@ def directory_alias(request, monkeypatch):
     def create(link, target):
         if request.param == "junction":
             command = Path(os.environ["SystemRoot"]) / "System32/cmd.exe"
-            # Permit only fixture creation; native measurement remains forbidden.
+            # Permit only fixture creation. Native measurement remains forbidden.
             with monkeypatch.context() as setup:
                 setup.setattr(subprocess, "Popen", _PROCESS)
                 # cmd answers in the console code page, not the locale's ANSI

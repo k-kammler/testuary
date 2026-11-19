@@ -164,13 +164,15 @@ def test_a_runs_provisioning_request_is_fulfilled_once_for_any_language(settled,
 
     monkeypatch.setattr(Settled, "discover_runtime", classmethod(discover))
     made = []
+    # A path absolute on every system. A rooted path without a drive is not absolute on Windows.
+    provided = str(tmp_path / "made" / "run")
     monkeypatch.setattr(project_module, "provision_runtime",
                         lambda language, request, **_: made.append((language, request.version))
-                        or "/made/run")
+                        or provided)
     with config.use_run_settings(_settings(tmp_path)):
         first = language_project_context("settled", str(tmp_path))
         second = language_project_context("settled", str(tmp_path))
-    assert first.interpreter.path == second.interpreter.path == "/made/run"
+    assert first.interpreter.path == second.interpreter.path == provided
     assert made == [("settled", "9.1")]
 
 
@@ -188,7 +190,7 @@ def test_a_container_takes_the_supervisor_the_runtime_names(described, tmp_path)
 
 
 def test_a_stated_runtime_version_reaches_every_languages_context(settled, tmp_path):
-    """[project] runtime_version states the runtime's version line; every
+    """[project] runtime_version states the runtime's version line. Every
     language's adapter reads it from its context instead of asking the
     runtime (AP4: the starter's Python-only runtime line goes)."""
     settings = _settings(tmp_path, runtime_version="Settled 9.1")

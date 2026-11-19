@@ -296,7 +296,7 @@ def test_every_coverage_module_is_bound_before_the_last_test_runs(
     tmp_path: Path, fixtures_dir: Path,
 ) -> None:
     """The protection binds once at configure time. A coverage.py module
-    first imported later would stay unbound; the last test of the run checks
+    first imported later would stay unbound. The last test of the run checks
     that none exists after every earlier test's data was flushed."""
     work, target, _ = _stage(tmp_path, fixtures_dir)
     suite = Path(work) / "tests" / "test_bound.py"

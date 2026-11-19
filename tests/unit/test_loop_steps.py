@@ -73,7 +73,7 @@ def test_a_runs_loop_steps_are_shown_and_the_model_input_is_unchanged(tmp_path, 
     events = []
     shown = _calc_run(tmp_path, monkeypatch, events.append)
     unshown = _calc_run(tmp_path, monkeypatch, None)
-    # The same seeds and texts; only the measured durations in the test
+    # The same seeds and texts. Only the measured durations in the test
     # runs' reports differ between two runs.
     assert shown[0] == unshown[0]
     assert _timeless(shown[1]) == _timeless(unshown[1]) and shown[1]

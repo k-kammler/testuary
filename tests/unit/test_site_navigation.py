@@ -1,6 +1,6 @@
 """The documentation site's navigation names existing pages and every page.
 
-The site build itself (mkdocs build --strict) needs the docs extra; this
+The site build itself (mkdocs build --strict) needs the docs extra. This
 check keeps the navigation, the pages and their includes consistent without it.
 """
 from __future__ import annotations

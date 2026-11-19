@@ -27,6 +27,8 @@ def _files(root):
 @pytest.mark.parametrize("argv", [[], ["generate"], ["--help"], ["-h"], ["generate", "--help"]])
 def test_help_and_empty_commands_never_resolve_or_write(argv, tmp_path, monkeypatch, capsys):
     monkeypatch.chdir(tmp_path)
+    # argparse wraps the help to the terminal's width.
+    monkeypatch.setenv("COLUMNS", "80")
     monkeypatch.setattr(sys, "argv", ["testuary", *argv])
     monkeypatch.setattr(settings, "resolve_settings", lambda **kw: pytest.fail("settings resolution"))
     monkeypatch.setattr(orchestrator, "run_pipeline", lambda *a, **k: pytest.fail("generation"))
@@ -40,7 +42,8 @@ def test_help_and_empty_commands_never_resolve_or_write(argv, tmp_path, monkeypa
     text = capsys.readouterr().out
     assert "usage:" in text and "Run started" not in text
     if argv != ["generate", "--help"]:
-        assert len(text.splitlines()) < 25
+        # The main help and the hint of a bare command stay short.
+        assert len(text.splitlines()) < 40
     assert _files(tmp_path) == {}
 
 

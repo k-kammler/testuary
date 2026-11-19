@@ -28,7 +28,10 @@ testuary --help
 ```
 
 On Windows, create the environment with `python -m venv testuary-env` and
-activate it with `testuary-env\Scripts\activate`. On Debian and Ubuntu,
+activate it with `testuary-env\Scripts\activate` in cmd or PowerShell. In
+PowerShell, run `Set-ExecutionPolicy -Scope Process RemoteSigned` first: the
+default policy of Windows PowerShell refuses the activation script, and this
+command allows local scripts in that window only. On Debian and Ubuntu,
 `python3 -m venv` needs a package, as
 [Set up your machine](guide/machine.md#windows-with-wsl) describes.
 
@@ -98,7 +101,8 @@ It has three parts, asked in this order:
    waiting at most two seconds. If Ollama on this computer answers, it is
    the suggested choice.
 2. This machine, in `config.ini` in your user directory: how many mutants run
-   at the same time (about half the CPUs, at most 15) and how many
+   at the same time (about half the CPUs Testuary may use, which a
+   container's CPU limit lowers, at most 15) and how many
    concurrent requests the model service gets in the starter phase.
 3. The project, in its settings file `.testuary/project.ini` in the
    project directory: the project directory, whose files are tested (the
@@ -151,7 +155,9 @@ starting it.
 Without the wizard, a command names the model with `--model`: the packaged
 settings choose no model, so a run without one in an option or a settings file is
 refused before any work. `[api] model` in the project's settings file, as
-the wizard writes it, takes the option's place.
+the wizard writes it, takes the option's place. `testuary check` without a
+model reports it as a problem, with exit status 1, and still looks at the
+project and its tools.
 
 ## Configure a model
 
@@ -204,13 +210,15 @@ On Windows, the interpreter of a virtual environment is
 `--python-executable C:\path\to\project-env\Scripts\python.exe`.
 
 [The check's report](guide/terminal.md#the-checks-report) says what the quick
-check looks at. The report goes to standard error and starts with a line
-that says how many problems it found and how far it looked.
+check looks at. The report goes to standard error and starts with what it
+found and how far it looked. A run tries some required parts first, such as
+the API key, so the quick check reports no problem only for what it tried.
 For a Python project with every tool installed it looks like this (paths
 replaced by placeholders):
 
 ```text
-No problems found by a quick check, which runs nothing in your project and contacts no model.
+The quick check found no problem in what it tried. The required parts it left to a run are listed under Not tried yet.
+A quick check runs nothing in your project and contacts no model.
 
 Source directory: /path/to/project (on this computer)
 Target: package/module.py
@@ -247,8 +255,8 @@ next step. Add
 status and reason, or `--json` for the report as data on standard output.
 
 The tool check, `--verify`, also starts each tool once and tries your
-project in a copy as a run does, without running a test. It still installs
-nothing and contacts no model:
+project in a copy as a run does, without running a test. It contacts no
+model:
 
 ```bash
 testuary check --verify --model ollama_qwen --source-dir /path/to/project \
@@ -259,23 +267,26 @@ testuary check --verify --model ollama_qwen --source-dir /path/to/project \
 For Python it imports the test tools with the selected interpreter in a copy of
 the project, collects the project's tests there without running one, and writes
 nothing into the project or its environment. For Java it runs the selected
-`java` and `javac`, then, in the copy, resolves the build without downloading,
-compiles and finds the tests, and starts the measurement tools a run needs.
-The first run tries a step that needs a download first, that fails offline for
-a reason the check does not know, or that the check had no time left for. It
-also tries the build of a project with its own build wrapper, which may
+`java` and `javac`, then, in the copy, resolves the build, compiles and finds
+the tests, and starts the measurement tools a run needs. Like a run, it
+downloads what the build needs and, unless `LANGADAPTER_JAVA_TOOLS_OFFLINE` is
+set, the JUnit launcher, JaCoCo and PIT, within `setup_timeout_seconds`. A
+download that fails, or that the variable turns off, is reported as a problem
+with the step to take. The first run tries a step that the check had no time
+left for, and the build of a project with its own build wrapper, which may
 download its build tool. Running the tests and their measurements is a run's
 work.
 The tool check lists such parts under "not tried yet" and still ends with exit
 status 0 when nothing else is open. Where the project's own runs build
 offline, with Maven's `-o` or `--offline` in `MAVEN_ARGS` or in
-`.mvn/maven.config`, the check reports a needed download or an offline failure
-it does not know as a problem instead, since the first run would meet it too.
+`.mvn/maven.config`, the check builds offline too and reports a needed download
+or an offline failure it does not know as a problem, since the first run would
+meet it too.
 The check's exit statuses:
 
 <!-- exit-statuses: check -->
 - Status 0: The check found no problem. Parts that only a real run can try are listed under "not tried yet".
-- Status 1: The check found a problem.
+- Status 1: The check found a problem, such as a missing tool or no selected model.
 - Status 2: A setting was refused or a choice is ambiguous.
 - Status 130: The check was stopped with Ctrl+C. No setup was changed.
 <!-- /exit-statuses -->

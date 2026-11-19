@@ -458,7 +458,10 @@ class Snapshot:
     """The compact view's rows at one moment, as plain data. ``empty`` holds
     before the first observation. ``playback`` names the clock of the
     newest observation: playback time in a demonstration. ``message``,
-    ``metrics`` and ``usage`` are None when the newest observation has none."""
+    ``metrics`` and ``usage`` are None when the newest observation has none.
+    ``issues`` name the newest failed, stopped or refused work, and ``cause``
+    the failure behind a run that ended without success. A run that
+    succeeded has neither."""
 
     empty: bool
     title: str = ""
@@ -588,7 +591,9 @@ class RunView:
 
     def _cause(self) -> str | None:
         runs = [event for event in self._latest.values() if level_of(event) == "run"]
-        if not runs or runs[-1].state not in TERMINAL_STATES:
+        # A run that succeeded names no cause: what failed on its way stays
+        # in the log, and a loop that reached its limit is among its warnings.
+        if not runs or runs[-1].state not in TERMINAL_STATES - {"succeeded"}:
             return None
         failed = [event for event in self._printed_failures if event.message]
         if is_outcome(runs[-1]) and not any(
@@ -702,8 +707,15 @@ class RunView:
                 metrics=self._safe(" | ".join(_running_metric_text(m, running, latest.provenance)
                                               for m in metrics)) if metrics else None,
                 usage=None if usage is None else self._safe(usage),
-                issues=tuple(self._safe(f"Recent issue: {issue}") for issue in self._issues),
-                cause=self._cause())
+                issues=self._shown_issues(events), cause=self._cause())
+
+    def _shown_issues(self, events: list[DisplayEvent]) -> tuple[str, ...]:
+        """The Recent issue lines. A run that succeeded shows none: every file
+        got its suite, and the log above the view keeps their lines."""
+        runs = [event for event in events if level_of(event) == "run"]
+        if runs and runs[-1].state == "succeeded":
+            return ()
+        return tuple(self._safe(f"Recent issue: {issue}") for issue in self._issues)
 
     def _message(self, event: DisplayEvent) -> str:
         """An observation's message as this view shows it: a tool row's,

@@ -349,7 +349,7 @@ def test_without_testuarys_settings_no_dir_opens(tmp_path, monkeypatch):
 
 def test_a_java_test_goes_below_the_projects_test_root_in_its_package(tmp_path):
     """The root of a project's own tests is their directory without the package
-    path their files declare; a delivered test goes below it in its own."""
+    path their files declare. A delivered test goes below it in its own."""
     from testuary.languages import get_backend
 
     backend = get_backend("java")

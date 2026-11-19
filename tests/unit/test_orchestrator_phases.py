@@ -786,8 +786,8 @@ def test_restored_test_file_collects_writes_conftest_via_setup_test_env(
     # a Java multi-module project, where the pom would not be found.
     run_args = calls[1][1]
     assert run_args[1] == "/proj/root", (
-        f"run_test_files got source_dir={run_args[1]!r}; "
-        f"must be the resolved root, not ctx.work_tests.parent"
+        f"run_test_files got source_dir={run_args[1]!r}. "
+        f"It must be the resolved root, not ctx.work_tests.parent"
     )
 
 

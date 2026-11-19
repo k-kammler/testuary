@@ -144,8 +144,8 @@ def test_a_provider_section_no_model_uses_is_listed(serve, user_dir):
 
 
 def test_the_remove_question_says_what_stays_for_each_model(serve, user_dir):
-    """A model of the user's own service has a provider section, which stays;
-    a vLLM, OpenAI or Ollama model usually has none, so its question names
+    """A model of the user's own service has a provider section, which stays.
+    A vLLM, OpenAI or Ollama model usually has none, so its question names
     none, and its own address goes with its section."""
     from conftest import page_value
 
@@ -327,8 +327,8 @@ def _flash_project(tmp_path, user_dir):
 
 
 def test_the_default_model_is_the_global_one_and_the_projects_is_its_own(serve, user_dir, tmp_path):
-    """The default model is the one the global settings choose (none here);
-    the working directory's project's model is named apart."""
+    """The default model is the one the global settings choose (none here).
+    The working directory's project's model is named apart."""
     app, server, client = serve(_flash_project(tmp_path, user_dir))
     for path in ("/api/catalogue", "/api/models"):
         data = client.json("GET", path)[1]

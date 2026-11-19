@@ -157,6 +157,15 @@ class RunReadiness:
         return json.loads(json.dumps(asdict(self), allow_nan=False))
 
 
+def _no_model_selected(settings) -> bool:
+    """Whether ``[api] model`` names no model, and models.ini has no problem
+    of its own: then a missing model is the only model problem."""
+    from testuary.models import catalogue_problems
+
+    value = settings.sections.get("api", {}).get("model", "")
+    return isinstance(value, str) and not value.strip() and not catalogue_problems(settings.models)
+
+
 def _configuration_report(request, settings) -> RunReadiness:
     """The report of the configuration alone: the model each phase resolves
     (an added provider's factory is imported, no client is built and no key
@@ -179,9 +188,12 @@ def _configuration_report(request, settings) -> RunReadiness:
     args = _invocation(request)
     with _settings_scope(settings):
         models, problems, credential = orchestrator._resolve_generation_models(args, settings)
+        # No model selected is the one model problem the check reports and goes
+        # past, to look at the project. Every other one refuses the check.
+        unselected = bool(problems) and _no_model_selected(settings)
         if not problems:
             problems = _added_factory_problems(models, credential)
-        if problems:
+        if problems and not unselected:
             raise ConfigurationError(safe("model configuration refused:\n" + "\n".join(problems)))
         project = config_module.get_project_config()
         output = project_module.output_dir()
@@ -189,7 +201,12 @@ def _configuration_report(request, settings) -> RunReadiness:
         identity = next(iter(models.values())).identity if models else None
         limits = [ReadinessLimit("setup", name, float(project[name]), "seconds", "configured")
                   for name in ("setup_timeout_seconds", "setup_probe_timeout_seconds")]
-        items = []
+        items = [ReadinessItem(
+            f"configuration.model.{phase}", True, "missing_setup",
+            reason="No model is selected: [api] model names no alias of models.ini and no model.",
+            action=("Run testuary setup model, or run testuary init and add an alias to models.ini, "
+                    "then select the alias with --model or [api] model."),
+        ) for phase in (orchestrator._generation_model_phases(args) if unselected else ())]
         for phase, model in models.items():
             items.append(ReadinessItem(
                 f"configuration.model.{phase}", True, "verified", selected=safe(model.protocol),
@@ -355,12 +372,13 @@ def _configuration_inputs(context, settings):
 
 
 def _setup_request(invocation, settings, *, context, required_operations, inputs=None,
-                   required_facets=()):
+                   required_facets=(), allow_acquisition=False):
     """The setup request for one captured context and its selections. The
     language's adapter selects contexts and tools. The execution resolvers are
     not called here, since selecting a configured Python version can
-    provision an environment, and inspection and verification never acquire
-    tools.
+    provision an environment. ``allow_acquisition`` lets the adapter
+    download what a run would, which the tool check asks for and inspection
+    never does.
     """
     from langadapter import ContainerExecution, Environment, ProjectContext, ProjectSetupRequest
     from pathlib import Path, PurePosixPath
@@ -398,7 +416,8 @@ def _setup_request(invocation, settings, *, context, required_operations, inputs
             required_operations=required_operations, required_facets=required_facets,
             inputs=inputs,
             probe_timeout_s=float(project["setup_probe_timeout_seconds"]),
-            total_timeout_s=float(project["setup_timeout_seconds"]), allow_acquisition=False,
+            total_timeout_s=float(project["setup_timeout_seconds"]),
+            allow_acquisition=allow_acquisition,
         )
 
 
@@ -407,6 +426,9 @@ def _setup_item_status(item) -> ReadinessStatus:
 
     if item.ambiguous:
         return "ambiguous"
+    if item.outcome is Outcome.NO_TESTS and not item.required:
+        # A project without tests is no failure of an optional step.
+        return "verified"
     if item.outcome not in (None, Outcome.COMPLETED, Outcome.MISSING_SETUP, Outcome.UNSUPPORTED):
         return "failed"
     if item.outcome is Outcome.MISSING_SETUP or item.readiness is Availability.MISSING_SETUP:
@@ -435,6 +457,20 @@ def _readiness_summary(items, *, scope):
     return "verified", 0
 
 
+def _named_after_missing_model(project) -> bool:
+    """Whether the run directory is named after the model alias while no
+    model is selected: the default, results/<model alias>, or an output_dir
+    with the ${model} placeholder (project.output_dir)."""
+    import re
+
+    from testuary import config as config_module
+
+    if str(config_module.load_config("api").get("model") or "").strip():
+        return False
+    raw = str(project.get("output_dir") or "")
+    return not raw or re.search(r"\$(\{model\}|model\b)", raw) is not None
+
+
 def _output_report(configuration: RunReadiness, invocation, settings) -> RunReadiness:
     """The run directory's item: whether the run may write there, checked
     without cleanup, allocation or a resume. A kept directory does not show
@@ -453,6 +489,18 @@ def _output_report(configuration: RunReadiness, invocation, settings) -> RunRead
             or not isinstance(settings, RunSettings)):
         raise ConfigurationError("output inspection requires RunReadiness, RunRequest and RunSettings")
     with _settings_scope(settings):
+        if _named_after_missing_model(config_module.get_project_config()):
+            # Its name is not known yet, so the check looks at no directory.
+            items = [item for item in configuration.items if item.key not in {
+                "output.admission", "output.original_separation", "output.saved_artifacts"}]
+            items.append(ReadinessItem(
+                "output.admission", True, "unverified",
+                reason="It is named after the model alias, and no model is selected yet.",
+                action="Nothing to do now. The check looks at the run directory once a model is selected.",
+            ))
+            status, exit_code = _readiness_summary(items, scope=configuration.scope)
+            return replace(configuration, status=status, exit_code=exit_code, output_dir=None,
+                           items=tuple(items))
         preserve = orchestrator._cleanup_preserve_flags(_invocation(invocation))
         output = orchestrator._admit_output(project_module.output_dir(), preserve=preserve)
         project = config_module.get_project_config()
@@ -960,8 +1008,8 @@ def _native_report(invocation, settings, *, verify=False) -> RunReadiness:
     LangAdapter's public setup functions, with the targets as the
     languages' checks found them. It does not admit a run: the run checks
     saved-work compatibility, source membership and the separation of guest
-    and output again. Verification runs only on request and never acquires
-    tools.
+    and output again. Verification runs only on request, and it downloads
+    what a run would, as a run does.
     """
     from dataclasses import replace
     from langadapter import InvalidRequest, inspect_project, verify_project
@@ -1002,7 +1050,8 @@ def _native_report(invocation, settings, *, verify=False) -> RunReadiness:
                 request = _setup_request(selected, settings, context=group.context,
                                          required_operations=requirements.operations,
                                          required_facets=requirements.facets,
-                                         inputs=_configuration_inputs(group.context, settings))
+                                         inputs=_configuration_inputs(group.context, settings),
+                                         allow_acquisition=verify)
             except InvalidRequest as exc:
                 raise ConfigurationError(_redact_diagnostic(str(exc), settings)) from exc
             requests.append((group.language, request))

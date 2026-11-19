@@ -26,7 +26,7 @@ def _tool_names(agent, mode):
 def test_a_noted_green_run_offers_the_edit_tool_beside_the_measurement(
         tmp_path, suite, noted):
     """After the model's edit passes run_tests with a note, the next step
-    offers the measurement and the edit tool; without a note only the
+    offers the measurement and the edit tool. Without a note only the
     measurement, as before. Both are the Assess step."""
     agent = _coverage_agent(tmp_path, PLAIN)
     agent.session.writes_done = 1

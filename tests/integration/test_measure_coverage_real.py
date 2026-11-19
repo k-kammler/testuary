@@ -67,6 +67,6 @@ def test_measure_coverage_produces_nonzero_score_on_real_subprocess(
     assert session.coverage_measurements == 1
     assert session.best_coverage_pct is not None
     assert session.best_coverage_pct >= 90.0, (
-        f"fixture suite should fully cover arith.py; got "
+        f"fixture suite should fully cover arith.py, got "
         f"{session.best_coverage_pct}"
     )

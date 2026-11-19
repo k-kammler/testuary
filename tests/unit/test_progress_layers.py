@@ -85,7 +85,7 @@ def test_steps_report_running_then_their_end_inside_the_target_scope():
     assert len(events) == 4
 
 
-# The run plan's phases are the three generation phases; Finishing follows
+# The run plan's phases are the three generation phases. Finishing follows
 # them in its step-level events and counts as the fourth.
 @pytest.mark.parametrize("stop,reuse,expected", [
     (None, {}, ("starter", "coverage", "mutation")),

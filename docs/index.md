@@ -39,7 +39,10 @@ python -m pip install testuary
 ```
 
 On Windows, create the environment with `python -m venv testuary-env` and
-activate it with `testuary-env\Scripts\activate`. On Debian and Ubuntu,
+activate it with `testuary-env\Scripts\activate` in cmd or PowerShell. In
+PowerShell, run `Set-ExecutionPolicy -Scope Process RemoteSigned` first: the
+default policy of Windows PowerShell refuses the activation script, and this
+command allows local scripts in that window only. On Debian and Ubuntu,
 `python3 -m venv` needs a package, as
 [Set up your machine](guide/machine.md#windows-with-wsl) describes.
 
@@ -111,7 +114,7 @@ At a paid service, model requests can cost money. To see a run of all four phase
 a model, play back the [offline demonstration](guide/demonstrations.md) with
 `testuary --demo --output-dir demo-python`.
 
-The [quickstart directory](https://github.com/k-kammler/testuary/tree/v0.2.0/examples/quickstart)
+The [quickstart directory](https://github.com/k-kammler/testuary/tree/v0.2.1/examples/quickstart)
 of the repository, also in the source distribution, holds these first steps
 as scripts and commands: the demonstrations, the web interface started from
 the console or from Python, and two small projects, one Python file and one

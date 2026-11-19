@@ -613,7 +613,7 @@ def _resolve_model(settings: RunSettings, phase: str | None, section_names: tupl
     if values["request_timeout_seconds"] is None or values["request_timeout_seconds"] <= 0:
         raise ConfigurationError("request_timeout_seconds must be positive")
     if values["reasoning_budget_tokens"] is not None and values["reasoning_budget_tokens"] <= 0:
-        raise ConfigurationError("reasoning_budget_tokens must be positive; use reasoning = off to disable reasoning")
+        raise ConfigurationError("reasoning_budget_tokens must be positive. Use reasoning = off to disable reasoning")
     for key in ("reasoning", "reasoning_effort"):
         values[key] = _optional_text(raw.get(key, ""), key)
     if values["reasoning_effort"] == "0":
@@ -826,7 +826,7 @@ def build_resolved_chat_model(settings: PhaseModelSettings, *, api_key: str) -> 
         try:
             model = factory(**parameters)
         except Exception:
-            raise ConfigurationError("chat_model construction failed; check its parameters and dependencies") from None
+            raise ConfigurationError("chat_model construction failed. Check its parameters and dependencies") from None
         if not isinstance(model, BaseChatModel):
             raise ConfigurationError("chat_model must construct a LangChain BaseChatModel")
         return model

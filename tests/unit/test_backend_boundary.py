@@ -43,7 +43,7 @@ def private_imports() -> set:
 def test_no_private_import_of_the_backend():
     found = sorted(private_imports())
     assert not found, (
-        "private imports of the language backend; use its public API: " + "; ".join(found))
+        "private imports of the language backend. Use its public API: " + ", ".join(found))
 
 
 def test_a_private_import_is_recognized():

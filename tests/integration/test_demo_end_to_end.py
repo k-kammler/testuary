@@ -90,7 +90,7 @@ def test_the_demonstration_reproduces_the_recorded_run(tmp_path):
     ledger = (out / "demo" / "ledger.jsonl").read_text(encoding="utf-8").splitlines()
     assert len(ledger) == manifest["entries"]
 
-    # A second run answers the same calls and delivers the same suite; only
+    # A second run answers the same calls and delivers the same suite. Only
     # the order of concurrent calls may differ.
     proc2, out2 = _demo(tmp_path, "b")
     assert proc2.returncode == 0, proc2.stdout[-3000:] + proc2.stderr[-3000:]

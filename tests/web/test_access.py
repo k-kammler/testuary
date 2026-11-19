@@ -1,6 +1,6 @@
 """Who may use the interface: without an access key by
 default, a per-start key or one kept in the user directory on request, from
---access or [web] access; the port from --port or [web] port. With every
+--access or [web] access, and the port from --port or [web] port. With every
 access setting it listens on 127.0.0.1 only, answers only requests naming it
 in their Host header and takes a change only from its own Origin."""
 from __future__ import annotations

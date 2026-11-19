@@ -873,32 +873,32 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     parser.add_argument("--file-extension", action="append", default=[],
                         help="a source file extension of that language, such as .toy")
     parser.add_argument("--project", required=True, type=Path,
-                        help="the project directory; the recording copies it")
+                        help="the project directory, which the recording copies")
     parser.add_argument("--target", required=True, help="the source file, relative to --project")
     parser.add_argument("--instance", required=True, help="the project's name in the demo")
     parser.add_argument("--model", required=True, help="the models.ini alias the run uses")
     parser.add_argument("--replay-model", type=Path, metavar="SCENARIO",
                         help="an earlier recording's scenario.json.gz: its model answers "
                              "answer the run's model requests, matched by key, and no model "
-                             "is contacted; a request it does not hold stops the recording")
+                             "is contacted. A request it does not hold stops the recording")
     source = parser.add_mutually_exclusive_group(required=True)
     source.add_argument("--catalogue-dir", type=Path,
                         help="the directory whose models.ini (which may hold a key) Testuary's "
-                             "settings reader reads in memory; nothing copies or prints it")
+                             "settings reader reads in memory. Nothing copies or prints it")
     source.add_argument("--models", type=Path,
                         help="a key-free models.ini for a run against a fake model")
     parser.add_argument("--alias-field", action="append", default=[], metavar="KEY=VALUE",
                         help="a field of the alias the demo ships (provider, model, api_url)")
     parser.add_argument("--preset", type=Path,
-                        help="settings for the run; default: none. A prompt profile or hints "
+                        help="settings for the run (default: none). A prompt profile or hints "
                              "file it names, relative to its directory, travels with the data")
     parser.add_argument("--dataset", metavar="NAME",
                         help="the name testuary --demo --demo-data selects the data by, for a "
-                             "variant such as tutorial; default: the language")
+                             "variant such as tutorial (default: the language)")
     parser.add_argument("--recording-setting", action="append", default=[],
                         metavar="SECTION.KEY=VALUE",
                         help="a setting only the recording runs with, not shipped in the "
-                             "data's preset, such as mutation.engine_workers=6; it must "
+                             "data's preset, such as mutation.engine_workers=6. It must "
                              "not enter what the playback matches on")
     parser.add_argument("--option", action="append", default=[],
                         help="a further option of the run, such as --display=plain")

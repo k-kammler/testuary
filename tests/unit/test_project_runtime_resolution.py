@@ -111,7 +111,7 @@ def test_several_environments_are_refused(tmp_path):
     with config_module.use_run_settings(_host(tmp_path, VIRTUAL_ENV=str(tmp_path / "activated"))):
         text = _refusal(project_python)
     assert text == ("[project] python_executable: several interpreters could run the project "
-                    f"({first}; {second}): select one{_PYTHON_SETTING}")
+                    f"({first}, {second}): select one{_PYTHON_SETTING}")
 
 
 def test_the_callers_own_environment_outside_the_project_is_refused(tmp_path):

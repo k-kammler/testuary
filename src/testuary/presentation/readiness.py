@@ -54,6 +54,8 @@ def _header(report: RunReadiness, steps: NextSteps = TERMINAL_STEPS, *,
         lines = ["Setup before the run"]
     else:
         overall = _OVERALL.get(report.status, _words.status_word(report.status, report.scope))
+        if report.status == "verified" and _left_to_run(report):
+            overall = "no problem found in what it tried, some required parts left to a run"
         lines = [f"Testuary {_check_name(report.scope)}: {overall} "
                  f"(exit status {report.exit_code})"]
         disclaimer = "A check does not promise that a run succeeds or what it will measure."
@@ -288,6 +290,35 @@ def _key_sentence(report: RunReadiness) -> str | None:
             False: "API key: none found.", None: None}[report.credentials_configured]
 
 
+def _left_to_run(report: RunReadiness) -> list[ReadinessItem]:
+    """The required items that only a run tries: not tried by this check."""
+    return [item for item in report.items
+            if item.required and item.status == "unverified" and item.tried_by == "run"]
+
+
+def _unchecked_languages(report: RunReadiness) -> list[str]:
+    """The languages whose adapter has no check of its own: the producer leaves
+    their assessment to a run."""
+    return list(dict.fromkeys(
+        _words.language_name(item.key) for item in _left_to_run(report)
+        if item.key.startswith("native.") and _words.key_parts(item.key)[1:] == ("", "assessment")))
+
+
+def _untried_line(check: str, report: RunReadiness, untried: bool) -> str:
+    """The first line of a check that found no problem but did not try every
+    required part. It never says that no problem was found."""
+    if report.exit_code and untried:
+        # The first line agrees with the exit status the producer reported.
+        return (f"The {check} found no failure, but some required parts were not tried, "
+                f"so it ends with exit status {report.exit_code}.")
+    unchecked = _unchecked_languages(report)
+    has, own = ("has", "its") if len(unchecked) == 1 else ("have", "their")
+    languages = (f" {' and '.join(unchecked)} {has} no check of {own} own, so a run tries "
+                 f"{own} tools first." if unchecked else "")
+    return (f"The {check} found no problem in what it tried.{languages} The required parts "
+            "it left to a run are listed under Not tried yet.")
+
+
 def _summary_header(report: RunReadiness, problems: int, *, refused: bool,
                     before_run: bool = False) -> list[str]:
     found = ("No problems found" if not problems else
@@ -303,11 +334,13 @@ def _summary_header(report: RunReadiness, problems: int, *, refused: bool,
         lines = [f"{found} by a {check}: the settings were refused, so it "
                  "stopped before looking "
                  "at your project."]
-    elif not problems and report.exit_code and untried:
-        # The first line agrees with the exit status the producer reported.
-        lines = [f"No problems found by a {check}, but some required parts "
-                 f"were not tried, so this check ends with exit status {report.exit_code}.",
-                 f"A {check} {reach}."]
+    elif not problems and ((report.exit_code and untried) or _left_to_run(report)):
+        lines = [_untried_line(check, report, untried), f"A {check} {reach}."]
+        opening = 2
+    elif problems == 1 and all(item.key.startswith("configuration.model.")
+                               for item in _words.listed_problems(list(report.items))):
+        # The check went past a missing model to look at the project.
+        lines = [f"1 problem found by a {check}: no model is selected.", f"A {check} {reach}."]
         opening = 2
     else:
         lines = [f"{found} by a {check}, which {reach}."]
